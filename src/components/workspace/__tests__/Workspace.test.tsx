@@ -1,0 +1,145 @@
+import { describe, expect, it } from 'vitest';
+import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '@/test/render';
+import { Explorer } from '../Explorer';
+import { SearchPanel } from '../SearchPanel';
+import { DiffViewer } from '../DiffViewer';
+
+describe('Explorer', () => {
+  it('exposes a tree with treeitem rows', () => {
+    renderWithProviders(<Explorer />);
+    expect(screen.getByRole('tree')).toBeInTheDocument();
+    expect(screen.getAllByRole('treeitem').length).toBeGreaterThan(0);
+  });
+
+  it('expands and collapses a directory on click', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<Explorer />);
+
+    expect(screen.getByTestId('tree-src/main.tsx')).toBeInTheDocument();
+    await user.click(screen.getByTestId('tree-src'));
+    expect(screen.queryByTestId('tree-src/main.tsx')).not.toBeInTheDocument();
+
+    await user.click(screen.getByTestId('tree-src'));
+    expect(screen.getByTestId('tree-src/main.tsx')).toBeInTheDocument();
+  });
+
+  it('marks directory rows with aria-expanded', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<Explorer />);
+    const row = screen.getByTestId('tree-docs').closest('[role="treeitem"]');
+    expect(row).toHaveAttribute('aria-expanded', 'false');
+    await user.click(screen.getByTestId('tree-docs'));
+    expect(row).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('collapses everything with the collapse-all button', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<Explorer />);
+    await user.click(screen.getByTestId('explorer-collapse'));
+    expect(screen.queryByTestId('tree-src/components')).not.toBeInTheDocument();
+    expect(screen.getByTestId('tree-src')).toBeInTheDocument();
+  });
+
+  it('moves the selection with the arrow keys', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<Explorer />);
+    const first = screen.getByTestId('tree-src');
+    first.focus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByTestId('tree-src/components')).toHaveFocus();
+    await user.keyboard('{ArrowUp}');
+    expect(first).toHaveFocus();
+  });
+
+  it('keeps a single tab stop in the tree', () => {
+    renderWithProviders(<Explorer />);
+    const focusable = screen
+      .getAllByRole('treeitem')
+      .flatMap((item) => within(item).getAllByRole('button'))
+      .filter((button) => button.getAttribute('tabindex') === '0');
+    expect(focusable).toHaveLength(1);
+  });
+
+  it('shows the git status marker for changed files', () => {
+    renderWithProviders(<Explorer />);
+    expect(
+      within(screen.getByTestId('tree-src/services/runtime.ts')).getByText('A'),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('SearchPanel', () => {
+  it('shows an idle hint before any query', () => {
+    renderWithProviders(<SearchPanel />);
+    expect(screen.queryByTestId('search-summary')).not.toBeInTheDocument();
+  });
+
+  it('lists matches and a summary for a query', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<SearchPanel />);
+    await user.type(screen.getByTestId('search-input'), 'runtime');
+    expect(screen.getByTestId('search-summary')).toBeInTheDocument();
+    expect(screen.getAllByRole('mark').length).toBeGreaterThan(0);
+  });
+
+  it('reports an empty state when nothing matches', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<SearchPanel />);
+    await user.type(screen.getByTestId('search-input'), 'zzz-nope');
+    expect(screen.getByTestId('search-empty')).toBeInTheDocument();
+  });
+
+  it('announces the summary politely', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<SearchPanel />);
+    await user.type(screen.getByTestId('search-input'), 'runtime');
+    expect(screen.getByTestId('search-summary')).toHaveAttribute(
+      'aria-live',
+      'polite',
+    );
+  });
+});
+
+describe('DiffViewer', () => {
+  it('renders the first change by default', () => {
+    renderWithProviders(<DiffViewer />);
+    expect(screen.getByTestId('diff-table')).toBeInTheDocument();
+  });
+
+  it('sums additions and deletions across the change set', () => {
+    renderWithProviders(<DiffViewer />);
+    const total = screen.getByTestId('changes-total');
+    expect(total).toHaveTextContent('+7');
+    expect(total).toHaveTextContent('7');
+  });
+
+  it('switches the displayed diff when another file is selected', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<DiffViewer />);
+    await user.click(screen.getByTestId('change-src/components/AppShell.tsx'));
+    expect(
+      screen.getByTestId('change-src/components/AppShell.tsx'),
+    ).toHaveAttribute('aria-current', 'true');
+    expect(screen.getByTestId('diff-table')).toHaveTextContent('useOldStore');
+  });
+
+  it('explains binary files instead of rendering garbage', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<DiffViewer />);
+    await user.click(screen.getByTestId('change-assets/logo.png'));
+    expect(screen.getByTestId('diff-binary')).toBeInTheDocument();
+    expect(screen.queryByTestId('diff-table')).not.toBeInTheDocument();
+  });
+
+  it('marks added and removed rows distinctly for styling and tests', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<DiffViewer />);
+    await user.click(screen.getByTestId('change-src/services/legacy.ts'));
+    const rows = screen
+      .getByTestId('diff-table')
+      .querySelectorAll('tr[data-kind="removed"]');
+    expect(rows).toHaveLength(2);
+  });
+});

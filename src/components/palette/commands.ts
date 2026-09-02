@@ -74,6 +74,14 @@ export function createCommands(): Command[] {
       run: () => ui().requestComposerFocus(),
     },
     {
+      id: 'toggle-panel',
+      labelKey: 'commands.togglePanel',
+      group: 'view',
+      icon: 'sessions',
+      keys: ['Mod', '`'],
+      run: () => ui().togglePanel(),
+    },
+    {
       id: 'toggle-theme',
       labelKey: 'commands.toggleTheme',
       group: 'appearance',

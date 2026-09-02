@@ -17,6 +17,7 @@ export {
   type MockRuntimeOptions,
 } from './mockRuntime';
 export * from './fixtures';
+export * from './workspace';
 
 /** A rejected event, kept for the Agent Logs panel and diagnostics. */
 export interface RuntimeDiagnostic {

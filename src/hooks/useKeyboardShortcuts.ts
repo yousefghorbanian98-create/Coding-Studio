@@ -17,6 +17,7 @@ export const SHORTCUTS: ShortcutDefinition[] = [
   { id: 'toggleTheme', keys: ['Mod', 'J'], labelKey: 'commands.toggleTheme' },
   { id: 'switchLanguage', keys: ['Mod', 'Shift', 'L'], labelKey: 'commands.switchLanguage' },
   { id: 'focusComposer', keys: ['Mod', '/'], labelKey: 'commands.focusComposer' },
+  { id: 'togglePanel', keys: ['Mod', '`'], labelKey: 'commands.togglePanel' },
   { id: 'stopStreaming', keys: ['Esc'], labelKey: 'commands.stopStreaming' },
 ];
 
@@ -76,6 +77,10 @@ export function useKeyboardShortcuts(): void {
           case '/':
             event.preventDefault();
             ui.requestComposerFocus();
+            return;
+          case '`':
+            event.preventDefault();
+            ui.togglePanel();
             return;
           default:
             return;

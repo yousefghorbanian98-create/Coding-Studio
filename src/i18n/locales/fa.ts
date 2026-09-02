@@ -13,6 +13,7 @@ export const fa: Translation = {
     menu: 'منوی برنامه',
   },
   rail: {
+    changes: 'تغییرات',
     chat: 'گفت‌وگو',
     sessions: 'نشست‌ها',
     files: 'فایل‌ها',
@@ -103,6 +104,7 @@ export const fa: Translation = {
     switchLanguage: 'تغییر زبان (فارسی / English)',
     focusComposer: 'فوکوس روی جعبه پیام',
     stopStreaming: 'توقف دریافت پاسخ',
+    togglePanel: 'نمایش یا پنهان‌کردن پنل پایین',
     clearSession: 'پاک کردن نشست فعلی',
   },
   settings: {
@@ -216,6 +218,52 @@ export const fa: Translation = {
   providers: {
     needsRuntime: 'پس از یکپارچه‌سازی زمان اجرای مدیریت‌شده در دسترس خواهد بود.',
     demoBadge: 'نمایشی',
+  },
+  explorer: {
+    title: 'کاوشگر',
+    collapseAll: 'بستن همه پوشه‌ها',
+    status: {
+      added: 'افزوده‌شده',
+      modified: 'تغییریافته',
+      deleted: 'حذف‌شده',
+      renamed: 'تغییرنام‌یافته',
+    },
+  },
+  search: {
+    title: 'جست‌وجو',
+    placeholder: 'جست‌وجو در فضای کاری',
+    idle: 'برای جست‌وجو در فضای کاری نمایشی تایپ کنید.',
+    noResults: 'نتیجه‌ای یافت نشد.',
+    summary: '{{matches}} مورد در {{files}} فایل',
+  },
+  changes: {
+    title: 'تغییرات',
+    binary: 'فایل باینری نمایش داده نمی‌شود.',
+    emptyDiff: 'تغییر متنی وجود ندارد.',
+    diffFor: 'تفاوت‌های {{path}}',
+    kind: {
+      added: 'افزوده‌شده',
+      modified: 'تغییریافته',
+      deleted: 'حذف‌شده',
+      renamed: 'تغییرنام‌یافته',
+    },
+  },
+  panel: {
+    title: 'پنل',
+    close: 'بستن پنل',
+    toggle: 'نمایش یا پنهان‌کردن پنل',
+    channel: 'کانال خروجی',
+    terminalInput: 'دستور ترمینال',
+    terminalHint: 'برای دیدن دستورهای نمایشی help را بنویسید',
+    logsHint: 'رویدادهایی که اعتبارسنجی طرح‌واره آن‌ها را رد کرده اینجا می‌آیند.',
+    logsEmpty: 'هنوز رویداد ردشده‌ای وجود ندارد.',
+    tabs: {
+      terminal: 'ترمینال',
+      problems: 'مشکل‌ها',
+      output: 'خروجی',
+      logs: 'گزارش عامل',
+    },
+    severity: { error: 'خطا', warning: 'هشدار', info: 'اطلاع' },
   },
   common: {
     cancel: 'انصراف',

@@ -10,6 +10,7 @@ import { connectRunStore } from '@/stores/run';
 import { ScenarioLab } from '@/components/devtools/ScenarioLab';
 import { useScenarioFromUrl } from '@/components/devtools/useScenario';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { BottomPanel } from '@/components/panel/BottomPanel';
 import { ActivityRail } from './ActivityRail';
 import { Sidebar } from './Sidebar';
 import { StatusBar } from './StatusBar';
@@ -43,6 +44,7 @@ export function AppShell(): React.ReactElement {
         <ChatArea />
         <Inspector />
       </div>
+      <BottomPanel />
       <StatusBar />
       <CommandPalette />
       <SettingsDialog />

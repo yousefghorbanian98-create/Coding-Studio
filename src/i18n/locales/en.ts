@@ -11,6 +11,7 @@ export const en = {
     menu: 'Application menu',
   },
   rail: {
+    changes: 'Changes',
     chat: 'Chat',
     sessions: 'Sessions',
     files: 'Files',
@@ -101,6 +102,7 @@ export const en = {
     switchLanguage: 'Switch language (فارسی / English)',
     focusComposer: 'Focus message composer',
     stopStreaming: 'Stop streaming response',
+    togglePanel: 'Toggle bottom panel',
     clearSession: 'Clear current session',
   },
   settings: {
@@ -214,6 +216,52 @@ export const en = {
   providers: {
     needsRuntime: 'Available once the managed runtime is integrated.',
     demoBadge: 'Demo',
+  },
+  explorer: {
+    title: 'Explorer',
+    collapseAll: 'Collapse all folders',
+    status: {
+      added: 'Added',
+      modified: 'Modified',
+      deleted: 'Deleted',
+      renamed: 'Renamed',
+    },
+  },
+  search: {
+    title: 'Search',
+    placeholder: 'Search in workspace',
+    idle: 'Type to search the demo workspace.',
+    noResults: 'No matches found.',
+    summary: '{{matches}} matches in {{files}} files',
+  },
+  changes: {
+    title: 'Changes',
+    binary: 'Binary file not shown.',
+    emptyDiff: 'No textual changes.',
+    diffFor: 'Diff for {{path}}',
+    kind: {
+      added: 'Added',
+      modified: 'Modified',
+      deleted: 'Deleted',
+      renamed: 'Renamed',
+    },
+  },
+  panel: {
+    title: 'Panel',
+    close: 'Close panel',
+    toggle: 'Toggle panel',
+    channel: 'Output channel',
+    terminalInput: 'Terminal command',
+    terminalHint: 'Type help for available demo commands',
+    logsHint: 'Runtime events rejected by schema validation appear here.',
+    logsEmpty: 'No rejected events yet.',
+    tabs: {
+      terminal: 'Terminal',
+      problems: 'Problems',
+      output: 'Output',
+      logs: 'Agent Logs',
+    },
+    severity: { error: 'Error', warning: 'Warning', info: 'Information' },
   },
   common: {
     cancel: 'Cancel',

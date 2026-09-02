@@ -11,5 +11,6 @@ export const RAIL_ITEMS: RailItem[] = [
   { id: 'sessions', icon: 'sessions', labelKey: 'rail.sessions' },
   { id: 'files', icon: 'files', labelKey: 'rail.files' },
   { id: 'search', icon: 'search', labelKey: 'rail.search' },
+  { id: 'changes', icon: 'branch', labelKey: 'rail.changes' },
   { id: 'extensions', icon: 'extensions', labelKey: 'rail.extensions' },
 ];
