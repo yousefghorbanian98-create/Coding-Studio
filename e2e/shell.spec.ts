@@ -67,8 +67,13 @@ test('switches theme and language and persists them across reloads', async ({ pa
 });
 
 test('activity rail switches the sidebar view', async ({ page }) => {
+  // The files view replaces the session list with the workspace explorer,
+  // so the sidebar region keeps its "Files" label while the content changes.
   await page.getByTestId('rail-files').click();
-  await expect(page.getByRole('heading', { name: 'Files' })).toBeVisible();
+  await expect(page.getByTestId('explorer')).toBeVisible();
+  await expect(page.getByRole('complementary', { name: 'Files' })).toBeVisible();
+
   await page.getByTestId('rail-chat').click();
+  await expect(page.getByTestId('explorer')).toBeHidden();
   await expect(page.getByRole('heading', { name: 'Sessions' })).toBeVisible();
 });
