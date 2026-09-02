@@ -1,4 +1,4 @@
-import { findModel } from './models';
+import { findModel } from '@/services/runtime/fixtures';
 
 const REPLIES: string[] = [
   `Good question. Here is how I would approach it:

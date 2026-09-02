@@ -1,6 +1,7 @@
 import type { SVGProps } from 'react';
 
 export type IconName =
+  | 'alert'
   | 'chat'
   | 'sessions'
   | 'files'
@@ -59,6 +60,7 @@ const PATHS: Record<IconName, string> = {
   close: 'M6 6l12 12M18 6 6 18',
   branch: 'M6 4v10a4 4 0 0 0 4 4h4M6 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z',
   dot: 'M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z',
+  alert: 'M12 9v4m0 3h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z',
 };
 
 export interface IconProps extends SVGProps<SVGSVGElement> {

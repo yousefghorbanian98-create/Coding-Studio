@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/Icon';
 import { selectActiveSession, useChatStore } from '@/stores/chat';
 import { Composer } from './Composer';
 import { ErrorBanner } from './ErrorBanner';
-import { ConnectionBanner } from '@/components/ollama/ConnectionBanner';
+import { RuntimeBanner } from '@/components/runtime/RuntimeBanner';
 import { MessageItem } from './MessageItem';
 
 export function ChatArea(): React.ReactElement {
@@ -79,7 +79,7 @@ export function ChatArea(): React.ReactElement {
 
       <div className="border-t border-[var(--color-line)] bg-[var(--color-canvas)] p-3">
         <div className="mx-auto w-full max-w-3xl">
-          <ConnectionBanner />
+          <RuntimeBanner />
           <ErrorBanner />
           <Composer />
         </div>

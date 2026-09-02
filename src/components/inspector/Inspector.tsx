@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import { formatDateTime, formatNumber } from '@/lib/format';
-import { findModel } from '@/mocks/models';
+import { findModel } from '@/services/runtime/fixtures';
 import { selectActiveSession, totalTokens, useChatStore } from '@/stores/chat';
 import { usePreferences } from '@/stores/preferences';
 

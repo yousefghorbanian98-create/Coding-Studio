@@ -6,7 +6,7 @@ import { Icon } from '@/components/ui/Icon';
 import { MessageContent } from './MessageContent';
 import { IconButton } from '@/components/ui/IconButton';
 import { formatTime } from '@/lib/format';
-import { findModel } from '@/mocks/models';
+import { findModel } from '@/services/runtime/fixtures';
 import type { ChatMessage } from '@/types/chat';
 import { useChatStore } from '@/stores/chat';
 import { usePreferences } from '@/stores/preferences';

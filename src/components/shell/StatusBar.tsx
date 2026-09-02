@@ -3,7 +3,7 @@ import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { LANGUAGE_LABELS } from '@/i18n';
 import { formatNumber } from '@/lib/format';
-import { useOllamaStore, selectActiveModel } from '@/stores/ollama';
+import { useRuntimeStore, selectActiveModel } from '@/stores/runtime';
 import { selectActiveSession, totalTokens, useChatStore } from '@/stores/chat';
 import { usePreferences } from '@/stores/preferences';
 import { useUiStore } from '@/stores/ui';
@@ -17,8 +17,8 @@ export function StatusBar(): React.ReactElement {
   const isStreaming = useChatStore((s) => s.isStreaming);
   const session = useChatStore(selectActiveSession);
   const modelId = useChatStore((s) => s.modelId);
-  const connection = useOllamaStore((s) => s.status);
-  const model = useOllamaStore(selectActiveModel);
+  const connection = useRuntimeStore((s) => s.status);
+  const model = useRuntimeStore(selectActiveModel);
   const tokens = totalTokens(session);
 
   return (
@@ -51,15 +51,15 @@ export function StatusBar(): React.ReactElement {
           {isStreaming
             ? t('status.streaming')
             : connection === 'connecting'
-              ? t('ollama.status.connecting')
+              ? t('runtime.status.connecting')
               : connection === 'unavailable'
-                ? t('ollama.status.unavailable')
+                ? t('runtime.status.unavailable')
                 : connection === 'no-models'
-                  ? t('ollama.status.noModels')
+                  ? t('runtime.status.noModels')
                   : connection === 'error'
-                    ? t('ollama.status.error')
+                    ? t('runtime.status.error')
                     : connection === 'cancelled'
-                      ? t('ollama.status.cancelled')
+                      ? t('runtime.status.cancelled')
                       : t('status.ready')}
         </span>
       </span>
@@ -95,7 +95,7 @@ export function StatusBar(): React.ReactElement {
           onClick={() => setShortcutsOpen(true)}
           className="rounded px-1 hover:text-[var(--color-ink)]"
         >
-          {t('ollama.label')}
+          {t('runtime.label')}
         </button>
       </span>
     </footer>

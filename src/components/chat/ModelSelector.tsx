@@ -3,30 +3,24 @@ import { Select } from '@base-ui-components/react/select';
 import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { useChatStore } from '@/stores/chat';
-import { useOllamaStore } from '@/stores/ollama';
-
-function formatSize(bytes: number): string {
-  if (bytes <= 0) return '—';
-  const gb = bytes / 1_000_000_000;
-  return gb >= 1 ? `${gb.toFixed(1)} GB` : `${Math.round(bytes / 1_000_000)} MB`;
-}
+import { useRuntimeStore } from '@/stores/runtime';
 
 export function ModelSelector(): React.ReactElement {
   const { t } = useTranslation();
   const isStreaming = useChatStore((s) => s.isStreaming);
   const setModel = useChatStore((s) => s.setModel);
 
-  const status = useOllamaStore((s) => s.status);
-  const models = useOllamaStore((s) => s.models);
-  const selectedModelId = useOllamaStore((s) => s.selectedModelId);
-  const selectModel = useOllamaStore((s) => s.selectModel);
-  const refresh = useOllamaStore((s) => s.refresh);
+  const status = useRuntimeStore((s) => s.status);
+  const models = useRuntimeStore((s) => s.models);
+  const modelId = useRuntimeStore((s) => s.modelId);
+  const selectModel = useRuntimeStore((s) => s.selectModel);
+  const refresh = useRuntimeStore((s) => s.refresh);
 
-  const current = models.find((model) => model.id === selectedModelId);
+  const current = models.find((model) => model.id === modelId);
   const blocked =
     status === 'unavailable' || status === 'no-models' || status === 'error';
 
-  // Nothing to choose from — offer the recovery action instead.
+  // Nothing to choose from — offer the recovery action instead of an empty menu.
   if (blocked || models.length === 0) {
     return (
       <button
@@ -49,18 +43,18 @@ export function ModelSelector(): React.ReactElement {
           )}
         />
         {status === 'connecting'
-          ? t('ollama.status.connecting')
+          ? t('runtime.status.connecting')
           : status === 'no-models'
-            ? t('ollama.status.noModels')
-            : t('ollama.status.unavailable')}
-        <span className="text-[10px] underline">{t('ollama.retry')}</span>
+            ? t('runtime.status.noModels')
+            : t('runtime.status.unavailable')}
+        <span className="text-[10px] underline">{t('runtime.retry')}</span>
       </button>
     );
   }
 
   return (
     <Select.Root
-      value={selectedModelId ?? ''}
+      value={modelId}
       onValueChange={(value) => {
         const id = String(value);
         selectModel(id);
@@ -82,7 +76,7 @@ export function ModelSelector(): React.ReactElement {
         <span className="font-medium">{current?.name ?? t('model.select')}</span>
         {current ? (
           <span className="text-[10px] text-[var(--color-ink-soft)]">
-            {current.parameterSize} · {current.quantization}
+            {current.contextK}K
           </span>
         ) : null}
         <Select.Icon className="ms-1 rotate-90 text-[var(--color-ink-soft)]">
@@ -118,12 +112,8 @@ export function ModelSelector(): React.ReactElement {
                   <Select.ItemText className="block font-medium">
                     {model.name}
                   </Select.ItemText>
-                  <span
-                    dir="ltr"
-                    className="mt-0.5 block text-[10px] text-[var(--color-ink-soft)]"
-                  >
-                    {model.family} · {model.parameterSize} · {model.quantization} ·{' '}
-                    {formatSize(model.sizeBytes)}
+                  <span className="mt-0.5 block text-[10px] text-[var(--color-ink-soft)]">
+                    {model.description}
                   </span>
                 </span>
               </Select.Item>

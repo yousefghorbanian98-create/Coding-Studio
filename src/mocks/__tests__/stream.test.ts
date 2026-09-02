@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { estimateTokens, pickReply, runMockStream, toChunks } from '../stream';
-import { findModel, MOCK_MODELS } from '../models';
+import { FIXTURE_MODELS, findModel } from '@/services/runtime/fixtures';
 
 describe('mock stream', () => {
   it('splits text into word-ish chunks', () => {
@@ -52,15 +52,15 @@ describe('mock stream', () => {
   });
 });
 
-describe('mock models', () => {
+describe('model fixtures', () => {
   it('exposes a non-empty catalogue with unique ids', () => {
-    const ids = MOCK_MODELS.map((model) => model.id);
+    const ids = FIXTURE_MODELS.map((model) => model.id);
     expect(ids.length).toBeGreaterThan(2);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
   it('finds a model by id', () => {
-    expect(findModel('studio-opus')?.name).toBe('Studio Opus');
+    expect(findModel('demo-reasoning')?.name).toBe('Demo Reasoning');
     expect(findModel('nope')).toBeUndefined();
   });
 });

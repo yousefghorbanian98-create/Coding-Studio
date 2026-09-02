@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { ChatMessage, ChatSession } from '@/types/chat';
 import { createMockSessions } from '@/mocks/sessions';
-import { DEFAULT_MODEL_ID } from '@/mocks/models';
+import { DEFAULT_MODEL_ID } from '@/services/runtime';
 import { estimateTokens } from '@/mocks/stream';
 import {
   MockTransport,

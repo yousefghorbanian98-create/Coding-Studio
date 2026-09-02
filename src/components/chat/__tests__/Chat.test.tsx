@@ -72,11 +72,11 @@ describe('chat area', () => {
     useChatStore.getState().stopStreaming();
   });
 
-  it('lists the installed models in the selector', async () => {
+  it('lists the available models in the selector', async () => {
     renderWithProviders(<AppShell />);
-    // Outside Tauri the retained Mock Adapter serves the fixture model list.
+    // The mock runtime serves the provider-neutral fixture catalogue.
     expect(await screen.findByTestId('model-selector')).toHaveTextContent(
-      'llama3.2:3b',
+      'Demo Balanced',
     );
   });
 });
