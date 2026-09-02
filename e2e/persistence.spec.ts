@@ -53,8 +53,11 @@ test('deleting a session persists across a reload', async ({ page }) => {
   const items = page.getByTestId('session-list').getByRole('listitem');
   const before = await items.count();
 
-  await items.first().hover();
-  await items.first().getByRole('button', { name: /delete/i }).click();
+  // Deletion now sits behind the row menu and a confirmation step.
+  const first = items.first();
+  await first.locator('[data-testid^="session-actions-"]').click();
+  await first.locator('[data-testid^="session-action-delete-"]').click();
+  await first.locator('[data-testid^="session-confirm-delete-"]').click();
   await expect(items).toHaveCount(before - 1);
 
   await page.reload();

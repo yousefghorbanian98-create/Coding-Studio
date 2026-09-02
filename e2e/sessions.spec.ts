@@ -35,11 +35,17 @@ test('renames a session from the row menu', async ({ page }) => {
 
 test('pins a session so it sorts to the top', async ({ page }) => {
   const list = page.getByTestId('session-list');
-  const second = list.getByRole('listitem').nth(1);
-  const title = await second.locator('.truncate').innerText();
 
-  await second.locator('[data-testid^="session-actions-"]').click();
-  await second.locator('[data-testid^="session-action-pin-"]').click();
+  // The seed data already pins one session; unpin it so the assertion below
+  // measures the effect of pinning rather than the pre-existing order.
+  const pinned = list.getByRole('listitem').first();
+  await pinned.locator('[data-testid^="session-actions-"]').click();
+  await pinned.locator('[data-testid^="session-action-pin-"]').click();
+
+  const target = list.getByRole('listitem').nth(1);
+  const title = await target.locator('.truncate').innerText();
+  await target.locator('[data-testid^="session-actions-"]').click();
+  await target.locator('[data-testid^="session-action-pin-"]').click();
 
   await expect(list.getByRole('listitem').first()).toContainText(title);
 });
