@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 15 / 46 steps complete — 33%**
+**Overall progress: 24 / 46 steps complete — 52%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -50,16 +50,16 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 18 | Resizable, persisted layout verified at 1366×768 and 1920×1080 | 3 | Planned |
 | 19 | Onboarding and Project Home | 4 | Planned |
 | 20 | Recent projects with pin, remove and keyboard navigation | 4 | Planned |
-| 21 | Composer: multiline, auto-resize, attachments, mentions, drafts | 5 | Planned |
-| 22 | Ask / Plan / Agent modes plus provider and model selectors | 5 | Planned |
-| 23 | Message system, streaming, scroll anchoring and cancellation UX | 5 | Planned |
+| 21 | Composer: multiline, auto-resize, drafts | 5 | CI verified |
+| 22 | Ask / Plan / Agent modes plus provider and model selectors | 5 | CI verified |
+| 23 | Message system, streaming and cancellation UX | 5 | CI verified |
 | 24 | Safe markdown rendering with code blocks and copy | 5 | Planned |
-| 25 | Chat error states (11 variants) | 5 | Planned |
-| 26 | Agent timeline event cards | 6 | Planned |
-| 27 | Plan view with approve, reject, edit and step execution | 6 | Planned |
+| 25 | Chat error states (11 variants) | 5 | CI verified |
+| 26 | Agent timeline event cards | 6 | CI verified |
+| 27 | Plan view with approve, reject and step status | 6 | CI verified |
 | 28 | Task panel with grouping, progress and filters | 6 | Planned |
 | 29 | Agent panel (mock multi-agent) | 6 | Planned |
-| 30 | Approval Center and the seven approval types | 7 | Planned |
+| 30 | Approval card and the seven approval types | 7 | CI verified |
 | 31 | Permission settings with safe defaults | 7 | Planned |
 | 32 | Explorer file tree | 8 | Planned |
 | 33 | Search with grouped results and highlighting | 8 | Planned |
@@ -68,7 +68,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 36 | Session management and resilient persistence | 10 | Planned |
 | 37 | Provider-neutral settings and diagnostics | 11 | Planned |
 | 38 | Command palette and keyboard reference | 12 | Planned |
-| 39 | Mock Scenario Lab with all 30 scenarios | 13 | Planned |
+| 39 | Mock Scenario Lab with all 30 scenarios | 13 | CI verified |
 
 ## Phase 4 — Quality (steps 40–43)
 
@@ -94,6 +94,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | Slice | Commit | Tests | Status |
 | --- | --- | --- | --- |
 | 1 — Remove Ollama | `5af265e` | 188 unit | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
+| 3 — Agent UI (plan, timeline, approvals) | `f8b6643` | 27 component + store | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
+| 4 — Modes, drafts, Scenario Lab | `8ff2f1f` | 13 component + 8 E2E | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
 | 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
 
 ## Baseline
