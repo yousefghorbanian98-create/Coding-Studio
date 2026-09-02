@@ -99,8 +99,9 @@ npm install
 
 npm run dev        # Vite dev server on http://localhost:1420
 npm run build      # tsc -b && vite build
+npm run lint       # ESLint 9 flat config, type-aware
 npm run typecheck  # app + e2e type checking
-npm test           # Vitest (54 tests)
+npm test           # Vitest (63 tests)
 npm run test:e2e   # Playwright (requires: npm run test:e2e:install)
 
 npm run tauri dev    # native desktop window (requires Rust toolchain)
@@ -116,15 +117,24 @@ fully usable in a browser preview.
 
 ---
 
+## Continuous integration
+
+`.github/workflows/ci-windows.yml` runs the whole gate on **windows-latest**:
+`npm ci` → lint → type-check → unit tests → frontend build → Playwright Chromium
+install → E2E → Rust stable → `tauri build`, then uploads the MSI/NSIS bundle as
+a build artifact. The bundle is **unsigned by design** — no signing or
+auto-update keys are stored in this repository.
+
 ## Testing
 
-**Unit & integration (Vitest + Testing Library, jsdom) — 54 tests**
+**Unit & integration (Vitest + Testing Library, jsdom) — 63 tests**
 
 - `src/stores/__tests__/` — chat store (streaming, stop, sessions, models) and
   persisted preferences (clamping, theme, language, localStorage).
 - `src/mocks/__tests__/` — the abortable stream simulator and model catalogue.
 - `src/i18n/__tests__/` — en/fa key-set parity and direction mapping.
-- `src/lib/__tests__/` — `cn` and Intl formatting helpers.
+- `src/lib/__tests__/` — `cn`, Intl formatting, the markdown block/inline
+  parser and platform key mapping.
 - `src/components/shell/__tests__/` — shell regions, sidebar/inspector toggles,
   RTL switching, theme class, accessible resize separator.
 - `src/components/chat/__tests__/` — transcript, filtering, send/stop, Enter vs

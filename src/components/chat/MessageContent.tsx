@@ -1,59 +1,33 @@
 import { memo } from 'react';
 import { cn } from '@/lib/cn';
+import { parseBlocks, parseInline } from '@/lib/markdown';
 
-interface Block {
-  type: 'code' | 'text';
-  content: string;
-  lang?: string;
-}
-
-/** Minimal, dependency-free markdown-ish renderer for the mock transcript. */
-export function parseBlocks(markdown: string): Block[] {
-  const blocks: Block[] = [];
-  const pattern = /```(\w+)?\n([\s\S]*?)(?:```|$)/g;
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  while ((match = pattern.exec(markdown)) !== null) {
-    if (match.index > lastIndex) {
-      blocks.push({ type: 'text', content: markdown.slice(lastIndex, match.index) });
-    }
-    blocks.push({
-      type: 'code',
-      content: match[2] ?? '',
-      ...(match[1] ? { lang: match[1] } : {}),
-    });
-    lastIndex = pattern.lastIndex;
-  }
-  if (lastIndex < markdown.length) {
-    blocks.push({ type: 'text', content: markdown.slice(lastIndex) });
-  }
-  return blocks.filter((block) => block.content.trim().length > 0);
-}
-
-export function renderInline(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
-  return parts.filter(Boolean).map((part, index) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return (
-        <strong key={index} className="font-semibold">
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
-      return (
-        <code
-          key={index}
-          dir="ltr"
-          className="rounded bg-[var(--color-surface-2)] px-1 py-0.5 font-mono text-[0.85em]"
-        >
-          {part.slice(1, -1)}
-        </code>
-      );
-    }
-    return <span key={index}>{part}</span>;
-  });
+function InlineText({ text }: { text: string }): React.ReactElement {
+  return (
+    <>
+      {parseInline(text).map((segment, index) => {
+        if (segment.kind === 'bold') {
+          return (
+            <strong key={index} className="font-semibold">
+              {segment.value}
+            </strong>
+          );
+        }
+        if (segment.kind === 'code') {
+          return (
+            <code
+              key={index}
+              dir="ltr"
+              className="rounded bg-[var(--color-surface-2)] px-1 py-0.5 font-mono text-[0.85em]"
+            >
+              {segment.value}
+            </code>
+          );
+        }
+        return <span key={index}>{segment.value}</span>;
+      })}
+    </>
+  );
 }
 
 export const MessageContent = memo(function MessageContent({
@@ -89,7 +63,7 @@ export const MessageContent = memo(function MessageContent({
               .filter((line) => line.trim().length > 0)
               .map((line, lineIndex) => (
                 <p key={lineIndex} className="whitespace-pre-wrap">
-                  {renderInline(line)}
+                  <InlineText text={line} />
                 </p>
               ))}
           </div>

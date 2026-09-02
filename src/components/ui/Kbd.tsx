@@ -1,16 +1,5 @@
 import { cn } from '@/lib/cn';
-
-export function isAppleLike(): boolean {
-  if (typeof navigator === 'undefined') return false;
-  return /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent);
-}
-
-export function renderKey(key: string): string {
-  if (key === 'Mod') return isAppleLike() ? '⌘' : 'Ctrl';
-  if (key === 'Shift') return isAppleLike() ? '⇧' : 'Shift';
-  if (key === 'Esc') return 'Esc';
-  return key;
-}
+import { renderKey } from '@/lib/platform';
 
 export function Kbd({ keys }: { keys: string[] }): React.ReactElement {
   return (

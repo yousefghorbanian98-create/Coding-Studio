@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { AppShell } from '@/components/shell/AppShell';
 import { renderWithProviders, resetStores } from '@/test/render';
 import { selectActiveSession, useChatStore } from '@/stores/chat';
-import { parseBlocks } from '../MessageContent';
+import { parseBlocks } from '@/lib/markdown';
 
 describe('chat area', () => {
   beforeEach(resetStores);

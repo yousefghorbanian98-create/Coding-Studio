@@ -29,17 +29,14 @@ export function resetStores(): void {
   void i18n.changeLanguage('en');
 }
 
-function Wrapper({ children }: { children: ReactNode }): ReactElement {
+export function renderWithProviders(ui: ReactElement): RenderResult {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return (
+  const wrapper = ({ children }: { children: ReactNode }): ReactElement => (
     <QueryClientProvider client={client}>
       <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
     </QueryClientProvider>
   );
-}
-
-export function renderWithProviders(ui: ReactElement): RenderResult {
-  return render(ui, { wrapper: Wrapper });
+  return render(ui, { wrapper });
 }

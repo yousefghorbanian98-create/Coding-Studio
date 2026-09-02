@@ -1,24 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/cn';
-import { Icon, type IconName } from '@/components/ui/Icon';
+import { Icon } from '@/components/ui/Icon';
+import { RAIL_ITEMS } from './railItems';
 import { IconButton } from '@/components/ui/IconButton';
 import { usePreferences } from '@/stores/preferences';
 import { useUiStore } from '@/stores/ui';
-
-interface RailItem {
-  id: string;
-  icon: IconName;
-  labelKey: string;
-}
-
-export const RAIL_ITEMS: RailItem[] = [
-  { id: 'chat', icon: 'chat', labelKey: 'rail.chat' },
-  { id: 'sessions', icon: 'sessions', labelKey: 'rail.sessions' },
-  { id: 'files', icon: 'files', labelKey: 'rail.files' },
-  { id: 'search', icon: 'search', labelKey: 'rail.search' },
-  { id: 'extensions', icon: 'extensions', labelKey: 'rail.extensions' },
-];
 
 export function ActivityRail(): React.ReactElement {
   const { t } = useTranslation();
