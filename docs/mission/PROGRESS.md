@@ -26,20 +26,20 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 
 | # | Step | Status |
 | --- | --- | --- |
-| 7 | Delete the Rust Ollama client, adapter, registry, types, errors and tests | Locally verified |
-| 8 | Remove the Ollama Tauri commands and their registration | Locally verified |
-| 9 | Remove the Ollama TypeScript services, store, schemas and UI | Locally verified |
-| 10 | Purge Ollama strings, i18n keys, docs and unused dependencies | Locally verified |
-| 11 | Verify a case-insensitive `ollama` search returns nothing in active source | Locally verified |
+| 7 | Delete the Rust Ollama client, adapter, registry, types, errors and tests | CI verified |
+| 8 | Remove the Ollama Tauri commands and their registration | CI verified |
+| 9 | Remove the Ollama TypeScript services, store, schemas and UI | CI verified |
+| 10 | Purge Ollama strings, i18n keys, docs and unused dependencies | CI verified |
+| 11 | Verify a case-insensitive `ollama` search returns nothing in active source | CI verified |
 
 ## Phase 2 — Slice 2: StudioRuntimeBridge (steps 12–15)
 
 | # | Step | Status |
 | --- | --- | --- |
-| 12 | Define the typed contract and the 28 discriminated-union events | Locally verified |
-| 13 | Add Zod validation with non-crashing, loggable invalid-event handling | Locally verified |
-| 14 | Implement the deterministic MockStudioRuntime with real cancellation | Locally verified |
-| 15 | Subscription cleanup, StrictMode safety and ID-namespace separation | Locally verified |
+| 12 | Define the typed contract and the 28 discriminated-union events | CI verified |
+| 13 | Add Zod validation with non-crashing, loggable invalid-event handling | CI verified |
+| 14 | Implement the deterministic MockStudioRuntime with real cancellation | CI verified |
+| 15 | Subscription cleanup, StrictMode safety and ID-namespace separation | CI verified |
 
 ## Phase 3 — Slices 3–14: frontend build-out (steps 16–39)
 
@@ -93,8 +93,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 
 | Slice | Commit | Tests | Status |
 | --- | --- | --- | --- |
-| 1 — Remove Ollama | `5af265e` | 188 unit | Locally verified |
-| 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | Locally verified |
+| 1 — Remove Ollama | `5af265e` | 188 unit | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
+| 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
 
 ## Baseline
 
