@@ -12,8 +12,10 @@ test('a sent conversation survives a reload', async ({ page }) => {
 
   // Wait for the stream to finish so the reply is final.
   await expect(page.getByTestId('send-button')).toBeVisible({ timeout: 30_000 });
+  // Compare the rendered body only: the header carries a clock that can tick
+  // over between the two reads.
   const replyBefore = await page
-    .getByTestId('message-assistant')
+    .getByTestId('message-content')
     .last()
     .innerText();
 
@@ -23,7 +25,7 @@ test('a sent conversation survives a reload', async ({ page }) => {
   await expect(page.getByTestId('message-user').last()).toContainText(
     'Persist this conversation',
   );
-  await expect(page.getByTestId('message-assistant').last()).toHaveText(
+  await expect(page.getByTestId('message-content').last()).toHaveText(
     replyBefore,
   );
 });
