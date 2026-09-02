@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 3 / 46 steps complete — 7%**
+**Overall progress: 15 / 46 steps complete — 33%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -18,28 +18,28 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 1 | Save the full mission as a document in the repository | CI verified |
 | 2 | Produce the numbered step list with a progress percentage | CI verified |
 | 3 | Verify branch, git status and recover the workspace pointer | CI verified |
-| 4 | Review PR #1 and the latest CI run | In progress |
-| 5 | Baseline audit: structure, deps, configs, Ollama surface, tests, artifacts | Planned |
-| 6 | Record the baseline report and the keep / refactor / delete decision | Planned |
+| 4 | Review PR #1 and the latest CI run | CI verified |
+| 5 | Baseline audit: structure, deps, configs, Ollama surface, tests, artifacts | CI verified |
+| 6 | Record the baseline report and the keep / refactor / delete decision | CI verified |
 
 ## Phase 1 — Slice 1: remove Ollama (steps 7–11)
 
 | # | Step | Status |
 | --- | --- | --- |
-| 7 | Delete the Rust Ollama client, adapter, registry, types, errors and tests | Planned |
-| 8 | Remove the Ollama Tauri commands and their registration | Planned |
-| 9 | Remove the Ollama TypeScript services, store, schemas and UI | Planned |
-| 10 | Purge Ollama strings, i18n keys, docs and unused dependencies | Planned |
-| 11 | Verify a case-insensitive `ollama` search returns nothing in active source | Planned |
+| 7 | Delete the Rust Ollama client, adapter, registry, types, errors and tests | Locally verified |
+| 8 | Remove the Ollama Tauri commands and their registration | Locally verified |
+| 9 | Remove the Ollama TypeScript services, store, schemas and UI | Locally verified |
+| 10 | Purge Ollama strings, i18n keys, docs and unused dependencies | Locally verified |
+| 11 | Verify a case-insensitive `ollama` search returns nothing in active source | Locally verified |
 
 ## Phase 2 — Slice 2: StudioRuntimeBridge (steps 12–15)
 
 | # | Step | Status |
 | --- | --- | --- |
-| 12 | Define the typed contract and the 28 discriminated-union events | Planned |
-| 13 | Add Zod validation with non-crashing, loggable invalid-event handling | Planned |
-| 14 | Implement the deterministic MockStudioRuntime with real cancellation | Planned |
-| 15 | Subscription cleanup, StrictMode safety and ID-namespace separation | Planned |
+| 12 | Define the typed contract and the 28 discriminated-union events | Locally verified |
+| 13 | Add Zod validation with non-crashing, loggable invalid-event handling | Locally verified |
+| 14 | Implement the deterministic MockStudioRuntime with real cancellation | Locally verified |
+| 15 | Subscription cleanup, StrictMode safety and ID-namespace separation | Locally verified |
 
 ## Phase 3 — Slices 3–14: frontend build-out (steps 16–39)
 
@@ -88,6 +88,13 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 46 | Final report; PR remains Draft and unmerged | Planned |
 
 ---
+
+## Slice log
+
+| Slice | Commit | Tests | Status |
+| --- | --- | --- | --- |
+| 1 — Remove Ollama | `5af265e` | 188 unit | Locally verified |
+| 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | Locally verified |
 
 ## Baseline
 
