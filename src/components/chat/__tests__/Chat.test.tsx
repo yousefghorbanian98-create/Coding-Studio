@@ -72,9 +72,12 @@ describe('chat area', () => {
     useChatStore.getState().stopStreaming();
   });
 
-  it('lists the mock models in the selector', () => {
+  it('shows the unavailable model selector when Ollama is offline', async () => {
     renderWithProviders(<AppShell />);
-    expect(screen.getByTestId('model-selector')).toHaveTextContent('Studio Sonnet');
+    // No Tauri backend in jsdom, so the shell reports Ollama as unreachable.
+    expect(
+      await screen.findByTestId('model-selector-unavailable'),
+    ).toBeInTheDocument();
   });
 });
 

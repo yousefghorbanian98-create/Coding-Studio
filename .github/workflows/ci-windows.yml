@@ -93,6 +93,13 @@ jobs:
         with:
           workspaces: src-tauri -> target
 
+      # Compiles the Ollama adapter and runs the wiremock-backed integration
+      # tests. No real Ollama daemon is required: every HTTP call is served by
+      # a local mock server started inside the tests.
+      - name: Rust tests (cargo test)
+        working-directory: src-tauri
+        run: cargo test --all-features
+
       - name: Tauri build
         # No signing keys are configured on purpose: this produces an unsigned
         # bundle. Code-signing and auto-update keys must live in repository

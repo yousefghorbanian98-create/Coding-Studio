@@ -3,7 +3,7 @@ import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { LANGUAGE_LABELS } from '@/i18n';
 import { formatNumber } from '@/lib/format';
-import { findModel } from '@/mocks/models';
+import { useOllamaStore, selectActiveModel } from '@/stores/ollama';
 import { selectActiveSession, totalTokens, useChatStore } from '@/stores/chat';
 import { usePreferences } from '@/stores/preferences';
 import { useUiStore } from '@/stores/ui';
@@ -17,7 +17,8 @@ export function StatusBar(): React.ReactElement {
   const isStreaming = useChatStore((s) => s.isStreaming);
   const session = useChatStore(selectActiveSession);
   const modelId = useChatStore((s) => s.modelId);
-  const model = findModel(modelId);
+  const connection = useOllamaStore((s) => s.status);
+  const model = useOllamaStore(selectActiveModel);
   const tokens = totalTokens(session);
 
   return (
@@ -34,14 +35,33 @@ export function StatusBar(): React.ReactElement {
         aria-live="polite"
       >
         <span
+          data-testid="status-dot"
           className={cn(
             'h-1.5 w-1.5 rounded-full',
-            isStreaming
+            isStreaming || connection === 'connecting'
               ? 'animate-pulse bg-[var(--color-warn)]'
-              : 'bg-[var(--color-ok)]',
+              : connection === 'unavailable' || connection === 'error'
+                ? 'bg-[var(--color-danger)]'
+                : connection === 'no-models'
+                  ? 'bg-[var(--color-warn)]'
+                  : 'bg-[var(--color-ok)]',
           )}
         />
-        {isStreaming ? t('status.streaming') : t('status.ready')}
+        <span data-testid="status-connection">
+          {isStreaming
+            ? t('ollama.status.streaming')
+            : connection === 'connecting'
+              ? t('ollama.status.connecting')
+              : connection === 'unavailable'
+                ? t('ollama.status.unavailable')
+                : connection === 'no-models'
+                  ? t('ollama.status.noModels')
+                  : connection === 'error'
+                    ? t('ollama.status.error')
+                    : connection === 'cancelled'
+                      ? t('ollama.status.cancelled')
+                      : t('status.ready')}
+        </span>
       </span>
 
       <span className="inline-flex items-center gap-1">
@@ -49,7 +69,9 @@ export function StatusBar(): React.ReactElement {
         main
       </span>
 
-      <span className="hidden sm:inline">{model?.name ?? modelId}</span>
+      <span className="hidden sm:inline" data-testid="status-model">
+        {model?.name ?? modelId}
+      </span>
 
       <span className="ms-auto inline-flex items-center gap-3">
         <span data-testid="status-tokens">
@@ -73,7 +95,7 @@ export function StatusBar(): React.ReactElement {
           onClick={() => setShortcutsOpen(true)}
           className="rounded px-1 hover:text-[var(--color-ink)]"
         >
-          {t('status.mock')}
+          {t('ollama.label')}
         </button>
       </span>
     </footer>

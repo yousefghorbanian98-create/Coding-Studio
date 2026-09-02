@@ -3,6 +3,8 @@ import { Inspector } from '@/components/inspector/Inspector';
 import { CommandPalette } from '@/components/palette/CommandPalette';
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
 import { ShortcutsDialog } from '@/components/settings/ShortcutsDialog';
+import { useEffect } from 'react';
+import { bootstrapOllama } from '@/services/ollama/bootstrap';
 import { useAppearance } from '@/hooks/useAppearance';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { ActivityRail } from './ActivityRail';
@@ -13,6 +15,11 @@ import { TitleBar } from './TitleBar';
 export function AppShell(): React.ReactElement {
   useAppearance();
   useKeyboardShortcuts();
+
+  // Probe Ollama once on mount and install the real transport under Tauri.
+  useEffect(() => {
+    bootstrapOllama();
+  }, []);
 
   return (
     <div
