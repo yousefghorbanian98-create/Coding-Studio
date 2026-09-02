@@ -13,11 +13,12 @@ test('a sent conversation survives a reload', async ({ page }) => {
   // Wait for the stream to finish so the reply is final.
   await expect(page.getByTestId('send-button')).toBeVisible({ timeout: 30_000 });
   // Compare the rendered body only: the header carries a clock that can tick
-  // over between the two reads.
+  // over between the two reads. textContent (not innerText) is used because
+  // toHaveText matches against normalised textContent.
   const replyBefore = await page
     .getByTestId('message-content')
     .last()
-    .innerText();
+    .textContent();
 
   await page.reload();
   await expect(page.getByTestId('app-shell')).toBeVisible();
@@ -26,7 +27,7 @@ test('a sent conversation survives a reload', async ({ page }) => {
     'Persist this conversation',
   );
   await expect(page.getByTestId('message-content').last()).toHaveText(
-    replyBefore,
+    replyBefore ?? '',
   );
 });
 
