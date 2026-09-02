@@ -1,6 +1,11 @@
 const fs = require('fs');
 const f = 'playwright-report/results.json';
-if (!fs.existsSync(f)) { console.log('No JSON report produced.'); process.exit(0); }
+if (!fs.existsSync(f)) {
+  const msg = '## Playwright failures\n\nNo JSON report was produced (the run failed before tests started).\n';
+  fs.writeFileSync('pw-failures.md', msg);
+  console.log(msg);
+  process.exit(0);
+}
 const r = JSON.parse(fs.readFileSync(f, 'utf8'));
 const out = [];
 const walk = (s) => {

@@ -8,7 +8,14 @@ export default defineConfig({
   forbidOnly: Boolean(process.env['CI']),
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
-  reporter: [['list']],
+  reporter: process.env['CI']
+    ? [
+        ['list'],
+        // A machine-readable report so CI can summarise failures without
+        // relying on artifact downloads.
+        ['json', { outputFile: 'playwright-report/results.json' }],
+      ]
+    : [['list']],
   use: {
     baseURL: `http://127.0.0.1:${PORT}`,
     trace: 'on-first-retry',
