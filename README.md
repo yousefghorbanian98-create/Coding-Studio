@@ -84,6 +84,8 @@ src/
   i18n/           i18next setup + en/fa bundles (type-checked for key parity)
   lib/            cn, format, env helpers
   mocks/          models, sessions, abortable stream simulator
+  services/       transport/ (ChatTransport seam: mock + SSE HTTP) and
+                  sessionStorage (versioned, validating localStorage layer)
   stores/         Zustand: chat, preferences (persisted), ui
   styles/         Tailwind 4 theme tokens (light + dark)
 src-tauri/        Rust crate, tauri.conf.json, capabilities
@@ -161,6 +163,42 @@ persistence across reloads. Run `npm run test:e2e:install` once to fetch Chromiu
   English, so a missing translation fails CI rather than falling back silently.
 
 ---
+
+## Chat transport
+
+All assistant replies flow through a single `ChatTransport` interface
+(`src/services/transport/`). Two implementations ship today:
+
+- **`MockTransport`** (default) — replays canned replies token-by-token, so the
+  app is fully usable with no backend configured.
+- **`HttpTransport`** — streams from any OpenAI-compatible SSE endpoint.
+
+Going live is a one-liner at startup:
+
+```ts
+import { HttpTransport, setTransport } from '@/services/transport';
+
+setTransport(
+  new HttpTransport({
+    endpoint: 'https://your-gateway/v1/chat/completions',
+    headers: { Authorization: `Bearer ${tokenFromSecureStore}` },
+    timeoutMs: 30_000,
+  }),
+);
+```
+
+Credentials are **never** read from the repo or persisted by the transport — the
+caller passes headers explicitly. Failures are normalised into `TransportError`
+kinds (`network`, `timeout`, `unauthorized`, `rate-limited`, `server`) which map
+to translated messages and a Retry action in the composer.
+
+## Session persistence
+
+Sessions, messages and the active selection are written to `localStorage` behind
+a versioned, defensively-validated layer (`src/services/sessionStorage.ts`).
+Corrupt or stale payloads are discarded rather than crashing the app, and a
+message that was mid-stream when the app closed is restored as `stopped` instead
+of permanently spinning.
 
 ## Notes on the mock layer
 

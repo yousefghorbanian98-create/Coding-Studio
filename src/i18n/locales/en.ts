@@ -120,6 +120,15 @@ export const en = {
   shortcuts: {
     title: 'Keyboard shortcuts',
   },
+  errors: {
+    network: 'Could not reach the model service. Check your connection.',
+    timeout: 'The model took too long to respond.',
+    unauthorized: 'Authentication failed. Check your API credentials.',
+    rateLimited: 'Rate limit reached. Please wait a moment and try again.',
+    server: 'The model service reported an error.',
+    unknown: 'Something went wrong while generating the reply.',
+    retry: 'Retry',
+  },
   common: {
     cancel: 'Cancel',
     delete: 'Delete',

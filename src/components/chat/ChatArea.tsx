@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { selectActiveSession, useChatStore } from '@/stores/chat';
 import { Composer } from './Composer';
+import { ErrorBanner } from './ErrorBanner';
 import { MessageItem } from './MessageItem';
 
 export function ChatArea(): React.ReactElement {
@@ -77,6 +78,7 @@ export function ChatArea(): React.ReactElement {
 
       <div className="border-t border-[var(--color-line)] bg-[var(--color-canvas)] p-3">
         <div className="mx-auto w-full max-w-3xl">
+          <ErrorBanner />
           <Composer />
         </div>
       </div>
