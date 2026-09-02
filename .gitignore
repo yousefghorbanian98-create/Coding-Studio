@@ -151,3 +151,6 @@ blob-report/
 coverage/
 src-tauri/target/
 src-tauri/gen/
+
+# Playwright screenshot output
+screenshots/

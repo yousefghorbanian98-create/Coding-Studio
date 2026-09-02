@@ -75,6 +75,15 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+      - name: Upload UI screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-screenshots
+          path: screenshots/
+          retention-days: 14
+          if-no-files-found: warn
+
       # ---- Native desktop bundle ------------------------------------------
       - name: Install Rust (stable)
         uses: dtolnay/rust-toolchain@stable
