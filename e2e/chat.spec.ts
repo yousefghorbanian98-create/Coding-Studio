@@ -47,11 +47,11 @@ test('stops a streaming response with the Escape key', async ({ page }) => {
   await expect(page.getByTestId('send-button')).toBeVisible();
 });
 
-test('selects a different mock model', async ({ page }) => {
-  await expect(page.getByTestId('model-selector')).toContainText('Studio Sonnet');
+test('selects a different installed model', async ({ page }) => {
+  await expect(page.getByTestId('model-selector')).toContainText('llama3.2:3b');
   await page.getByTestId('model-selector').click();
-  await page.getByTestId('model-option-studio-opus').click();
-  await expect(page.getByTestId('model-selector')).toContainText('Studio Opus');
+  await page.getByTestId('model-option-qwen2.5-coder:7b').click();
+  await expect(page.getByTestId('model-selector')).toContainText('qwen2.5-coder:7b');
 });
 
 test('filters and switches sessions', async ({ page }) => {

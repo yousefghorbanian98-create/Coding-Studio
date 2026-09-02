@@ -2,17 +2,23 @@ import { isTauri } from '@/lib/env';
 import { setTransport } from '@/services/transport';
 import { useOllamaStore } from '@/stores/ollama';
 import { OllamaTransport } from './ollamaTransport';
+import { setOllamaBridge } from './ipc';
+import { MockOllamaBridge } from './mockBridge';
 
 /**
  * Chooses the transport for this environment and probes the daemon.
  *
- * Inside Tauri the real Ollama adapter is installed. In the browser preview the
- * MockTransport configured by default stays in place, so the shell remains
- * usable and the UI shows the "unavailable" state.
+ * Inside Tauri the real Rust adapter is installed and talks to the daemon over
+ * IPC. In a plain browser (Live Preview, Playwright, Storybook) there is no
+ * backend to reach, so the retained Mock Adapter stands in and the shell stays
+ * fully explorable with fixture models.
  */
 export function bootstrapOllama(): void {
   if (isTauri()) {
+    setOllamaBridge(null);
     setTransport(new OllamaTransport());
+  } else {
+    setOllamaBridge(new MockOllamaBridge());
   }
   void useOllamaStore.getState().refresh();
 }

@@ -72,12 +72,12 @@ describe('chat area', () => {
     useChatStore.getState().stopStreaming();
   });
 
-  it('shows the unavailable model selector when Ollama is offline', async () => {
+  it('lists the installed models in the selector', async () => {
     renderWithProviders(<AppShell />);
-    // No Tauri backend in jsdom, so the shell reports Ollama as unreachable.
-    expect(
-      await screen.findByTestId('model-selector-unavailable'),
-    ).toBeInTheDocument();
+    // Outside Tauri the retained Mock Adapter serves the fixture model list.
+    expect(await screen.findByTestId('model-selector')).toHaveTextContent(
+      'llama3.2:3b',
+    );
   });
 });
 
