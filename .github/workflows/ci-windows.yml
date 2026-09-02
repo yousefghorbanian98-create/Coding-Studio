@@ -95,9 +95,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coding-studio-windows
+          # productName is "Coding Studio", so the binary and installers are
+          # named accordingly — globs keep this resilient to renames.
           path: |
             src-tauri/target/release/bundle/msi/*.msi
-            src-tauri/target/release/bundle/nsis/*.exe
-            src-tauri/target/release/coding-studio.exe
+            src-tauri/target/release/bundle/nsis/*setup.exe
+            src-tauri/target/release/*.exe
           retention-days: 14
           if-no-files-found: error
