@@ -47,11 +47,11 @@ test('stops a streaming response with the Escape key', async ({ page }) => {
   await expect(page.getByTestId('send-button')).toBeVisible();
 });
 
-test('selects a different installed model', async ({ page }) => {
-  await expect(page.getByTestId('model-selector')).toContainText('llama3.2:3b');
+test('selects a different available model', async ({ page }) => {
+  await expect(page.getByTestId('model-selector')).toContainText('Demo Balanced');
   await page.getByTestId('model-selector').click();
-  await page.getByTestId('model-option-qwen2.5-coder:7b').click();
-  await expect(page.getByTestId('model-selector')).toContainText('qwen2.5-coder:7b');
+  await page.getByTestId('model-option-demo-reasoning').click();
+  await expect(page.getByTestId('model-selector')).toContainText('Demo Reasoning');
 });
 
 test('filters and switches sessions', async ({ page }) => {
