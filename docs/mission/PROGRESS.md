@@ -61,10 +61,10 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 29 | Agent panel (mock multi-agent) | 6 | Planned |
 | 30 | Approval card and the seven approval types | 7 | CI verified |
 | 31 | Permission settings with safe defaults | 7 | Planned |
-| 32 | Explorer file tree | 8 | Locally verified |
-| 33 | Search with grouped results and highlighting | 8 | Locally verified |
-| 34 | Changes list and diff viewer | 8 | Locally verified |
-| 35 | Bottom panel: Terminal, Problems, Output, Agent Logs | 9 | Locally verified |
+| 32 | Explorer file tree | 8 | CI verified |
+| 33 | Search with grouped results and highlighting | 8 | CI verified |
+| 34 | Changes list and diff viewer | 8 | CI verified |
+| 35 | Bottom panel: Terminal, Problems, Output, Agent Logs | 9 | CI verified |
 | 36 | Session management and resilient persistence | 10 | Planned |
 | 37 | Provider-neutral settings and diagnostics | 11 | Planned |
 | 38 | Command palette and keyboard reference | 12 | Planned |
@@ -96,8 +96,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 1 — Remove Ollama | `5af265e` | 188 unit | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
 | 3 — Agent UI (plan, timeline, approvals) | `f8b6643` | 27 component + store | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
 | 4 — Modes, drafts, Scenario Lab | `8ff2f1f` | 13 component + 8 E2E | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
-| 8 — Explorer, search, changes and diff | pending | 32 unit + component, 8 E2E | Locally verified |
-| 9 — Bottom panel (terminal, problems, output, agent logs) | pending | 12 component | Locally verified |
+| 8 — Explorer, search, changes and diff | `d98cfec` | 32 unit + component, 8 E2E | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
+| 9 — Bottom panel (terminal, problems, output, agent logs) | `f753963` | 12 component | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
 | 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
 
 ## Baseline
