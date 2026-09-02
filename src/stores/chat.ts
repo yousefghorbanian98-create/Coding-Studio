@@ -27,6 +27,9 @@ export interface ChatState {
   isStreaming: boolean;
   selectedMessageId: string | null;
   filter: string;
+  /** When true the sidebar lists archived sessions instead of active ones. */
+  showArchived: boolean;
+  setShowArchived: (showArchived: boolean) => void;
   /** Not persisted — the controller for the in-flight stream. */
   controller: AbortController | null;
   /** i18n key of the last transport failure, or null. */
@@ -39,6 +42,9 @@ export interface ChatState {
   createSession: () => string;
   deleteSession: (id: string) => void;
   renameSession: (id: string, title: string) => void;
+  togglePinned: (id: string) => void;
+  setArchived: (id: string, archived: boolean) => void;
+  duplicateSession: (id: string) => string | null;
   clearSession: (id?: string) => void;
   sendMessage: (content: string, options?: { seed?: number; delayMs?: number }) => Promise<void>;
   stopStreaming: () => void;
@@ -58,15 +64,19 @@ export function selectActiveSession(state: ChatState): ChatSession | undefined {
 export function filterSessions(
   sessions: ChatSession[],
   filter: string,
+  showArchived = false,
 ): ChatSession[] {
   const q = filter.trim().toLowerCase();
+  const scoped = sessions.filter(
+    (s) => (s.archived === true) === showArchived,
+  );
   const matched = q
-    ? sessions.filter(
+    ? scoped.filter(
         (s) =>
           s.title.toLowerCase().includes(q) ||
           s.messages.some((m) => m.content.toLowerCase().includes(q)),
       )
-    : sessions;
+    : scoped;
   return [...matched].sort((a, b) => {
     if (Boolean(a.pinned) !== Boolean(b.pinned)) return a.pinned ? -1 : 1;
     return b.updatedAt - a.updatedAt;
@@ -82,10 +92,66 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   isStreaming: false,
   selectedMessageId: null,
   filter: '',
+  showArchived: false,
   controller: null,
   errorKey: null,
 
   setFilter: (filter) => set({ filter }),
+
+  setShowArchived: (showArchived) => set({ showArchived }),
+
+  togglePinned: (id) => {
+    set((state) => ({
+      sessions: state.sessions.map((s) =>
+        s.id === id ? { ...s, pinned: s.pinned !== true } : s,
+      ),
+    }));
+    persist();
+  },
+
+  setArchived: (id, archived) => {
+    set((state) => {
+      const sessions = state.sessions.map((s) =>
+        // Archiving also unpins: a pinned archive would sort above live work.
+        s.id === id ? { ...s, archived, pinned: archived ? false : s.pinned === true } : s,
+      );
+      // Never leave the archived session selected in the active list.
+      const activeSessionId =
+        archived && state.activeSessionId === id
+          ? (sessions.find((s) => s.archived !== true)?.id ?? '')
+          : state.activeSessionId;
+      return { sessions, activeSessionId };
+    });
+    persist();
+  },
+
+  duplicateSession: (id) => {
+    const source = get().sessions.find((s) => s.id === id);
+    if (!source) return null;
+    const now = Date.now();
+    const copy: ChatSession = {
+      ...source,
+      id: createId('sess'),
+      title: `${source.title} (copy)`,
+      createdAt: now,
+      updatedAt: now,
+      pinned: false,
+      archived: false,
+      // Clone the transcript with fresh ids so the two sessions stay separate.
+      messages: source.messages.map((message) => ({
+        ...message,
+        id: createId('msg'),
+        streaming: false,
+      })),
+    };
+    set((state) => ({
+      sessions: [copy, ...state.sessions],
+      activeSessionId: copy.id,
+      selectedMessageId: null,
+    }));
+    persist();
+    return copy.id;
+  },
 
   setModel: (modelId) => {
     set((state) => ({

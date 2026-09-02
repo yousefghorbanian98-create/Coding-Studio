@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 28 / 46 steps complete — 61%**
+**Overall progress: 29 / 46 steps complete — 63%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -65,7 +65,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 33 | Search with grouped results and highlighting | 8 | CI verified |
 | 34 | Changes list and diff viewer | 8 | CI verified |
 | 35 | Bottom panel: Terminal, Problems, Output, Agent Logs | 9 | CI verified |
-| 36 | Session management and resilient persistence | 10 | Planned |
+| 36 | Session management and resilient persistence | 10 | Locally verified |
 | 37 | Provider-neutral settings and diagnostics | 11 | Planned |
 | 38 | Command palette and keyboard reference | 12 | Planned |
 | 39 | Mock Scenario Lab with all 30 scenarios | 13 | CI verified |
@@ -98,6 +98,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 4 — Modes, drafts, Scenario Lab | `8ff2f1f` | 13 component + 8 E2E | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
 | 8 — Explorer, search, changes and diff | `d98cfec` | 32 unit + component, 8 E2E | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
 | 9 — Bottom panel (terminal, problems, output, agent logs) | `f753963` | 12 component | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
+| 10 — Session management and persistence | pending | 35 unit + component, 7 E2E | Locally verified |
 | 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
 
 ## Baseline

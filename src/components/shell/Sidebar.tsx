@@ -21,6 +21,8 @@ export function Sidebar(): React.ReactElement | null {
   const setFilter = useChatStore((s) => s.setFilter);
   const createSession = useChatStore((s) => s.createSession);
   const requestComposerFocus = useUiStore((s) => s.requestComposerFocus);
+  const showArchived = useChatStore((s) => s.showArchived);
+  const setShowArchived = useChatStore((s) => s.setShowArchived);
 
   const title = useMemo(() => {
     switch (activeRailItem) {
@@ -68,6 +70,19 @@ export function Sidebar(): React.ReactElement | null {
                 {title}
               </h2>
               <div className="ms-auto flex items-center">
+                <IconButton
+                  label={
+                    showArchived
+                      ? t('sessions.showActive')
+                      : t('sessions.showArchived')
+                  }
+                  active={showArchived}
+                  aria-pressed={showArchived}
+                  data-testid="sidebar-toggle-archived"
+                  onClick={() => setShowArchived(!showArchived)}
+                >
+                  <Icon name="sessions" size={15} />
+                </IconButton>
                 <IconButton
                   label={t('sidebar.newSession')}
                   data-testid="sidebar-new-session"

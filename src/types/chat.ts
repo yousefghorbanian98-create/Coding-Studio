@@ -10,6 +10,8 @@ export interface ChatMessage {
   latencyMs?: number;
   streaming?: boolean;
   stopped?: boolean;
+  /** The run was still streaming when the app closed and cannot be resumed. */
+  interrupted?: boolean;
 }
 
 export interface ChatSession {
@@ -19,6 +21,7 @@ export interface ChatSession {
   updatedAt: number;
   modelId: string;
   pinned?: boolean;
+  archived?: boolean;
   messages: ChatMessage[];
 }
 

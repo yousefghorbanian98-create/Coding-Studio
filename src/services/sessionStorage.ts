@@ -1,7 +1,10 @@
 import type { ChatMessage, ChatSession } from '@/types/chat';
 
 export const SESSIONS_STORAGE_KEY = 'coding-studio:sessions';
-export const SESSIONS_SCHEMA_VERSION = 1;
+export const SESSIONS_SCHEMA_VERSION = 2;
+
+/** Versions we know how to read. Anything older is migrated forward. */
+export const SUPPORTED_SCHEMA_VERSIONS = [1, 2] as const;
 
 interface PersistedShape {
   version: number;
@@ -48,10 +51,13 @@ function reviveSession(input: unknown): ChatSession | null {
               ? { latencyMs: message['latencyMs'] }
               : {}),
             // A reply that was mid-flight when the app closed is not streaming
-            // any more; persist it as a stopped message.
-            ...(message['stopped'] === true || message['streaming'] === true
-              ? { stopped: true }
-              : {}),
+            // any more. It is marked interrupted so the UI can say the run
+            // ended rather than showing a spinner that will never resolve.
+            ...(message['streaming'] === true || message['interrupted'] === true
+              ? { stopped: true, interrupted: true }
+              : message['stopped'] === true
+                ? { stopped: true }
+                : {}),
         };
         return [revived];
       })
@@ -65,6 +71,8 @@ function reviveSession(input: unknown): ChatSession | null {
     updatedAt: typeof raw['updatedAt'] === 'number' ? raw['updatedAt'] : now,
     modelId: typeof raw['modelId'] === 'string' ? raw['modelId'] : '',
     ...(raw['pinned'] === true ? { pinned: true } : {}),
+    // Added in schema v2; absent in v1 records, which means "not archived".
+    ...(raw['archived'] === true ? { archived: true } : {}),
     messages,
   };
 }
@@ -92,7 +100,16 @@ export function loadSessions(
 
   try {
     const parsed = JSON.parse(raw) as Partial<PersistedShape>;
-    if (parsed.version !== SESSIONS_SCHEMA_VERSION) return null;
+    const version = parsed.version;
+    if (
+      typeof version !== 'number' ||
+      !SUPPORTED_SCHEMA_VERSIONS.includes(
+        version as (typeof SUPPORTED_SCHEMA_VERSIONS)[number],
+      )
+    ) {
+      // Unknown or future schema: fall back to seed data rather than guessing.
+      return null;
+    }
     if (!Array.isArray(parsed.sessions)) return null;
 
     const sessions = parsed.sessions.flatMap((entry) => {
@@ -125,8 +142,10 @@ export function saveSessions(
       // Never persist a half-streamed message as still streaming.
       sessions: sessions.map((session) => ({
         ...session,
-        messages: session.messages.map(({ streaming: _streaming, ...rest }) =>
-          _streaming ? { ...rest, stopped: true } : rest,
+        messages: session.messages.map(({ streaming, ...rest }) =>
+          streaming === true
+            ? { ...rest, stopped: true, interrupted: true }
+            : rest,
         ),
       })),
       activeSessionId,

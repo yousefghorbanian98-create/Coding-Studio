@@ -103,8 +103,17 @@ export const MessageItem = memo(function MessageItem({
           <MessageBody content={message.content} streaming={message.streaming} />
         )}
         {message.stopped ? (
-          <p className="mt-1 text-[10px] text-[var(--color-warn)]">
-            {t('chat.stop')}
+          <p
+            data-testid={
+              message.interrupted === true
+                ? `message-interrupted-${message.id}`
+                : undefined
+            }
+            className="mt-1 text-[10px] text-[var(--color-warn)]"
+          >
+            {message.interrupted === true
+              ? t('sessions.interrupted')
+              : t('chat.stop')}
           </p>
         ) : null}
       </div>
