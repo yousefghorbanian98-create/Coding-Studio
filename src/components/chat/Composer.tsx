@@ -5,10 +5,21 @@ import { Icon } from '@/components/ui/Icon';
 import { useChatStore } from '@/stores/chat';
 import { useUiStore } from '@/stores/ui';
 import { ModelSelector } from './ModelSelector';
+import { ModeSelector } from './ModeSelector';
+
+const DRAFT_KEY = 'coding-studio:draft';
+
+function readDraft(): string {
+  try {
+    return globalThis.localStorage?.getItem(DRAFT_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
 
 export function Composer(): React.ReactElement {
   const { t } = useTranslation();
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(readDraft);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isStreaming = useChatStore((s) => s.isStreaming);
   const sendMessage = useChatStore((s) => s.sendMessage);
@@ -24,6 +35,15 @@ export function Composer(): React.ReactElement {
     if (!el) return;
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+  }, [value]);
+
+  // Keep an unsent draft across reloads so a long prompt is never lost.
+  useEffect(() => {
+    try {
+      globalThis.localStorage?.setItem(DRAFT_KEY, value);
+    } catch {
+      // Storage unavailable; the draft simply stays in memory.
+    }
   }, [value]);
 
   const submit = (): void => {
@@ -70,8 +90,9 @@ export function Composer(): React.ReactElement {
       />
 
       <div className="mt-1 flex items-center gap-2">
+        <ModeSelector />
         <ModelSelector />
-        <span className="hidden text-[10px] text-[var(--color-ink-soft)] md:inline">
+        <span className="hidden text-[10px] text-[var(--color-ink-soft)] lg:inline">
           {t('chat.hint')}
         </span>
 

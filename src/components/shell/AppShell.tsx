@@ -6,6 +6,9 @@ import { SettingsDialog } from '@/components/settings/SettingsDialog';
 import { ShortcutsDialog } from '@/components/settings/ShortcutsDialog';
 import { useAppearance } from '@/hooks/useAppearance';
 import { useRuntimeStore } from '@/stores/runtime';
+import { connectRunStore } from '@/stores/run';
+import { ScenarioLab } from '@/components/devtools/ScenarioLab';
+import { useScenarioFromUrl } from '@/components/devtools/useScenario';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { ActivityRail } from './ActivityRail';
 import { Sidebar } from './Sidebar';
@@ -17,10 +20,16 @@ export function AppShell(): React.ReactElement {
   useKeyboardShortcuts();
   const refresh = useRuntimeStore((s) => s.refresh);
 
+  useScenarioFromUrl();
+
   // Probe the runtime once on mount so the shell reflects its real state.
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  // Project runtime events into the run store for the lifetime of the shell.
+  // The cleanup keeps StrictMode's double mount from doubling the listeners.
+  useEffect(() => connectRunStore(), []);
 
   return (
     <div
@@ -38,6 +47,7 @@ export function AppShell(): React.ReactElement {
       <CommandPalette />
       <SettingsDialog />
       <ShortcutsDialog />
+      <ScenarioLab />
     </div>
   );
 }
