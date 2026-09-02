@@ -1,209 +1,81 @@
 # Coding Studio
 
-> AI pair-programming desktop workspace — **Sprint 1: Application Shell + Chat Mock**
+A desktop AI pair-programming workspace for Windows, built with Tauri, React and
+TypeScript.
 
-A Tauri 2 desktop app with a React 19 frontend. This first milestone delivers the full
-workbench shell and a fully interactive chat experience backed by mock data and a
-simulated token stream.
-
----
+> **Current status: provider-neutral frontend on a mock runtime.**
+> No AI provider is connected. Every agent behaviour — replies, plans, tool
+> calls, approvals and multi-agent activity — is produced by a deterministic
+> in-process mock. Nothing in this build performs authentication, network calls
+> to a model provider, or credential storage.
 
 ## Architecture
 
-| Layer | Technology |
-| --- | --- |
-| Desktop shell | Tauri 2 (Rust) |
-| UI | React 19 + TypeScript (`strict`, `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`) |
-| Bundler | Vite 6 |
-| Styling | Tailwind CSS 4 (CSS-first `@theme`, logical properties) |
-| Components | Base UI (`Dialog`, `Select`, `Tooltip`, `DirectionProvider`) |
-| Animation | Motion |
-| Routing | TanStack Router (memory history — desktop app) |
-| Server state | TanStack Query |
-| Client state | Zustand (+ `persist` for appearance) |
-| i18n | i18next / react-i18next — **English + فارسی**, **LTR + RTL** |
-| Theming | Dark / Light / System |
-| Testing | Vitest + Testing Library (unit/integration), Playwright (e2e) |
-
----
-
-## Sprint 1 feature checklist
-
-| # | Feature | Where |
-| --- | --- | --- |
-| 1 | Custom Windows title bar | `src/components/shell/TitleBar.tsx` + `useWindowControls` |
-| 2 | Activity rail | `src/components/shell/ActivityRail.tsx` |
-| 3 | Resizable sidebar | `src/components/shell/Sidebar.tsx` + `ResizeHandle.tsx` |
-| 4 | Main chat area | `src/components/chat/ChatArea.tsx` |
-| 5 | Optional inspector panel | `src/components/inspector/Inspector.tsx` |
-| 6 | Status bar | `src/components/shell/StatusBar.tsx` |
-| 7 | Session list | `src/components/sessions/SessionList.tsx` |
-| 8 | Model selector (mock data) | `src/components/chat/ModelSelector.tsx`, `src/mocks/models.ts` |
-| 9 | Chat messages (mock data) | `src/mocks/sessions.ts` |
-| 10 | Experimental streaming | `src/mocks/stream.ts` (abortable, token-by-token) |
-| 11 | Send & Stop | `src/components/chat/Composer.tsx` |
-| 12 | Command palette | `src/components/palette/` |
-| 13 | Keyboard shortcuts | `src/hooks/useKeyboardShortcuts.ts` |
-| 14 | Persisted appearance settings | `src/stores/preferences.ts` (localStorage) |
-| 15 | Vitest & Playwright | `src/**/__tests__`, `e2e/` |
-
----
-
-## Keyboard shortcuts
-
-| Action | Shortcut |
-| --- | --- |
-| Command palette | `Ctrl/⌘ + K` |
-| New session | `Ctrl/⌘ + N` |
-| Toggle sidebar | `Ctrl/⌘ + B` |
-| Toggle inspector | `Ctrl/⌘ + I` |
-| Toggle theme | `Ctrl/⌘ + J` |
-| Switch language | `Ctrl/⌘ + Shift + L` |
-| Focus composer | `Ctrl/⌘ + /` |
-| Stop streaming | `Esc` |
-| Shortcuts help | `?` |
-
-Composer: `Enter` sends, `Shift + Enter` inserts a newline.
-
----
-
-## Project layout
+Today the application stops at the mock runtime:
 
 ```
-src/
-  app/            Providers (Query, Direction) + TanStack Router
-  components/
-    chat/         ChatArea, Composer, ModelSelector, MessageItem, MessageContent
-    inspector/    Optional right-hand metadata panel
-    palette/      Command palette + command registry
-    sessions/     Session list
-    settings/     Appearance + shortcuts dialogs
-    shell/        TitleBar, ActivityRail, Sidebar, ResizeHandle, StatusBar, AppShell
-    ui/           Icon, IconButton, Kbd primitives
-  hooks/          useAppearance, useKeyboardShortcuts, useWindowControls
-  i18n/           i18next setup + en/fa bundles (type-checked for key parity)
-  lib/            cn, format, env helpers
-  mocks/          models, sessions, abortable stream simulator
-  services/       transport/ (ChatTransport seam: mock + SSE HTTP) and
-                  sessionStorage (versioned, validating localStorage layer)
-  stores/         Zustand: chat, preferences (persisted), ui
-  styles/         Tailwind 4 theme tokens (light + dark)
-src-tauri/        Rust crate, tauri.conf.json, capabilities
-e2e/              Playwright specs
+React UI  →  Typed StudioRuntimeBridge  →  MockStudioRuntime
 ```
 
----
+The target architecture keeps the same seam and swaps the implementation:
+
+```
+React UI  →  Typed StudioRuntimeBridge  →  Tauri IPC
+          →  Rust Process Supervisor    →  Jcode
+          →  Claude / Codex / Gemini / GitHub Copilot
+```
+
+`StudioRuntimeBridge` (`src/services/runtime/types.ts`) is the only contract the
+UI depends on. It exposes health, capabilities, providers, models, sessions,
+runs, cancellation and approvals, plus a 28-event discriminated union. Every
+inbound event is validated with Zod before it reaches the UI: a malformed
+payload is dropped and recorded as a diagnostic rather than throwing.
+
+Ollama was removed from the product. No code path contacts a local model daemon.
 
 ## Getting started
 
 ```bash
 npm install
-
-npm run dev        # Vite dev server on http://localhost:1420
-npm run build      # tsc -b && vite build
-npm run lint       # ESLint 9 flat config, type-aware
-npm run typecheck  # app + e2e type checking
-npm test           # Vitest (63 tests)
-npm run test:e2e   # Playwright (requires: npm run test:e2e:install)
-
-npm run tauri dev    # native desktop window (requires Rust toolchain)
-npm run tauri build  # production desktop bundle
+npm run dev          # Vite dev server
+npm run tauri dev    # desktop shell (requires the Rust toolchain)
 ```
-
-### Requirements for the native shell
-
-`npm run tauri dev` needs a Rust toolchain (`rustup`) plus the platform WebView
-dependencies. The web frontend runs standalone in any browser — `useWindowControls`
-detects the absence of Tauri and hides the native window buttons, so the shell is
-fully usable in a browser preview.
-
----
-
-## Continuous integration
-
-`.github/workflows/ci-windows.yml` runs the whole gate on **windows-latest**:
-`npm ci` → lint → type-check → unit tests → frontend build → Playwright Chromium
-install → E2E → Rust stable → `tauri build`, then uploads the MSI/NSIS bundle as
-a build artifact. The bundle is **unsigned by design** — no signing or
-auto-update keys are stored in this repository.
 
 ## Testing
 
-**Unit & integration (Vitest + Testing Library, jsdom) — 63 tests**
-
-- `src/stores/__tests__/` — chat store (streaming, stop, sessions, models) and
-  persisted preferences (clamping, theme, language, localStorage).
-- `src/mocks/__tests__/` — the abortable stream simulator and model catalogue.
-- `src/i18n/__tests__/` — en/fa key-set parity and direction mapping.
-- `src/lib/__tests__/` — `cn`, Intl formatting, the markdown block/inline
-  parser and platform key mapping.
-- `src/components/shell/__tests__/` — shell regions, sidebar/inspector toggles,
-  RTL switching, theme class, accessible resize separator.
-- `src/components/chat/__tests__/` — transcript, filtering, send/stop, Enter vs
-  Shift+Enter, markdown-ish block parser.
-- `src/components/palette/__tests__/` — palette filtering, running commands, empty state.
-
-**End-to-end (Playwright, Chromium)** — `e2e/shell.spec.ts`, `e2e/chat.spec.ts`,
-`e2e/palette.spec.ts` cover the shell regions, drag-resizing the sidebar, the full
-send → stream → stop loop, model switching, the command palette and appearance
-persistence across reloads. Run `npm run test:e2e:install` once to fetch Chromium.
-
----
-
-## Internationalisation & RTL
-
-- The active language drives `<html lang>` and `<html dir>`; Base UI receives the
-  same value through `DirectionProvider`.
-- Styling uses **logical properties** (`ms-*`, `pe-*`, `border-s`, `start-*`) so a
-  single stylesheet serves both directions. Only directional glyphs (the send
-  arrow) are mirrored with `rtl:-scale-x-100`.
-- Code blocks and identifiers are pinned to `dir="ltr"` so snippets stay readable
-  inside Persian text.
-- A unit test enforces that the Persian bundle has exactly the same key set as
-  English, so a missing translation fails CI rather than falling back silently.
-
----
-
-## Chat transport
-
-All assistant replies flow through a single `ChatTransport` interface
-(`src/services/transport/`). Two implementations ship today:
-
-- **`MockTransport`** (default) — replays canned replies token-by-token, so the
-  app is fully usable with no backend configured.
-- **`HttpTransport`** — streams from any OpenAI-compatible SSE endpoint.
-
-Going live is a one-liner at startup:
-
-```ts
-import { HttpTransport, setTransport } from '@/services/transport';
-
-setTransport(
-  new HttpTransport({
-    endpoint: 'https://your-gateway/v1/chat/completions',
-    headers: { Authorization: `Bearer ${tokenFromSecureStore}` },
-    timeoutMs: 30_000,
-  }),
-);
+```bash
+npm run lint         # ESLint
+npm run typecheck    # app and e2e TypeScript projects
+npm test             # Vitest unit and component tests
+npm run test:e2e     # Playwright (installs Chromium on first run)
+npm run build        # production frontend bundle
 ```
 
-Credentials are **never** read from the repo or persisted by the transport — the
-caller passes headers explicitly. Failures are normalised into `TransportError`
-kinds (`network`, `timeout`, `unauthorized`, `rate-limited`, `server`) which map
-to translated messages and a Retry action in the composer.
+Tests never contact a real provider. Playwright drives the deterministic mock
+through `?scenario=<id>`; the available scenarios are listed in
+`src/services/runtime/scenarios.ts`, and in development they can also be picked
+from the Scenario Lab in the bottom-right corner.
 
-## Session persistence
+## Continuous integration
 
-Sessions, messages and the active selection are written to `localStorage` behind
-a versioned, defensively-validated layer (`src/services/sessionStorage.ts`).
-Corrupt or stale payloads are discarded rather than crashing the app, and a
-message that was mid-stream when the app closed is restored as `stopped` instead
-of permanently spinning.
+`\.github/workflows/ci-windows.yml` runs on `windows-latest`: lint, type-check,
+Vitest, the production build, Playwright, `cargo test`, and `tauri build`. It
+uploads three artifacts — the unsigned Windows bundle, the Playwright report and
+UI screenshots. No signing or auto-update keys are configured or committed.
 
-## Notes on the mock layer
+## Documentation
 
-`src/mocks/stream.ts` simulates an LLM: it picks a deterministic reply, splits it
-into word-level chunks and emits them on a timer that honours an `AbortSignal`.
-The per-chunk delay varies with the selected model's badge (`fast` / `balanced` /
-`reasoning`), which makes the Stop button meaningful. Swapping this module for a
-real transport is the natural entry point for Sprint 2.
+- [`docs/mission/MISSION.md`](docs/mission/MISSION.md) — the full mission brief
+- [`docs/mission/PROGRESS.md`](docs/mission/PROGRESS.md) — numbered plan and progress
+- [`docs/mission/BASELINE.md`](docs/mission/BASELINE.md) — audit taken at mission start
+
+## Roadmap
+
+1. Complete the mock frontend *(in progress)*
+2. Jcode managed runtime
+3. Claude / Codex / Gemini / Copilot integration
+4. Ruflo advanced orchestration
+5. Soup skill routing
+6. OmniRoute provider routing
+7. Security hardening
+8. Beta release
