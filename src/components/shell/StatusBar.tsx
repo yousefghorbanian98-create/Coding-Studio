@@ -49,7 +49,7 @@ export function StatusBar(): React.ReactElement {
         />
         <span data-testid="status-connection">
           {isStreaming
-            ? t('ollama.status.streaming')
+            ? t('status.streaming')
             : connection === 'connecting'
               ? t('ollama.status.connecting')
               : connection === 'unavailable'
