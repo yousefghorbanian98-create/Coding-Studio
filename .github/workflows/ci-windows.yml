@@ -13,6 +13,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: write
 
 env:
   # Never fetch the Rust toolchain's docs; keeps the runner fast.
@@ -72,25 +73,21 @@ jobs:
 
       # Surfaces the failing spec, message and stack in the job summary. This is
       # readable through the checks API, unlike raw logs behind artifact storage.
+      # Surfaces the failing spec, message and stack. Written to the job
+      # summary and mirrored to the pull request so the failure is visible
+      # without downloading artifacts.
       - name: Summarise E2E failures
         if: failure()
         shell: bash
         run: |
-          node -e "
-          const fs=require('fs');
-          const f='playwright-report/results.json';
-          if(!fs.existsSync(f)){console.log('No JSON report produced.');process.exit(0)}
-          const r=JSON.parse(fs.readFileSync(f,'utf8'));
-          const out=[];
-          const walk=(s)=>{for(const sp of s.suites??[])walk(sp);
-            for(const t of s.specs??[]){if(t.ok)continue;
-              for(const x of t.tests??[])for(const res of x.results??[]){
-                out.push('### '+t.title+'\\n\\n\`\`\`\\n'+
-                  ((res.error&&(res.error.message||''))+'\\n'+
-                   (res.error&&res.error.stack||'')).slice(0,3000)+'\\n\`\`\`');}}};
-          for(const s of r.suites??[])walk(s);
-          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,'## Playwright failures\\n\\n'+(out.join('\\n')||'none')+'\\n');
-          "
+          node .github/scripts/summarise-playwright.cjs | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment E2E failures on the pull request
+        if: failure() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment ${{ github.event.pull_request.number }} --body-file pw-failures.md
 
       - name: Upload Playwright report
         if: always()
