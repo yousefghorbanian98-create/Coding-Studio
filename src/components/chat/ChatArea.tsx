@@ -6,6 +6,9 @@ import { selectActiveSession, useChatStore } from '@/stores/chat';
 import { Composer } from './Composer';
 import { ErrorBanner } from './ErrorBanner';
 import { RuntimeBanner } from '@/components/runtime/RuntimeBanner';
+import { PlanCard } from '@/components/agent/PlanCard';
+import { ToolTimeline } from '@/components/agent/ToolTimeline';
+import { ApprovalCard } from '@/components/agent/ApprovalCard';
 import { MessageItem } from './MessageItem';
 
 export function ChatArea(): React.ReactElement {
@@ -74,6 +77,10 @@ export function ChatArea(): React.ReactElement {
               <MessageItem key={message.id} message={message} />
             ))
           )}
+
+          <PlanCard />
+          <ToolTimeline />
+          <ApprovalCard />
         </div>
       </div>
 
