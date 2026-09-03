@@ -30,6 +30,18 @@ export default defineConfig({
   build: {
     target: 'es2022',
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        // Split the rarely-changing vendor code out of the app chunk so a
+        // UI change does not invalidate the whole download, and the browser
+        // can parse the pieces in parallel.
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['motion/react'],
+          i18n: ['i18next', 'react-i18next'],
+        },
+      },
+    },
   },
   test: {
     globals: true,

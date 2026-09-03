@@ -52,7 +52,7 @@ export const MessageItem = memo(function MessageItem({
         message.role === 'system' && 'opacity-70',
       )}
     >
-      <header className="mb-1.5 flex items-center gap-2">
+      <div className="mb-1.5 flex items-center gap-2">
         <span
           className={cn(
             'grid h-6 w-6 shrink-0 place-items-center rounded-md text-[10px] font-bold',
@@ -92,7 +92,7 @@ export const MessageItem = memo(function MessageItem({
             <Icon name={copied ? 'check' : 'copy'} size={12} />
           </IconButton>
         </span>
-      </header>
+      </div>
 
       <div className="ps-8">
         {message.content.length === 0 && message.streaming ? (

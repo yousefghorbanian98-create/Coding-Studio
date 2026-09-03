@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 34 / 46 steps complete — 74%**
+**Overall progress: 36 / 46 steps complete — 78%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -74,8 +74,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 
 | # | Step | Status |
 | --- | --- | --- |
-| 40 | Accessibility pass | Planned |
-| 41 | Performance pass and bundle measurement | Planned |
+| 40 | Accessibility pass | Locally verified — `docs/ACCESSIBILITY.md`, slice 14 |
+| 41 | Performance pass and bundle measurement | Locally verified — vendor chunk split, stream listener leak fixed |
 | 42 | Visual polish and state coverage | Planned |
 | 43 | Full test suite: unit, component, Playwright, screenshots | Planned |
 

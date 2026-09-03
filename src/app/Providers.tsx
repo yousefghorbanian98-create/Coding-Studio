@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { DirectionProvider } from '@base-ui-components/react/direction-provider';
+import { MotionConfig } from 'motion/react';
 import { LANGUAGE_DIRECTION } from '@/i18n';
 import { createQueryClient } from '@/lib/queryClient';
 import { usePreferences } from '@/stores/preferences';
@@ -12,7 +13,11 @@ export function Providers({ children }: { children: ReactNode }): React.ReactEle
   return (
     <QueryClientProvider client={queryClient}>
       <DirectionProvider direction={LANGUAGE_DIRECTION[language]}>
-        {children}
+        {/*
+          CSS alone cannot stop JS-driven animation, so motion/react is told
+          to honour the OS setting too. "user" follows prefers-reduced-motion.
+        */}
+        <MotionConfig reducedMotion="user">{children}</MotionConfig>
       </DirectionProvider>
     </QueryClientProvider>
   );

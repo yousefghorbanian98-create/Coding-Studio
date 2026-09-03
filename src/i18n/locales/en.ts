@@ -322,6 +322,7 @@ export const en = {
   changes: {
     title: 'Changes',
     binary: 'Binary file not shown.',
+    line: { added: 'Added line', removed: 'Removed line' },
     emptyDiff: 'No textual changes.',
     diffFor: 'Diff for {{path}}',
     kind: {

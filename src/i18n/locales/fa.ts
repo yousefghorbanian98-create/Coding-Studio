@@ -324,6 +324,7 @@ export const fa: Translation = {
   changes: {
     title: 'تغییرات',
     binary: 'فایل باینری نمایش داده نمی‌شود.',
+    line: { added: 'خط افزوده‌شده', removed: 'خط حذف‌شده' },
     emptyDiff: 'تغییر متنی وجود ندارد.',
     diffFor: 'تفاوت‌های {{path}}',
     kind: {

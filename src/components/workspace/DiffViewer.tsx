@@ -59,7 +59,16 @@ function DiffBody({ diff }: { diff: FileDiff }): React.ReactElement {
               {line.newLine ?? ''}
             </td>
             <td className="w-4 select-none text-center align-top opacity-70">
-              {SIGN[line.kind]}
+              {/*
+                The +/- sign carries the meaning for anyone who cannot see the
+                row tint; the sr-only word carries it for screen readers.
+              */}
+              <span aria-hidden="true">{SIGN[line.kind]}</span>
+              {line.kind === 'context' ? null : (
+                <span className="sr-only">
+                  {t(`changes.line.${line.kind}`)}
+                </span>
+              )}
             </td>
             <td
               dir="ltr"
@@ -90,7 +99,11 @@ export function DiffViewer(): React.ReactElement {
   );
 
   return (
-    <div className="flex min-h-0 flex-col" data-testid="diff-viewer">
+    <section
+      className="flex min-h-0 flex-col"
+      data-testid="diff-viewer"
+      aria-label={t('changes.title')}
+    >
       <header className="flex items-center gap-2 border-b border-[var(--color-line)] px-2 py-1.5">
         <h2 className="flex-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-ink-soft)]">
           {t('changes.title')}
@@ -132,6 +145,6 @@ export function DiffViewer(): React.ReactElement {
       <div className="min-h-0 flex-1 overflow-auto">
         {active ? <DiffBody diff={active} /> : null}
       </div>
-    </div>
+    </section>
   );
 }
