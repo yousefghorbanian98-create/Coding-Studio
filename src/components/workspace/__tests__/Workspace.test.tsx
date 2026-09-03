@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { screen, within } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/render';
 import { Explorer } from '../Explorer';
@@ -141,5 +141,54 @@ describe('DiffViewer', () => {
       .getByTestId('diff-table')
       .querySelectorAll('tr[data-kind="removed"]');
     expect(rows).toHaveLength(2);
+  });
+});
+
+describe('Explorer context menu', () => {
+  it('opens on right-click and closes on Escape', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<Explorer />);
+
+    fireEvent.contextMenu(screen.getByTestId('tree-src'));
+    expect(screen.getByTestId('explorer-menu')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByTestId('explorer-menu')).not.toBeInTheDocument();
+  });
+
+  it('copies the relative path', () => {
+    const writeText = vi.fn(() => Promise.resolve());
+    // navigator.clipboard is a getter-only property in jsdom.
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    renderWithProviders(<Explorer />);
+
+    fireEvent.contextMenu(screen.getByTestId('tree-src'));
+    // fireEvent, not userEvent: jsdom has no layout, so it reports the
+    // full-screen backdrop as the hit target and refuses the click.
+    fireEvent.click(screen.getByTestId('explorer-menu-copy'));
+
+    expect(writeText).toHaveBeenCalledWith('src');
+  });
+
+  it('closes when the user clicks outside it', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<Explorer />);
+
+    fireEvent.contextMenu(screen.getByTestId('tree-src'));
+    await user.click(screen.getByTestId('explorer-menu-backdrop'));
+
+    expect(screen.queryByTestId('explorer-menu')).not.toBeInTheDocument();
+  });
+
+  it('marks reveal inert and explains why', () => {
+    renderWithProviders(<Explorer />);
+    fireEvent.contextMenu(screen.getByTestId('tree-src'));
+
+    const reveal = screen.getByTestId('explorer-menu-reveal');
+    expect(reveal).toHaveAttribute('aria-disabled', 'true');
+    expect(reveal.getAttribute('title')).toMatch(/desktop shell/i);
   });
 });

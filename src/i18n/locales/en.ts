@@ -353,6 +353,13 @@ export const en = {
     title: 'Explorer',
     empty: 'No files in this workspace yet.',
     collapseAll: 'Collapse all folders',
+    menu: {
+      title: 'File actions',
+      copyPath: 'Copy relative path',
+      addToContext: 'Add to context',
+      reveal: 'Reveal in Explorer',
+      revealHint: 'Revealing a file needs the desktop shell integration.',
+    },
     status: {
       added: 'Added',
       modified: 'Modified',

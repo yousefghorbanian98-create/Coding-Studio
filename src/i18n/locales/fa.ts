@@ -352,6 +352,13 @@ export const fa: Translation = {
     },
   },
   explorer: {
+    menu: {
+      title: 'کنش‌های فایل',
+      copyPath: 'کپی مسیر نسبی',
+      addToContext: 'افزودن به زمینه',
+      reveal: 'نمایش در فایل‌منیجر',
+      revealHint: 'نمایش فایل به یکپارچگی با پوسته دسکتاپ نیاز دارد.',
+    },
     title: 'کاوشگر',
     empty: 'هنوز فایلی در این فضای کاری نیست.',
     collapseAll: 'بستن همه پوشه‌ها',
