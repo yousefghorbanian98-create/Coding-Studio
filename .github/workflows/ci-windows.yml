@@ -56,7 +56,22 @@ jobs:
 
       # ---- Unit / integration tests ---------------------------------------
       - name: Unit tests (Vitest)
-        run: npm run test
+        shell: bash
+        # Captured so a Windows-only failure is readable from the job summary;
+        # raw log storage is not reachable from every review environment.
+        run: set -o pipefail && npm run test 2>&1 | tee vitest-output.txt
+
+      - name: Summarise unit test failures
+        if: failure()
+        shell: bash
+        run: |
+          {
+            echo '## Vitest failures'
+            echo
+            echo '```'
+            tail -n 150 vitest-output.txt
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
       # ---- End-to-end tests -------------------------------------------------
       - name: Build frontend
