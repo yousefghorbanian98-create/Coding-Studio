@@ -80,20 +80,35 @@ test('the selected session is restored after a reload', async ({ page }) => {
 });
 
 test('a stopped reply is kept, not lost, after a reload', async ({ page }) => {
+  // long-streaming keeps the run in flight long enough to cancel it. The
+  // default reply can finish during the wait below, which would remove the
+  // stop button and hang the click on a slower machine.
+  await page.goto('/?scenario=long-streaming');
+  await expect(page.getByTestId('app-shell')).toBeVisible();
+
   await page.getByTestId('sidebar-new-session').click();
   await page.getByTestId('composer-input').fill('Stop me midway');
   await page.getByTestId('send-button').click();
 
-  await expect(page.getByTestId('stop-button')).toBeVisible();
-  // Let a few tokens arrive before stopping.
-  await page.waitForTimeout(500);
+  // Wait for real streamed text rather than a fixed delay, so the partial
+  // reply genuinely exists before it is stopped.
+  const reply = page.getByTestId('message-content').last();
+  await expect(reply).not.toBeEmpty();
+
   await page.getByTestId('stop-button').click();
   await expect(page.getByTestId('send-button')).toBeVisible();
+
+  const partial = ((await reply.textContent()) ?? '').trim();
+  expect(partial.length).toBeGreaterThan(0);
 
   await page.reload();
   await expect(page.getByTestId('app-shell')).toBeVisible();
   await expect(page.getByTestId('message-user').last()).toContainText(
     'Stop me midway',
+  );
+  // The partial text itself survived, which is what this test is named for.
+  await expect(page.getByTestId('message-content').last()).toContainText(
+    partial.slice(0, 24),
   );
   // Nothing should still be rendering a streaming caret after a reload.
   await expect(page.getByTestId('stream-caret')).toHaveCount(0);
