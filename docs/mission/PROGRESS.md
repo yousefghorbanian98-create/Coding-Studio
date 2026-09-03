@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 38 / 46 steps complete — 83%**
+**Overall progress: 45 / 46 steps complete — 98%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -45,20 +45,20 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 
 | # | Step | Slice | Status |
 | --- | --- | --- | --- |
-| 16 | Design system tokens and primitives | 3 | Planned |
-| 17 | Application shell: title bar, activity bar, panels, status bar | 3 | Planned |
-| 18 | Resizable, persisted layout verified at 1366×768 and 1920×1080 | 3 | Planned |
+| 16 | Design system tokens and primitives | 3 | CI verified |
+| 17 | Application shell: title bar, activity bar, panels, status bar | 3 | CI verified |
+| 18 | Resizable, persisted layout verified at 1366×768 and 1920×1080 | 3 | CI verified |
 | 19 | Onboarding and Project Home | 4 | Planned |
 | 20 | Recent projects with pin, remove and keyboard navigation | 4 | Planned |
 | 21 | Composer: multiline, auto-resize, drafts | 5 | CI verified |
 | 22 | Ask / Plan / Agent modes plus provider and model selectors | 5 | CI verified |
 | 23 | Message system, streaming and cancellation UX | 5 | CI verified |
-| 24 | Safe markdown rendering with code blocks and copy | 5 | Planned |
+| 24 | Safe markdown rendering with code blocks and copy | 5 | CI verified |
 | 25 | Chat error states (11 variants) | 5 | CI verified |
 | 26 | Agent timeline event cards | 6 | CI verified |
 | 27 | Plan view with approve, reject and step status | 6 | CI verified |
-| 28 | Task panel with grouping, progress and filters | 6 | Planned |
-| 29 | Agent panel (mock multi-agent) | 6 | Planned |
+| 28 | Task panel with grouping, progress and filters | 6 | Locally verified |
+| 29 | Agent panel (mock multi-agent) | 6 | CI verified — `AgentRoster` |
 | 30 | Approval card and the seven approval types | 7 | CI verified |
 | 31 | Permission settings with safe defaults | 7 | CI verified |
 | 32 | Explorer file tree | 8 | CI verified |
@@ -67,24 +67,24 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 35 | Bottom panel: Terminal, Problems, Output, Agent Logs | 9 | CI verified |
 | 36 | Session management and resilient persistence | 10 | CI verified |
 | 37 | Provider-neutral settings and diagnostics | 11 | CI verified |
-| 38 | Command palette and keyboard reference | 12 | Locally verified |
+| 38 | Command palette and keyboard reference | 12 | CI verified |
 | 39 | Mock Scenario Lab with all 30 scenarios | 13 | CI verified |
 
 ## Phase 4 — Quality (steps 40–43)
 
 | # | Step | Status |
 | --- | --- | --- |
-| 40 | Accessibility pass | Locally verified — `docs/ACCESSIBILITY.md`, slice 14 |
-| 41 | Performance pass and bundle measurement | Locally verified — vendor chunk split, stream listener leak fixed |
-| 42 | Visual polish and state coverage | Locally verified — overflow, tooltips, empty states |
-| 43 | Full test suite: unit, component, Playwright, screenshots | Planned |
+| 40 | Accessibility pass | CI verified — `docs/ACCESSIBILITY.md` |
+| 41 | Performance pass and bundle measurement | CI verified — vendor chunk split, stream listener leak fixed |
+| 42 | Visual polish and state coverage | CI verified — overflow, tooltips, empty states |
+| 43 | Full test suite: unit, component, Playwright, screenshots | CI verified — run `33736586399` |
 
 ## Phase 5 — Delivery (steps 44–46)
 
 | # | Step | Status |
 | --- | --- | --- |
-| 44 | Documentation: README, architecture, roadmap, testing | Locally verified — `docs/ARCHITECTURE.md`, `docs/TESTING.md` |
-| 45 | Windows CI green with all artifacts | Planned |
+| 44 | Documentation: README, architecture, roadmap, testing | CI verified — `docs/ARCHITECTURE.md`, `docs/TESTING.md` |
+| 45 | Windows CI green with all artifacts | CI verified — bundle, Playwright report, screenshots |
 | 46 | Final report; PR remains Draft and unmerged | Planned |
 
 ---
@@ -94,15 +94,16 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | Slice | Commit | Tests | Status |
 | --- | --- | --- | --- |
 | 1 — Remove Ollama | `5af265e` | 188 unit | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
+| 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
 | 3 — Agent UI (plan, timeline, approvals) | `f8b6643` | 27 component + store | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
 | 4 — Modes, drafts, Scenario Lab | `8ff2f1f` | 13 component + 8 E2E | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
 | 8 — Explorer, search, changes and diff | `d98cfec` | 32 unit + component, 8 E2E | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
 | 9 — Bottom panel (terminal, problems, output, agent logs) | `f753963` | 12 component | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
 | 10 — Session management and persistence | `d2081af` | 35 unit + component, 7 E2E | CI verified ([33689394001](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33689394001)) |
 | 11 — Settings, providers and permissions | `5d97287` | 30 unit + component, 9 E2E | CI verified ([33720031181](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33720031181)) |
-| 12 — Command palette and keyboard UX | pending | 35 unit + component, 9 E2E | Locally verified |
-| 13 — Scenario lab coverage + 12 CI screenshots | pending | 104 scenario tests | Locally verified |
-| 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
+| 12 — Command palette and keyboard UX | `3957315` | 35 unit + component, 9 E2E | CI verified ([33731232200](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33731232200)) |
+| 13 — Scenario lab coverage + 12 CI screenshots | `6ac0755` | 104 scenario tests | CI verified ([33731232200](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33731232200)) |
+| 14 — Accessibility, performance and polish | `4ccf99e` | 499 unit + component, 15 E2E incl. 12 screenshots | CI verified ([33736586399](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33736586399)) |
 
 ## Baseline
 

@@ -4,7 +4,8 @@ import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import { useUiStore, type PanelTab } from '@/stores/ui';
-import { getDiagnostics } from '@/services/runtime';
+import { getDiagnostics, type TaskStatus } from '@/services/runtime';
+import { useRunStore } from '@/stores/run';
 import {
   FIXTURE_OUTPUT,
   FIXTURE_PROBLEMS,
@@ -16,7 +17,7 @@ import {
   type TerminalEntry,
 } from '@/services/runtime/workspace';
 
-const TABS: PanelTab[] = ['terminal', 'problems', 'output', 'logs'];
+const TABS: PanelTab[] = ['terminal', 'problems', 'output', 'tasks', 'logs'];
 
 const SEVERITY_ICON: Record<ProblemSeverity, { name: 'alert' | 'dot'; className: string }> = {
   error: { name: 'alert', className: 'text-[var(--color-danger)]' },
@@ -199,6 +200,102 @@ function OutputTab(): React.ReactElement {
   );
 }
 
+const TASK_ORDER: TaskStatus[] = [
+  'running',
+  'blocked',
+  'pending',
+  'completed',
+  'failed',
+  'skipped',
+];
+
+function TasksTab(): React.ReactElement {
+  const { t } = useTranslation();
+  const tasks = useRunStore((state) => state.tasks);
+  const [filter, setFilter] = useState<TaskStatus | 'all'>('all');
+
+  const done = tasks.filter((task) => task.status === 'completed').length;
+  const visible =
+    filter === 'all' ? tasks : tasks.filter((task) => task.status === filter);
+
+  // Only offer filters for statuses actually present, so the control never
+  // advertises an empty result.
+  const present = TASK_ORDER.filter((status) =>
+    tasks.some((task) => task.status === status),
+  );
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col" data-testid="panel-tasks">
+      {tasks.length === 0 ? (
+        <p
+          data-testid="tasks-empty"
+          className="px-3 py-6 text-center text-[11px] text-[var(--color-ink-soft)]"
+        >
+          {t('panel.tasks.empty')}
+        </p>
+      ) : (
+        <>
+          <div className="flex items-center gap-2 border-b border-[var(--color-line)] px-3 py-1.5">
+            <span
+              data-testid="tasks-progress"
+              className="text-[11px] text-[var(--color-ink-soft)]"
+            >
+              {t('panel.tasks.progress', { done, total: tasks.length })}
+            </span>
+            <div className="ms-auto flex gap-1">
+              {(['all', ...present] as const).map((status) => (
+                <button
+                  key={status}
+                  type="button"
+                  data-testid={`tasks-filter-${status}`}
+                  aria-pressed={filter === status}
+                  onClick={() => setFilter(status)}
+                  className={cn(
+                    'rounded px-1.5 py-0.5 text-[10px] transition-colors',
+                    filter === status
+                      ? 'bg-[var(--color-brand-soft)] text-[var(--color-brand)]'
+                      : 'text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]',
+                  )}
+                >
+                  {status === 'all'
+                    ? t('panel.tasks.filterAll')
+                    : t(`agent.taskStatus.${status}`)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <ul className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
+            {visible.map((task) => (
+              <li
+                key={task.id}
+                data-testid={`task-${task.id}`}
+                data-status={task.status}
+                className="flex items-start gap-2 py-1 text-[11px]"
+              >
+                <span className="min-w-0 flex-1" title={task.title}>
+                  <span className="block truncate text-[var(--color-ink)]">
+                    {task.title}
+                  </span>
+                  {task.blockedReason !== undefined ? (
+                    <span className="block text-[10px] text-[var(--color-danger)]">
+                      {task.blockedReason}
+                    </span>
+                  ) : null}
+                </span>
+                {/* Status as text, never colour alone. */}
+                <span className="shrink-0 text-[10px] text-[var(--color-ink-soft)]">
+                  {t(`agent.taskStatus.${task.status}`)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
+
 function LogsTab(): React.ReactElement {
   const { t } = useTranslation();
   const diagnostics = getDiagnostics();
@@ -304,6 +401,7 @@ export function BottomPanel(): React.ReactElement | null {
         {tab === 'terminal' ? <TerminalTab /> : null}
         {tab === 'problems' ? <ProblemsTab /> : null}
         {tab === 'output' ? <OutputTab /> : null}
+        {tab === 'tasks' ? <TasksTab /> : null}
         {tab === 'logs' ? <LogsTab /> : null}
       </div>
     </section>

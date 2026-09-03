@@ -18,10 +18,10 @@ describe('BottomPanel', () => {
     expect(screen.queryByTestId('bottom-panel')).not.toBeInTheDocument();
   });
 
-  it('exposes the four tabs as a tablist', () => {
+  it('exposes the five tabs as a tablist', () => {
     renderWithProviders(<BottomPanel />);
     expect(screen.getByRole('tablist')).toBeInTheDocument();
-    expect(screen.getAllByRole('tab')).toHaveLength(4);
+    expect(screen.getAllByRole('tab')).toHaveLength(5);
     expect(screen.getByTestId('panel-tab-terminal')).toHaveAttribute(
       'aria-selected',
       'true',

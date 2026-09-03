@@ -352,10 +352,17 @@ export const fa: Translation = {
     terminalHint: 'برای دیدن دستورهای نمایشی help را بنویسید',
     logsHint: 'رویدادهایی که اعتبارسنجی طرح‌واره آن‌ها را رد کرده اینجا می‌آیند.',
     logsEmpty: 'هنوز رویداد ردشده‌ای وجود ندارد.',
+    tasks: {
+      empty: 'هنوز کاری نیست. وقتی عامل برنامه‌ای پیشنهاد دهد، کارها اینجا ظاهر می‌شوند.',
+      filterAll: 'همه',
+      blocked: 'مسدود',
+      progress: '{{done}} از {{total}} انجام شد',
+    },
     tabs: {
       terminal: 'ترمینال',
       problems: 'مشکل‌ها',
       output: 'خروجی',
+      tasks: 'کارها',
       logs: 'گزارش عامل',
     },
     severity: { error: 'خطا', warning: 'هشدار', info: 'اطلاع' },

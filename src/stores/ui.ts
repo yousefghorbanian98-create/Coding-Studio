@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type PanelTab = 'terminal' | 'problems' | 'output' | 'logs';
+export type PanelTab = 'terminal' | 'problems' | 'output' | 'tasks' | 'logs';
 
 export interface UiState {
   paletteOpen: boolean;

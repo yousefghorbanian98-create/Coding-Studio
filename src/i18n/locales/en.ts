@@ -350,10 +350,17 @@ export const en = {
     terminalHint: 'Type help for available demo commands',
     logsHint: 'Runtime events rejected by schema validation appear here.',
     logsEmpty: 'No rejected events yet.',
+    tasks: {
+      empty: 'No tasks yet. Tasks appear when the agent proposes a plan.',
+      filterAll: 'All',
+      blocked: 'Blocked',
+      progress: '{{done}} of {{total}} done',
+    },
     tabs: {
       terminal: 'Terminal',
       problems: 'Problems',
       output: 'Output',
+      tasks: 'Tasks',
       logs: 'Agent Logs',
     },
     severity: { error: 'Error', warning: 'Warning', info: 'Information' },
