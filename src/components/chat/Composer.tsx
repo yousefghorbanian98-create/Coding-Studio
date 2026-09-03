@@ -6,6 +6,8 @@ import { useChatStore } from '@/stores/chat';
 import { useUiStore } from '@/stores/ui';
 import { ModelSelector } from './ModelSelector';
 import { ModeSelector } from './ModeSelector';
+import { ContextMeter } from './ContextMeter';
+import { FileMention } from './FileMention';
 
 const DRAFT_KEY = 'coding-studio:draft';
 
@@ -25,6 +27,13 @@ export function Composer(): React.ReactElement {
   const sendMessage = useChatStore((s) => s.sendMessage);
   const stopStreaming = useChatStore((s) => s.stopStreaming);
   const focusToken = useUiStore((s) => s.composerFocusToken);
+  const [mentionOpen, setMentionOpen] = useState(false);
+
+  const insertMention = (path: string): void => {
+    setMentionOpen(false);
+    setValue((current) => current.replace(/@[^\s@]*$/, `@${path} `));
+    textareaRef.current?.focus();
+  };
 
   useEffect(() => {
     if (focusToken > 0) textareaRef.current?.focus();
@@ -46,10 +55,24 @@ export function Composer(): React.ReactElement {
     }
   }, [value]);
 
+  // A message typed while the agent is busy is queued rather than dropped,
+  // then sent automatically once the run finishes.
+  const [queued, setQueued] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isStreaming || queued === null) return;
+    setQueued(null);
+    void sendMessage(queued);
+  }, [isStreaming, queued, sendMessage]);
+
   const submit = (): void => {
     const text = value.trim();
-    if (!text || isStreaming) return;
+    if (!text) return;
     setValue('');
+    if (isStreaming) {
+      setQueued(text);
+      return;
+    }
     void sendMessage(text);
   };
 
@@ -75,8 +98,17 @@ export function Composer(): React.ReactElement {
         value={value}
         data-testid="composer-input"
         placeholder={t('chat.placeholder')}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => {
+          setValue(event.target.value);
+          // Open the picker while the caret sits in an unfinished @mention.
+          setMentionOpen(/@[^\s@]*$/.test(event.target.value));
+        }}
         onKeyDown={(event) => {
+          if (event.key === 'Escape' && mentionOpen) {
+            event.preventDefault();
+            setMentionOpen(false);
+            return;
+          }
           if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             submit();
@@ -89,9 +121,33 @@ export function Composer(): React.ReactElement {
         )}
       />
 
+      {mentionOpen ? <FileMention onSelect={insertMention} /> : null}
+
+      {queued !== null ? (
+        <div
+          data-testid="composer-queued"
+          className="mx-2 mb-1 flex items-center gap-2 rounded bg-[var(--color-surface-2)] px-2 py-1 text-[10px] text-[var(--color-ink-soft)]"
+        >
+          <Icon name="clock" size={11} className="shrink-0" />
+          <span className="min-w-0 flex-1 truncate" title={queued}>
+            {t('chat.queued', { text: queued })}
+          </span>
+          <button
+            type="button"
+            data-testid="composer-queued-cancel"
+            onClick={() => setQueued(null)}
+            className="shrink-0 rounded p-0.5 hover:text-[var(--color-danger)]"
+            aria-label={t('chat.queuedCancel')}
+          >
+            <Icon name="close" size={10} />
+          </button>
+        </div>
+      ) : null}
+
       <div className="mt-1 flex items-center gap-2">
         <ModeSelector />
         <ModelSelector />
+        <ContextMeter />
         <span className="hidden text-[10px] text-[var(--color-ink-soft)] lg:inline">
           {t('chat.hint')}
         </span>

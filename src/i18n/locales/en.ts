@@ -32,6 +32,17 @@ export const en = {
     resize: 'Resize sidebar',
   },
   chat: {
+    jumpToLatest: 'Jump to latest',
+    queued: 'Queued: {{text}}',
+    queuedCancel: 'Cancel queued message',
+    context: {
+      label: '{{percent}}% context',
+      tooltip: '{{used}} of {{limit}} tokens used ({{percent}}%)',
+    },
+    mention: {
+      title: 'Mention a file',
+    },
+    copyCode: 'Copy code',
     placeholder: 'Ask anything about your code…',
     send: 'Send',
     stop: 'Stop',

@@ -27,9 +27,11 @@ export type IconName =
   | 'restore'
   | 'close'
   | 'branch'
+  | 'clock'
   | 'dot';
 
 const PATHS: Record<IconName, string> = {
+  clock: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
   chat: 'M21 12a8 8 0 0 1-8 8H7l-4 3v-5.5A8 8 0 0 1 11 4h2a8 8 0 0 1 8 8Z',
   sessions: 'M4 6h16M4 12h16M4 18h10',
   files: 'M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9l-6-6Zm0 0v6h6',

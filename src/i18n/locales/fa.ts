@@ -34,6 +34,17 @@ export const fa: Translation = {
     resize: 'تغییر اندازه نوار کناری',
   },
   chat: {
+    jumpToLatest: 'رفتن به آخرین پیام',
+    queued: 'در صف: {{text}}',
+    queuedCancel: 'لغو پیام در صف',
+    context: {
+      label: '{{percent}}٪ زمینه',
+      tooltip: '{{used}} از {{limit}} توکن استفاده شده ({{percent}}٪)',
+    },
+    mention: {
+      title: 'اشاره به یک فایل',
+    },
+    copyCode: 'کپی کد',
     placeholder: 'هر سؤالی درباره کدت بپرس…',
     send: 'ارسال',
     stop: 'توقف',

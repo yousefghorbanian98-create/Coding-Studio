@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
@@ -12,6 +12,9 @@ import { ApprovalCard } from '@/components/agent/ApprovalCard';
 import { AgentRoster } from '@/components/agent/AgentRoster';
 import { MessageItem } from './MessageItem';
 
+/** How close to the bottom still counts as "following along". */
+const NEAR_BOTTOM_PX = 64;
+
 export function ChatArea(): React.ReactElement {
   const { t } = useTranslation();
   const session = useChatStore(selectActiveSession);
@@ -22,11 +25,29 @@ export function ChatArea(): React.ReactElement {
   const lastContent =
     session?.messages[messageCount - 1]?.content.length ?? 0;
 
+  const [atBottom, setAtBottom] = useState(true);
+
+  // Autoscroll only while the user is already near the bottom. If they have
+  // scrolled up to read, their position is theirs to keep.
   useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !atBottom) return;
+    el.scrollTop = el.scrollHeight;
+  }, [messageCount, lastContent, atBottom]);
+
+  const onScroll = (): void => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setAtBottom(distance <= NEAR_BOTTOM_PX);
+  };
+
+  const jumpToLatest = (): void => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [messageCount, lastContent]);
+    setAtBottom(true);
+  };
 
   const suggestions = [
     t('chat.suggestions.one'),
@@ -42,6 +63,7 @@ export function ChatArea(): React.ReactElement {
       <div
         ref={scrollRef}
         data-testid="message-scroll"
+        onScroll={onScroll}
         className="min-h-0 flex-1 overflow-y-auto"
       >
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 p-4">
@@ -89,7 +111,21 @@ export function ChatArea(): React.ReactElement {
         </div>
       </div>
 
-      <div className="border-t border-[var(--color-line)] bg-[var(--color-canvas)] p-3">
+      <div className="relative border-t border-[var(--color-line)] bg-[var(--color-canvas)] p-3">
+        {!atBottom && messageCount > 0 ? (
+          <button
+            type="button"
+            onClick={jumpToLatest}
+            data-testid="jump-to-latest"
+            className={cn(
+              'absolute -top-11 left-1/2 -translate-x-1/2 rounded-full',
+              'border border-[var(--color-line)] bg-[var(--color-surface)]',
+              'px-3 py-1.5 text-[11px] text-[var(--color-ink)] shadow-sm',
+            )}
+          >
+            {t('chat.jumpToLatest')}
+          </button>
+        ) : null}
         <div className="mx-auto w-full max-w-3xl">
           <RuntimeBanner />
           <ErrorBanner />
