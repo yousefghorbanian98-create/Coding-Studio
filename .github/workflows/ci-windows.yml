@@ -73,7 +73,10 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: E2E tests (Playwright)
-        run: npm run test:e2e
+        shell: bash
+        # Captured so the failure is readable even when artifact and log
+        # storage cannot be reached from a review environment.
+        run: set -o pipefail && npm run test:e2e 2>&1 | tee pw-output.txt
         env:
           # Emit a machine-readable report next to the list output so failures
           # can be summarised below even when artifacts are unavailable.
@@ -89,6 +92,18 @@ jobs:
         shell: bash
         run: |
           node .github/scripts/summarise-playwright.cjs | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -f pw-output.txt ]; then
+            {
+              echo
+              echo '<details><summary>Playwright console output (last 200 lines)</summary>'
+              echo
+              echo '```'
+              tail -n 200 pw-output.txt
+              echo '```'
+              echo
+              echo '</details>'
+            } | tee -a "$GITHUB_STEP_SUMMARY" >> pw-failures.md
+          fi
 
       - name: Comment E2E failures on the pull request
         if: failure() && github.event_name == 'pull_request'
