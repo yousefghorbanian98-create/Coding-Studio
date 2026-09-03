@@ -375,6 +375,11 @@ export const en = {
     summary: '{{matches}} matches in {{files}} files',
   },
   changes: {
+    copyPatch: 'Copy patch',
+    accept: 'Accept file',
+    revert: 'Revert file',
+    acceptAll: 'Accept all',
+    needsRuntime: 'Applying changes needs the managed runtime.',
     title: 'Changes',
     binary: 'Binary file not shown.',
     line: { added: 'Added line', removed: 'Removed line' },
@@ -388,6 +393,10 @@ export const en = {
     },
   },
   panel: {
+    terminal: {
+      clear: 'Clear',
+      copy: 'Copy output',
+    },
     title: 'Panel',
     close: 'Close panel',
     toggle: 'Toggle panel',

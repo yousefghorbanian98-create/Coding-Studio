@@ -157,7 +157,7 @@ describe('Explorer context menu', () => {
   });
 
   it('copies the relative path', () => {
-    const writeText = vi.fn(() => Promise.resolve());
+    const writeText = vi.fn((_text: string) => Promise.resolve());
     // navigator.clipboard is a getter-only property in jsdom.
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText },
@@ -190,5 +190,33 @@ describe('Explorer context menu', () => {
     const reveal = screen.getByTestId('explorer-menu-reveal');
     expect(reveal).toHaveAttribute('aria-disabled', 'true');
     expect(reveal.getAttribute('title')).toMatch(/desktop shell/i);
+  });
+});
+
+describe('Diff actions', () => {
+  it('copies a unified patch for the active file', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn((_text: string) => Promise.resolve());
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    renderWithProviders(<DiffViewer />);
+
+    await user.click(screen.getByTestId('diff-copy-patch'));
+
+    const patch = writeText.mock.calls[0]?.[0] ?? '';
+    expect(patch).toContain('--- a/');
+    expect(patch).toContain('+++ b/');
+    expect(patch).toMatch(/^[+\- ]/m);
+  });
+
+  it('marks apply actions inert and explains they need the runtime', () => {
+    renderWithProviders(<DiffViewer />);
+    for (const id of ['diff-accept', 'diff-revert', 'diff-acceptAll']) {
+      const button = screen.getByTestId(id);
+      expect(button).toHaveAttribute('aria-disabled', 'true');
+      expect(button.getAttribute('title')).toMatch(/managed runtime/i);
+    }
   });
 });

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/render';
@@ -108,5 +108,44 @@ describe('Tasks panel — active task and actions', () => {
     const retry = screen.getByTestId('task-retry-t1');
     expect(retry).toHaveAttribute('aria-disabled', 'true');
     expect(retry.getAttribute('title')).toMatch(/managed runtime/i);
+  });
+});
+
+describe('Terminal output controls', () => {
+  beforeEach(() => {
+    useUiStore.setState({ panelOpen: true, panelTab: 'terminal' });
+  });
+
+  it('offers clear and copy while the seeded transcript has output', () => {
+    renderWithProviders(<BottomPanel />);
+    expect(screen.getByTestId('terminal-clear')).toBeEnabled();
+    expect(screen.getByTestId('terminal-copy')).toBeEnabled();
+  });
+
+  it('copies the whole transcript, commands included', async () => {
+    // userEvent.setup() installs its own clipboard stub, so the spy has to be
+    // planted after it or it gets overwritten.
+    const user = userEvent.setup();
+    const writeText = vi.fn((_text: string) => Promise.resolve());
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    });
+    renderWithProviders(<BottomPanel />);
+
+    await user.click(screen.getByTestId('terminal-copy'));
+
+    expect(writeText).toHaveBeenCalledOnce();
+    expect(writeText.mock.calls[0]?.[0]).toContain('$ ');
+  });
+
+  it('empties the transcript and then disables both controls', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<BottomPanel />);
+
+    await user.click(screen.getByTestId('terminal-clear'));
+
+    expect(screen.getByTestId('terminal-clear')).toBeDisabled();
+    expect(screen.getByTestId('terminal-copy')).toBeDisabled();
   });
 });

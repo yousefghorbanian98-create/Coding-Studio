@@ -108,11 +108,51 @@ export function DiffViewer(): React.ReactElement {
         <h2 className="flex-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-ink-soft)]">
           {t('changes.title')}
         </h2>
+        <button
+          type="button"
+          data-testid="diff-copy-patch"
+          onClick={() => {
+            const active = diffs.find((diff) => diff.path === activePath);
+            if (!active) return;
+            const patch = [
+              `--- a/${active.previousPath ?? active.path}`,
+              `+++ b/${active.path}`,
+              ...active.lines.map((line) =>
+                `${line.kind === 'added' ? '+' : line.kind === 'removed' ? '-' : ' '}${line.text}`,
+              ),
+            ].join('\n');
+            void navigator.clipboard?.writeText(patch).catch(() => {
+              // Clipboard can be denied; silence beats a crash.
+            });
+          }}
+          aria-label={t('changes.copyPatch')}
+          title={t('changes.copyPatch')}
+          className="rounded p-1 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+        >
+          <Icon name="copy" size={12} />
+        </button>
         <span data-testid="changes-total" className="text-[10px]">
           <span className="text-[var(--color-ok)]">+{totals.additions}</span>{' '}
           <span className="text-[var(--color-danger)]">−{totals.deletions}</span>
         </span>
       </header>
+
+      <div className="flex shrink-0 items-center gap-1 border-b border-[var(--color-line)] px-2 py-1">
+        {/* Applying or reverting a change needs a real workspace, so these
+            state that plainly instead of being dead controls. */}
+        {(['accept', 'revert', 'acceptAll'] as const).map((action) => (
+          <button
+            key={action}
+            type="button"
+            aria-disabled="true"
+            data-testid={`diff-${action}`}
+            title={t('changes.needsRuntime')}
+            className="cursor-not-allowed rounded px-1.5 py-0.5 text-[10px] text-[var(--color-ink-soft)]"
+          >
+            {t(`changes.${action}`)}
+          </button>
+        ))}
+      </div>
 
       <ul className="flex shrink-0 flex-col border-b border-[var(--color-line)]">
         {diffs.map((diff) => (

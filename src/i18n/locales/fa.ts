@@ -377,6 +377,11 @@ export const fa: Translation = {
     summary: '{{matches}} مورد در {{files}} فایل',
   },
   changes: {
+    copyPatch: 'کپی پچ',
+    accept: 'پذیرش فایل',
+    revert: 'بازگردانی فایل',
+    acceptAll: 'پذیرش همه',
+    needsRuntime: 'اعمال تغییرات به رانتایم مدیریت‌شده نیاز دارد.',
     title: 'تغییرات',
     binary: 'فایل باینری نمایش داده نمی‌شود.',
     line: { added: 'خط افزوده‌شده', removed: 'خط حذف‌شده' },
@@ -390,6 +395,10 @@ export const fa: Translation = {
     },
   },
   panel: {
+    terminal: {
+      clear: 'پاک کردن',
+      copy: 'کپی خروجی',
+    },
     title: 'پنل',
     close: 'بستن پنل',
     toggle: 'نمایش یا پنهان‌کردن پنل',

@@ -71,6 +71,33 @@ function TerminalTab(): React.ReactElement {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col" data-testid="panel-terminal">
+      <div className="flex shrink-0 items-center gap-1 border-b border-[var(--color-line)] px-2 py-1">
+        <button
+          type="button"
+          data-testid="terminal-clear"
+          onClick={() => setEntries([])}
+          disabled={entries.length === 0}
+          className="rounded px-1.5 py-0.5 text-[10px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] disabled:opacity-40"
+        >
+          {t('panel.terminal.clear')}
+        </button>
+        <button
+          type="button"
+          data-testid="terminal-copy"
+          disabled={entries.length === 0}
+          onClick={() => {
+            const text = entries
+              .map((entry) => `$ ${entry.command}\n${entry.output}`)
+              .join('\n');
+            void navigator.clipboard?.writeText(text).catch(() => {
+              // Clipboard can be denied; silence beats a crash.
+            });
+          }}
+          className="rounded px-1.5 py-0.5 text-[10px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] disabled:opacity-40"
+        >
+          {t('panel.terminal.copy')}
+        </button>
+      </div>
       <div
         ref={logRef}
         className="min-h-0 flex-1 overflow-y-auto px-3 py-2 font-mono text-[11px]"
