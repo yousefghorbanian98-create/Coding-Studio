@@ -1,9 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createMockSessions } from '@/mocks/sessions';
+import type { ChatSession } from '@/types/chat';
 import {
   deriveTitle,
   filterSessions,
   selectActiveSession,
+  sessionSummary,
   totalTokens,
   useChatStore,
 } from '../chat';
@@ -119,5 +121,79 @@ describe('chat store', () => {
     const session = selectActiveSession(useChatStore.getState());
     expect(totalTokens(session)).toBeGreaterThan(0);
     expect(totalTokens(undefined)).toBe(0);
+  });
+});
+
+describe('sessionSummary', () => {
+  const base: ChatSession = {
+    id: 's1',
+    title: 'T',
+    createdAt: 0,
+    updatedAt: 0,
+    modelId: 'demo-balanced',
+    messages: [],
+  };
+
+  it('returns null for an empty session so the row can omit the line', () => {
+    expect(sessionSummary({ ...base })).toBeNull();
+  });
+
+  it('prefers the last assistant reply', () => {
+    expect(
+      sessionSummary({
+        ...base,
+        messages: [
+          { id: 'a', role: 'user', content: 'question', createdAt: 0 },
+          { id: 'b', role: 'assistant', content: 'the answer', createdAt: 1 },
+        ],
+      }),
+    ).toBe('the answer');
+  });
+
+  it('falls back to the user message when nothing has replied yet', () => {
+    expect(
+      sessionSummary({
+        ...base,
+        messages: [{ id: 'a', role: 'user', content: 'only asked', createdAt: 0 }],
+      }),
+    ).toBe('only asked');
+  });
+
+  it('strips code fences and collapses whitespace', () => {
+    expect(
+      sessionSummary({
+        ...base,
+        messages: [
+          {
+            id: 'a',
+            role: 'assistant',
+            content: 'before\n```js\nconst x = 1;\n```\nafter',
+            createdAt: 0,
+          },
+        ],
+      }),
+    ).toBe('before after');
+  });
+
+  it('truncates a long summary', () => {
+    const summary = sessionSummary({
+      ...base,
+      messages: [
+        { id: 'a', role: 'assistant', content: 'x'.repeat(200), createdAt: 0 },
+      ],
+    });
+    expect(summary).toHaveLength(81);
+    expect(summary?.endsWith('…')).toBe(true);
+  });
+
+  it('returns null when the content is only a code fence', () => {
+    expect(
+      sessionSummary({
+        ...base,
+        messages: [
+          { id: 'a', role: 'assistant', content: '```\ncode\n```', createdAt: 0 },
+        ],
+      }),
+    ).toBeNull();
   });
 });

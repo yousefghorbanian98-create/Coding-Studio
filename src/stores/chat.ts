@@ -461,3 +461,19 @@ export function totalTokens(session: ChatSession | undefined): number {
   if (!session) return 0;
   return session.messages.reduce((sum, m) => sum + (m.tokens ?? 0), 0);
 }
+
+/**
+ * A one-line preview of what a session was about: the last assistant reply,
+ * falling back to the last user message. Returns null for an empty session so
+ * the caller can omit the line entirely rather than render a blank row.
+ */
+export function sessionSummary(session: ChatSession): string | null {
+  const last =
+    [...session.messages].reverse().find((m) => m.role === 'assistant') ??
+    [...session.messages].reverse().find((m) => m.role === 'user');
+  if (!last) return null;
+
+  const text = last.content.replace(/```[\s\S]*?```/g, ' ').replace(/\s+/g, ' ').trim();
+  if (text.length === 0) return null;
+  return text.length > 80 ? `${text.slice(0, 80)}…` : text;
+}

@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { formatRelativeTime } from '@/lib/format';
-import { filterSessions, useChatStore } from '@/stores/chat';
+import { filterSessions, useChatStore, sessionSummary } from '@/stores/chat';
 import { usePreferences } from '@/stores/preferences';
 import { SessionRowActions } from './SessionRowActions';
 
@@ -110,6 +110,15 @@ export function SessionList(): React.ReactElement {
                         {session.title}
                       </span>
                     </span>
+                    {sessionSummary(session) !== null ? (
+                      <span
+                        data-testid={`session-summary-${session.id}`}
+                        className="mt-0.5 block truncate text-[10px] text-[var(--color-ink-soft)]"
+                        title={sessionSummary(session) ?? ''}
+                      >
+                        {sessionSummary(session)}
+                      </span>
+                    ) : null}
                     <span className="mt-0.5 flex items-center gap-1.5 text-[10px] text-[var(--color-ink-soft)]">
                       <span>
                         {t('sidebar.messages', {
