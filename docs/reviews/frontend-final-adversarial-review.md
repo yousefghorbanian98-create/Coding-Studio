@@ -422,7 +422,7 @@ now produces **zero annotations**, so the deprecation warnings are cleared.
 
 ## Final verdict
 
-**Final commit:** `e49ea22eb9e6e8e01706e8cd58d1e2e78e7bbcfd`
+**Final commit:** `d94354c` (verification head; code head `e49ea22`)
 
 | Gate | Result |
 | --- | --- |
@@ -442,10 +442,10 @@ now produces **zero annotations**, so the deprecation warnings are cleared.
 | PR | Draft, unmerged, `mergeable=true`, `mergeable_state=clean` |
 | Backend work started | **No** |
 
-Green CI on the final head `e49ea22`:
+Green CI on the final head `d94354c`:
 
-- Pull request run — [33808838488](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33808838488) ✅
-- Push run — [33808835692](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33808835692) ✅
+- Pull request run — [33809906831](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33809906831) ✅
+- Push run — [33809901235](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33809901235) ✅
 
 **Result: PASS**, derived from the counts above: zero unresolved Critical and
 zero unresolved High findings, with every CI stage green. The one disclosed
