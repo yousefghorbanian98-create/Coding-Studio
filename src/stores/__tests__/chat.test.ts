@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { connectRunStore, useRunStore } from '../run';
-import { resetRuntime } from '@/services/runtime';
+import { resetRuntime, setRuntime } from '@/services/runtime';
+import { createMockRuntime } from '@/services/runtime/mockRuntime';
 import { createMockSessions } from '@/mocks/sessions';
 import type { ChatSession } from '@/types/chat';
 import {
@@ -27,8 +28,19 @@ function resetStore(): void {
   useRunStore.getState().reset();
 }
 
-/** Waits for the default mock runtime to finish a run. */
-async function settle(timeoutMs = 3000): Promise<void> {
+/** Waits until the in-flight assistant message has received some text. */
+async function waitForText(timeoutMs = 5000): Promise<void> {
+  const started = Date.now();
+  for (;;) {
+    const assistant = selectActiveSession(useChatStore.getState())?.messages[1];
+    if (assistant && assistant.content.length > 0) return;
+    if (Date.now() - started > timeoutMs) throw new Error('no delta arrived');
+    await new Promise((resolve) => setTimeout(resolve, 5));
+  }
+}
+
+/** Waits for the mock runtime to finish a run. */
+async function settle(timeoutMs = 10_000): Promise<void> {
   const started = Date.now();
   while (useChatStore.getState().isStreaming) {
     if (Date.now() - started > timeoutMs) throw new Error('run did not settle');
@@ -111,12 +123,15 @@ describe('chat store', () => {
   });
 
   it('stops an in-flight stream and marks the message', async () => {
+    // A long reply with a slow tick guarantees the run is still streaming when
+    // we cancel. A fixed sleep would race the runtime on a slow CI machine.
+    setRuntime(createMockRuntime({ scenario: 'long-streaming', tickMs: 50 }));
     const disconnect = connectRunStore();
     useChatStore.getState().createSession();
     await useChatStore.getState().sendMessage('Long answer please');
 
-    // Let the runtime emit its first chunks, then cancel mid-flight.
-    await new Promise((resolve) => setTimeout(resolve, 40));
+    // Cancel as soon as the first delta has landed, not after a fixed delay.
+    await waitForText();
     useChatStore.getState().stopStreaming();
     await settle();
     disconnect();
