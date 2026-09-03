@@ -110,8 +110,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | Slice 8 completion — explorer menu, patch copy | `f81aceb` | 554 unit + component | CI verified |
 | Slice 9 completion — problems filter, output and log copy | `7f69795` | 564 unit + component | CI verified |
 | Slice 10 completion — session summary | `e092095` | 570 unit + component | CI verified ([33756413830](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33756413830)) |
-| Slice 13 completion — scenario app state, run summary | `4caa3c5` | 591 unit + component, 4 E2E | pending |
-| Slice 14 completion — copy-timer leak | _pending_ | 595 unit + component | pending |
+| Slice 13 completion — scenario app state, run summary | `4caa3c5` | 591 unit + component, 4 E2E | CI verified ([33759862921](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33759862921)) |
+| Slice 14 completion — copy-timer leak | `d0acc2a` | 595 unit + component | CI verified ([33759862921](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33759862921)) |
 
 ## Baseline
 
