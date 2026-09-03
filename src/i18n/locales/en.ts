@@ -393,6 +393,9 @@ export const en = {
     },
   },
   panel: {
+    copyReport: 'Copy diagnostic report',
+    problemsEmpty: 'No problems for this filter.',
+    outputEmpty: 'No output on this channel.',
     terminal: {
       clear: 'Clear',
       copy: 'Copy output',

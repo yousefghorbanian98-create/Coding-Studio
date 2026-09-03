@@ -395,6 +395,9 @@ export const fa: Translation = {
     },
   },
   panel: {
+    copyReport: 'کپی گزارش عیب‌یابی',
+    problemsEmpty: 'برای این فیلتر مشکلی نیست.',
+    outputEmpty: 'خروجی‌ای در این کانال نیست.',
     terminal: {
       clear: 'پاک کردن',
       copy: 'کپی خروجی',

@@ -6,6 +6,7 @@ import { IconButton } from '@/components/ui/IconButton';
 import { useUiStore, type PanelTab } from '@/stores/ui';
 import { getDiagnostics, type TaskStatus } from '@/services/runtime';
 import { useRunStore, selectIsBusy } from '@/stores/run';
+import { buildDiagnosticReport } from '@/lib/diagnosticReport';
 import {
   FIXTURE_OUTPUT,
   FIXTURE_PROBLEMS,
@@ -151,12 +152,49 @@ function TerminalTab(): React.ReactElement {
 
 function ProblemsTab(): React.ReactElement {
   const { t } = useTranslation();
+  const [severity, setSeverity] = useState<ProblemSeverity | 'all'>('all');
+  const visible =
+    severity === 'all'
+      ? FIXTURE_PROBLEMS
+      : FIXTURE_PROBLEMS.filter((problem) => problem.severity === severity);
+
   return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex shrink-0 items-center gap-1 border-b border-[var(--color-line)] px-2 py-1">
+        {(['all', 'error', 'warning', 'info'] as const).map((level) => (
+          <button
+            key={level}
+            type="button"
+            data-testid={`problems-filter-${level}`}
+            aria-pressed={severity === level}
+            onClick={() => setSeverity(level)}
+            className={cn(
+              'rounded px-1.5 py-0.5 text-[10px] transition-colors',
+              severity === level
+                ? 'bg-[var(--color-brand-soft)] text-[var(--color-brand)]'
+                : 'text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]',
+            )}
+          >
+            {level === 'all'
+              ? t('panel.tasks.filterAll')
+              : t(`panel.severity.${level}`)}
+          </button>
+        ))}
+      </div>
+
+      {visible.length === 0 ? (
+        <p
+          data-testid="problems-empty"
+          className="px-3 py-6 text-center text-[11px] text-[var(--color-ink-soft)]"
+        >
+          {t('panel.problemsEmpty')}
+        </p>
+      ) : (
     <ul
       className="min-h-0 flex-1 overflow-y-auto px-2 py-1.5"
       data-testid="panel-problems"
     >
-      {FIXTURE_PROBLEMS.map((problem) => {
+      {visible.map((problem) => {
         const icon = SEVERITY_ICON[problem.severity];
         return (
           <li
@@ -180,13 +218,18 @@ function ProblemsTab(): React.ReactElement {
         );
       })}
     </ul>
+      )}
+    </div>
   );
 }
 
 function OutputTab(): React.ReactElement {
   const [channel, setChannel] = useState<string>(OUTPUT_CHANNELS[0]);
-  const lines = FIXTURE_OUTPUT.filter((line) => line.channel === channel);
+  const [cleared, setCleared] = useState<string[]>([]);
   const { t } = useTranslation();
+  const lines = cleared.includes(channel)
+    ? []
+    : FIXTURE_OUTPUT.filter((line) => line.channel === channel);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col" data-testid="panel-output">
@@ -210,7 +253,41 @@ function OutputTab(): React.ReactElement {
             </option>
           ))}
         </select>
+
+        <button
+          type="button"
+          data-testid="output-copy"
+          disabled={lines.length === 0}
+          onClick={() => {
+            const text = lines
+              .map((line) => `${formatOffset(line.offsetMs)} ${line.text}`)
+              .join('\n');
+            void navigator.clipboard?.writeText(text).catch(() => {
+              // Clipboard can be denied; silence beats a crash.
+            });
+          }}
+          className="rounded px-1.5 py-0.5 text-[10px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] disabled:opacity-40"
+        >
+          {t('panel.terminal.copy')}
+        </button>
+        <button
+          type="button"
+          data-testid="output-clear"
+          disabled={lines.length === 0}
+          onClick={() => setCleared((current) => [...current, channel])}
+          className="rounded px-1.5 py-0.5 text-[10px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] disabled:opacity-40"
+        >
+          {t('panel.terminal.clear')}
+        </button>
       </div>
+      {lines.length === 0 ? (
+        <p
+          data-testid="output-empty"
+          className="px-3 py-6 text-center text-[11px] text-[var(--color-ink-soft)]"
+        >
+          {t('panel.outputEmpty')}
+        </p>
+      ) : null}
       <ul className="min-h-0 flex-1 overflow-y-auto px-3 pb-2 font-mono text-[11px]">
         {lines.map((line) => (
           <li key={line.id} data-testid={`output-${line.id}`} className="flex gap-2">
@@ -369,7 +446,26 @@ function LogsTab(): React.ReactElement {
       className="min-h-0 flex-1 overflow-y-auto px-3 py-2 text-[11px]"
       data-testid="panel-logs"
     >
-      <p className="mb-2 text-[var(--color-ink-soft)]">{t('panel.logsHint')}</p>
+      <div className="mb-2 flex items-center gap-2">
+        <p className="flex-1 text-[var(--color-ink-soft)]">
+          {t('panel.logsHint')}
+        </p>
+        <button
+          type="button"
+          data-testid="logs-copy"
+          disabled={diagnostics.length === 0}
+          onClick={() => {
+            void navigator.clipboard
+              ?.writeText(buildDiagnosticReport(diagnostics))
+              .catch(() => {
+                // Clipboard can be denied; silence beats a crash.
+              });
+          }}
+          className="shrink-0 rounded px-1.5 py-0.5 text-[10px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] disabled:opacity-40"
+        >
+          {t('panel.copyReport')}
+        </button>
+      </div>
       {diagnostics.length === 0 ? (
         <p data-testid="logs-empty" className="text-[var(--color-ink-soft)]">
           {t('panel.logsEmpty')}

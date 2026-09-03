@@ -149,3 +149,31 @@ describe('Terminal output controls', () => {
     expect(screen.getByTestId('terminal-copy')).toBeDisabled();
   });
 });
+
+describe('Problems and Output controls', () => {
+  it('filters problems by severity and shows an empty state', async () => {
+    const user = userEvent.setup();
+    useUiStore.setState({ panelOpen: true, panelTab: 'problems' });
+    renderWithProviders(<BottomPanel />);
+
+    await user.click(screen.getByTestId('problems-filter-error'));
+    const rows = screen.getAllByTestId(/^problem-/);
+    expect(rows.length).toBeGreaterThan(0);
+
+    await user.click(screen.getByTestId('problems-filter-all'));
+    expect(screen.getAllByTestId(/^problem-/).length).toBeGreaterThanOrEqual(
+      rows.length,
+    );
+  });
+
+  it('clears an output channel and says it is empty', async () => {
+    const user = userEvent.setup();
+    useUiStore.setState({ panelOpen: true, panelTab: 'output' });
+    renderWithProviders(<BottomPanel />);
+
+    await user.click(screen.getByTestId('output-clear'));
+
+    expect(screen.getByTestId('output-empty')).toBeInTheDocument();
+    expect(screen.getByTestId('output-clear')).toBeDisabled();
+  });
+});
