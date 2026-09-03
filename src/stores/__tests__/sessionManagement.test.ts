@@ -21,7 +21,7 @@ function seed(sessions: ChatSession[]): void {
     filter: '',
     showArchived: false,
     isStreaming: false,
-    controller: null,
+
     selectedMessageId: null,
   });
 }

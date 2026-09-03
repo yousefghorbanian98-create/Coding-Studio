@@ -29,7 +29,7 @@ beforeEach(() => {
     filter: '',
     showArchived: false,
     isStreaming: false,
-    controller: null,
+
     selectedMessageId: null,
   });
 });

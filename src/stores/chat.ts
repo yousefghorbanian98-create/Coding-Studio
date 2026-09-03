@@ -6,15 +6,11 @@ import {
   asSessionId,
   getRuntime,
   type SendMessageInput,
+  type StudioRuntimeEvent,
 } from '@/services/runtime';
-import { useRunStore } from './run';
+import { useRunStore, setChatProjection } from './run';
 import { useRuntimeStore } from './runtime';
-import { estimateTokens } from '@/mocks/stream';
-import {
-  MockTransport,
-  errorMessageKey,
-  getTransport,
-} from '@/services/transport';
+import { estimateTokens } from '@/lib/tokens';
 import {
   loadSessions,
   saveSessions,
@@ -37,10 +33,17 @@ export interface ChatState {
   /** When true the sidebar lists archived sessions instead of active ones. */
   showArchived: boolean;
   setShowArchived: (showArchived: boolean) => void;
-  /** Not persisted — the controller for the in-flight stream. */
-  controller: AbortController | null;
-  /** i18n key of the last transport failure, or null. */
+  /** i18n key of the last runtime failure, or null. */
   errorKey: string | null;
+  /** Correlation for the run currently projected into the transcript. */
+  activeRun: {
+    runId: string;
+    sessionId: string;
+    /** Runtime message id -> local ChatMessage id. */
+    messageIds: Record<string, string>;
+    /** Message ids already finalised, so a duplicate completion is a no-op. */
+    completed: string[];
+  } | null;
 
   setFilter: (filter: string) => void;
   setModel: (modelId: string) => void;
@@ -55,7 +58,12 @@ export interface ChatState {
   clearSession: (id?: string) => void;
   /** Replaces the whole workspace. Used by the Scenario Lab and tests. */
   loadSessions: (sessions: ChatSession[]) => void;
-  sendMessage: (content: string, options?: { seed?: number; delayMs?: number }) => Promise<void>;
+  sendMessage: (content: string) => Promise<void>;
+  /**
+   * Authoritative projection of runtime events onto the visible transcript.
+   * This is the only writer of assistant text.
+   */
+  applyRuntimeEvent: (event: StudioRuntimeEvent) => void;
   stopStreaming: () => void;
   retryLast: () => Promise<void>;
   dismissError: () => void;
@@ -102,8 +110,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   selectedMessageId: null,
   filter: '',
   showArchived: false,
-  controller: null,
   errorKey: null,
+  activeRun: null,
 
   setFilter: (filter) => set({ filter }),
 
@@ -251,11 +259,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   },
 
   stopStreaming: () => {
-    const { controller } = get();
-    if (controller && !controller.signal.aborted) controller.abort();
-    // Stop the runtime-side run too, otherwise its tools keep reporting.
+    // Cancellation routes only through the runtime bridge.
     void useRunStore.getState().requestCancel();
-    set({ controller: null, isStreaming: false });
+    set({ isStreaming: false });
     set((state) => ({
       sessions: state.sessions.map((s) => ({
         ...s,
@@ -267,7 +273,181 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     persist();
   },
 
-  sendMessage: async (content, options) => {
+  applyRuntimeEvent: (event) => {
+    const state = get();
+
+    // -- correlation ------------------------------------------------------
+    // A run is claimed on run.started. Every later event must match both the
+    // run and the session, so a superseded run or a background session can
+    // never write into the visible transcript.
+    if (event.type === 'run.started') {
+      set({
+        activeRun: {
+          runId: event.runId,
+          sessionId: event.sessionId,
+          messageIds: {},
+          completed: [],
+        },
+        isStreaming: true,
+      });
+      return;
+    }
+
+    const run = state.activeRun;
+    if (run === null) return;
+    if ('runId' in event && event.runId !== run.runId) return;
+    if ('sessionId' in event && event.sessionId !== run.sessionId) return;
+
+    const finish = (patch: Partial<ChatMessage>, streamingOnly = true): void => {
+      set((current) => ({
+        sessions: current.sessions.map((s) =>
+          s.id === run.sessionId
+            ? {
+                ...s,
+                updatedAt: Date.now(),
+                messages: s.messages.map((m) =>
+                  !streamingOnly || m.streaming === true ? { ...m, ...patch } : m,
+                ),
+              }
+            : s,
+        ),
+      }));
+    };
+
+    switch (event.type) {
+      case 'message.started': {
+        if (event.role !== 'assistant') return;
+        // Ignore a repeated start for a message that already exists.
+        if (run.messageIds[event.messageId] !== undefined) return;
+
+        const localId = createId('msg');
+        const message: ChatMessage = {
+          id: localId,
+          role: 'assistant',
+          content: '',
+          createdAt: Date.now(),
+          modelId: get().modelId,
+          streaming: true,
+        };
+        set((current) => ({
+          activeRun:
+            current.activeRun === null
+              ? null
+              : {
+                  ...current.activeRun,
+                  messageIds: {
+                    ...current.activeRun.messageIds,
+                    [event.messageId]: localId,
+                  },
+                },
+          sessions: current.sessions.map((s) =>
+            s.id === run.sessionId
+              ? { ...s, messages: [...s.messages, message] }
+              : s,
+          ),
+        }));
+        return;
+      }
+
+      case 'message.delta': {
+        // Text that arrives after the user cancelled must be dropped.
+        if (run.completed.includes(event.messageId)) return;
+        const localId = run.messageIds[event.messageId];
+        if (localId === undefined) return;
+
+        set((current) => ({
+          sessions: current.sessions.map((s) =>
+            s.id === run.sessionId
+              ? {
+                  ...s,
+                  messages: s.messages.map((m) =>
+                    m.id === localId
+                      ? { ...m, content: m.content + event.delta }
+                      : m,
+                  ),
+                }
+              : s,
+          ),
+        }));
+        return;
+      }
+
+      case 'message.completed': {
+        // A duplicate completion must not append or duplicate anything.
+        if (run.completed.includes(event.messageId)) return;
+        const localId = run.messageIds[event.messageId];
+        if (localId === undefined) return;
+
+        set((current) => ({
+          activeRun:
+            current.activeRun === null
+              ? null
+              : {
+                  ...current.activeRun,
+                  completed: [...current.activeRun.completed, event.messageId],
+                },
+          sessions: current.sessions.map((s) =>
+            s.id === run.sessionId
+              ? {
+                  ...s,
+                  updatedAt: Date.now(),
+                  messages: s.messages.map((m) =>
+                    m.id === localId
+                      ? {
+                          ...m,
+                          streaming: false,
+                          ...(event.tokens !== undefined
+                            ? { tokens: event.tokens }
+                            : { tokens: estimateTokens(m.content) }),
+                        }
+                      : m,
+                  ),
+                }
+              : s,
+          ),
+        }));
+        persist();
+        return;
+      }
+
+      case 'run.completed':
+        set({ isStreaming: false, activeRun: null });
+        persist();
+        return;
+
+      case 'run.cancelled':
+        // Keep the partial text; mark it stopped and seal every message so a
+        // late delta cannot extend it.
+        finish({ streaming: false, stopped: true });
+        set((current) => ({
+          isStreaming: false,
+          activeRun:
+            current.activeRun === null
+              ? null
+              : {
+                  ...current.activeRun,
+                  completed: Object.keys(current.activeRun.messageIds),
+                },
+        }));
+        persist();
+        return;
+
+      case 'run.failed':
+        finish({ streaming: false, stopped: true });
+        set({
+          isStreaming: false,
+          activeRun: null,
+          errorKey: `runtime.errors.${event.error.kind}`,
+        });
+        persist();
+        return;
+
+      default:
+        return;
+    }
+  },
+
+  sendMessage: async (content) => {
     const text = content.trim();
     if (!text || get().isStreaming) return;
 
@@ -282,141 +462,42 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       createdAt: now,
       tokens: estimateTokens(text),
     };
-    const assistantMessage: ChatMessage = {
-      id: createId('msg'),
-      role: 'assistant',
-      content: '',
-      createdAt: now + 1,
-      modelId,
-      streaming: true,
-    };
-
-    const controller = new AbortController();
 
     set((state) => ({
       isStreaming: true,
-      controller,
+      errorKey: null,
       sessions: state.sessions.map((s) =>
         s.id === sessionId
           ? {
               ...s,
               updatedAt: now,
-              title:
-                s.messages.length === 0 ? deriveTitle(text) : s.title,
-              messages: [...s.messages, userMessage, assistantMessage],
+              title: s.messages.length === 0 ? deriveTitle(text) : s.title,
+              messages: [...s.messages, userMessage],
             }
           : s,
       ),
     }));
+    persist();
 
-    const appendChunk = (chunk: string): void => {
-      set((state) => ({
-        sessions: state.sessions.map((s) =>
-          s.id === sessionId
-            ? {
-                ...s,
-                messages: s.messages.map((m) =>
-                  m.id === assistantMessage.id
-                    ? { ...m, content: m.content + chunk }
-                    : m,
-                ),
-              }
-            : s,
-        ),
-      }));
-    };
-
-    // Ask the runtime bridge to drive the run in parallel. This is what makes
-    // plans, tool calls and approvals appear: the run store is subscribed to
-    // those events. The text itself still streams over the transport below.
+    // The runtime bridge is the ONLY path. The assistant message is created
+    // and filled in by `applyRuntimeEvent` as message.started/delta/completed
+    // arrive, so there is exactly one source of transcript text.
     const runtimeState = useRuntimeStore.getState();
     const runtimeInput: SendMessageInput = {
       sessionId: asSessionId(sessionId),
       content: text,
       mode: runtimeState.mode,
       providerId: runtimeState.providerId,
-      modelId: runtimeState.modelId,
+      modelId,
     };
-    void getRuntime()
-      .sendMessage(runtimeInput)
-      .catch(() => {
-        // A runtime that refuses the run is already reported through its own
-        // events and the connection banner; the transport reply still applies.
-      });
-
-    // Route through the pluggable transport. The mock is the default, so a
-    // missing backend degrades to canned replies instead of an error.
-    const transport =
-      options?.seed !== undefined || options?.delayMs !== undefined
-        ? new MockTransport({
-            ...(options.seed !== undefined ? { seed: options.seed } : {}),
-            ...(options.delayMs !== undefined
-              ? { delayMs: options.delayMs }
-              : {}),
-          })
-        : getTransport();
-
-    const history = [
-      ...(get().sessions.find((s) => s.id === sessionId)?.messages ?? []),
-    ].filter((m) => m.id !== assistantMessage.id);
 
     try {
-      const result = await transport.complete(
-        { messages: history, modelId, signal: controller.signal },
-        (chunk) => appendChunk(chunk.delta),
-      );
-
-      set((state) => ({
-        isStreaming: false,
-        controller: null,
-        sessions: state.sessions.map((s) =>
-          s.id === sessionId
-            ? {
-                ...s,
-                updatedAt: Date.now(),
-                messages: s.messages.map((m) =>
-                  m.id === assistantMessage.id
-                    ? {
-                        ...m,
-                        streaming: false,
-                        stopped: result.aborted,
-                        tokens: estimateTokens(m.content),
-                        latencyMs: result.latencyMs,
-                      }
-                    : m,
-                ),
-              }
-            : s,
-        ),
-      }));
-    } catch (error) {
-      // Keep whatever text arrived, mark it stopped, and surface the reason.
-      set((state) => ({
-        isStreaming: false,
-        controller: null,
-        errorKey: errorMessageKey(error),
-        sessions: state.sessions.map((s) =>
-          s.id === sessionId
-            ? {
-                ...s,
-                updatedAt: Date.now(),
-                messages: s.messages.map((m) =>
-                  m.id === assistantMessage.id
-                    ? {
-                        ...m,
-                        streaming: false,
-                        stopped: true,
-                        tokens: estimateTokens(m.content),
-                      }
-                    : m,
-                ),
-              }
-            : s,
-        ),
-      }));
+      await getRuntime().sendMessage(runtimeInput);
+    } catch {
+      // A runtime that refuses the run emits no events, so settle here.
+      set({ isStreaming: false, errorKey: 'runtime.errors.runtime-unavailable' });
+      persist();
     }
-
-    persist();
   },
 
   retryLast: async () => {
@@ -491,3 +572,9 @@ export function sessionSummary(session: ChatSession): string | null {
   if (text.length === 0) return null;
   return text.length > 80 ? `${text.slice(0, 80)}…` : text;
 }
+
+// Register the transcript projection with the runtime subscription. Doing it
+// here keeps `run.ts` free of a circular import back into this module.
+setChatProjection((event) => {
+  useChatStore.getState().applyRuntimeEvent(event);
+});

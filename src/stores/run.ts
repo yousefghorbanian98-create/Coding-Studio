@@ -222,10 +222,26 @@ export const useRunStore = create<RunState>()((set, get) => ({
   reset: () => set({ ...EMPTY }),
 }));
 
-/** Wires the store to a runtime. Returns the unsubscribe function. */
+let chatProjection: ((event: StudioRuntimeEvent) => void) | null = null;
+
+/**
+ * Registers the transcript projection. Called once by the chat store so the
+ * runtime event stream has a single subscriber and a single fan-out point.
+ */
+export function setChatProjection(
+  projection: (event: StudioRuntimeEvent) => void,
+): void {
+  chatProjection = projection;
+}
+
+/** Wires the stores to a runtime. Returns the unsubscribe function. */
 export function connectRunStore(): () => void {
   return subscribeValidated(getRuntime(), (event) => {
+    // One validated stream feeds both projections, so plans, tools and the
+    // visible assistant text always come from the same run. The chat store is
+    // resolved lazily because it already imports this module.
     useRunStore.getState().apply(event);
+    chatProjection?.(event);
   });
 }
 

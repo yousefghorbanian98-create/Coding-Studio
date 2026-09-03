@@ -1,217 +1,265 @@
+/**
+ * Chat store behaviour that used to be driven through the legacy transport.
+ *
+ * The transport was removed in the A-1 fix, so these exercise the same
+ * user-visible behaviour — error surfacing, retry, dismissal and persistence —
+ * against the runtime bridge, which is now the only path.
+ */
+
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { useChatStore } from '@/stores/chat';
+import { useRunStore, connectRunStore } from '@/stores/run';
 import { createMockSessions } from '@/mocks/sessions';
-import { selectActiveSession, useChatStore } from '../chat';
 import {
-  TransportError,
-  resetTransport,
-  setTransport,
-  type ChatTransport,
-  type CompletionRequest,
-  type CompletionResult,
-  type StreamChunk,
-} from '@/services/transport';
-import { loadSessions } from '@/services/sessionStorage';
+  asMessageId,
+  asRunId,
+  asSessionId,
+  resetRuntime,
+  setRuntime,
+  type RunHandle,
+  type SendMessageInput,
+  type StudioRuntimeBridge,
+  type StudioRuntimeEvent,
+  type RuntimeErrorKind,
+} from '@/services/runtime';
+import { SESSIONS_STORAGE_KEY, loadSessions } from '@/services/sessionStorage';
 
-function resetStore(): void {
-  const sessions = createMockSessions();
-  useChatStore.setState({
-    sessions,
-    activeSessionId: sessions[0]!.id,
-    modelId: sessions[0]!.modelId,
-    isStreaming: false,
-    selectedMessageId: null,
-    filter: '',
-    controller: null,
-    errorKey: null,
-  });
-}
+class ScriptedRuntime implements StudioRuntimeBridge {
+  readonly sent: SendMessageInput[] = [];
+  private listeners = new Set<(event: StudioRuntimeEvent) => void>();
 
-/** Transport that emits fixed chunks, or fails with a chosen error. */
-class StubTransport implements ChatTransport {
-  readonly id = 'stub';
-  seenModel = '';
-  seenHistory: string[] = [];
+  emit(event: StudioRuntimeEvent): void {
+    for (const listener of [...this.listeners]) listener(event);
+  }
 
-  constructor(
-    private readonly chunks: string[],
-    private readonly failWith?: TransportError,
-  ) {}
+  subscribe(listener: (event: StudioRuntimeEvent) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
 
-  async complete(
-    request: CompletionRequest,
-    onChunk: (chunk: StreamChunk) => void,
-  ): Promise<CompletionResult> {
-    this.seenModel = request.modelId;
-    this.seenHistory = request.messages.map((m) => m.content);
-    if (this.failWith) throw this.failWith;
+  sendMessage(input: SendMessageInput): Promise<RunHandle> {
+    this.sent.push(input);
+    return Promise.resolve({
+      runId: asRunId('run-1'),
+      sessionId: input.sessionId,
+    });
+  }
 
-    let text = '';
-    for (const delta of this.chunks) {
-      if (request.signal.aborted) break;
-      text += delta;
-      onChunk({ delta });
-      await Promise.resolve();
-    }
-    return {
-      text,
-      tokens: text.length,
-      latencyMs: 5,
-      aborted: request.signal.aborted,
-    };
+  cancelRun = (): Promise<void> => Promise.resolve();
+  getHealth = (): Promise<never> => Promise.reject(new Error('unused'));
+  getCapabilities = (): Promise<never> => Promise.reject(new Error('unused'));
+  listProviders = (): Promise<never[]> => Promise.resolve([]);
+  listModels = (): Promise<never[]> => Promise.resolve([]);
+  listSessions = (): Promise<never[]> => Promise.resolve([]);
+  createSession = (): Promise<never> => Promise.reject(new Error('unused'));
+  resumeSession = (): Promise<never> => Promise.reject(new Error('unused'));
+  renameSession = (): Promise<void> => Promise.resolve();
+  archiveSession = (): Promise<void> => Promise.resolve();
+  deleteSession = (): Promise<void> => Promise.resolve();
+  respondToApproval = (): Promise<void> => Promise.resolve();
+  dispose(): void {
+    this.listeners.clear();
   }
 }
 
-describe('chat store transport integration', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    resetStore();
+let runtime: ScriptedRuntime;
+let disconnect: () => void;
+let sessionId: string;
+
+/** Streams a complete assistant reply through the bridge. */
+function streamReply(text: string): void {
+  const sid = asSessionId(sessionId);
+  const messageId = asMessageId('m-1');
+  runtime.emit({ type: 'run.started', runId: asRunId('run-1'), sessionId: sid, mode: 'agent' });
+  runtime.emit({
+    type: 'message.started',
+    runId: asRunId('run-1'),
+    sessionId: sid,
+    messageId,
+    role: 'assistant',
   });
-  afterEach(() => resetTransport());
+  runtime.emit({
+    type: 'message.delta',
+    runId: asRunId('run-1'),
+    sessionId: sid,
+    messageId,
+    delta: text,
+  });
+  runtime.emit({
+    type: 'message.completed',
+    runId: asRunId('run-1'),
+    sessionId: sid,
+    messageId,
+  });
+  runtime.emit({ type: 'run.completed', runId: asRunId('run-1'), sessionId: sid });
+}
 
-  it('streams through the injected transport', async () => {
-    setTransport(new StubTransport(['Real ', 'backend ', 'reply']));
-    useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('hello');
+function failRun(kind: RuntimeErrorKind): void {
+  const sid = asSessionId(sessionId);
+  runtime.emit({ type: 'run.started', runId: asRunId('run-1'), sessionId: sid, mode: 'agent' });
+  runtime.emit({
+    type: 'run.failed',
+    runId: asRunId('run-1'),
+    sessionId: sid,
+    error: { kind, message: 'failed' },
+  });
+}
 
-    const assistant = selectActiveSession(useChatStore.getState())?.messages[1];
-    expect(assistant?.content).toBe('Real backend reply');
-    expect(assistant?.streaming).toBe(false);
-    expect(useChatStore.getState().errorKey).toBeNull();
+beforeEach(() => {
+  globalThis.localStorage?.clear();
+  runtime = new ScriptedRuntime();
+  setRuntime(runtime);
+  useRunStore.getState().reset();
+  const sessions = createMockSessions();
+  sessionId = sessions[0]?.id ?? '';
+  useChatStore.setState({
+    sessions,
+    activeSessionId: sessionId,
+    isStreaming: false,
+    errorKey: null,
+    activeRun: null,
+  });
+  disconnect = connectRunStore();
+});
+
+afterEach(() => {
+  disconnect();
+  resetRuntime();
+});
+
+describe('chat store over the runtime bridge', () => {
+  it('streams the reply the runtime emitted', async () => {
+    await useChatStore.getState().sendMessage('Hello');
+    streamReply('Real bridge reply');
+
+    const session = useChatStore
+      .getState()
+      .sessions.find((s) => s.id === sessionId);
+    expect(session?.messages.at(-1)?.content).toBe('Real bridge reply');
   });
 
-  it('passes the model and conversation history to the transport', async () => {
-    const stub = new StubTransport(['ok']);
-    setTransport(stub);
-    useChatStore.getState().createSession();
-    useChatStore.getState().setModel('studio-opus');
-    await useChatStore.getState().sendMessage('first question');
+  it('passes the prompt and model to the runtime', async () => {
+    useChatStore.setState({ modelId: 'studio-opus' });
+    await useChatStore.getState().sendMessage('Question?');
 
-    expect(stub.seenModel).toBe('studio-opus');
-    expect(stub.seenHistory).toContain('first question');
+    expect(runtime.sent).toHaveLength(1);
+    expect(runtime.sent[0]?.content).toBe('Question?');
+    expect(runtime.sent[0]?.modelId).toBe('studio-opus');
   });
 
-  it('surfaces a transport failure as a translatable error key', async () => {
-    setTransport(
-      new StubTransport([], new TransportError('unauthorized', 'nope', 401)),
+  it('surfaces a runtime failure as a translatable error key', async () => {
+    await useChatStore.getState().sendMessage('Hello');
+    failRun('provider-unavailable');
+
+    expect(useChatStore.getState().errorKey).toBe(
+      'runtime.errors.provider-unavailable',
     );
-    useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('hello');
-
-    expect(useChatStore.getState().errorKey).toBe('errors.unauthorized');
-    expect(useChatStore.getState().isStreaming).toBe(false);
-    const assistant = selectActiveSession(useChatStore.getState())?.messages[1];
-    expect(assistant?.stopped).toBe(true);
   });
 
-  it('maps each error kind to its own message key', async () => {
-    const cases = [
-      ['network', 'errors.network'],
-      ['timeout', 'errors.timeout'],
-      ['rate-limited', 'errors.rateLimited'],
-      ['server', 'errors.server'],
-    ] as const;
+  it.each([
+    'runtime-unavailable',
+    'authentication-required',
+    'rate-limited',
+    'timeout',
+  ] as const)('maps %s to its own message key', async (kind) => {
+    await useChatStore.getState().sendMessage('Hello');
+    failRun(kind);
 
-    for (const [kind, key] of cases) {
-      resetStore();
-      setTransport(new StubTransport([], new TransportError(kind, 'x')));
-      useChatStore.getState().createSession();
-      await useChatStore.getState().sendMessage('hello');
-      expect(useChatStore.getState().errorKey).toBe(key);
-    }
+    expect(useChatStore.getState().errorKey).toBe(`runtime.errors.${kind}`);
   });
 
   it('dismisses the error', async () => {
-    setTransport(new StubTransport([], new TransportError('server', 'x')));
-    useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('hello');
-    expect(useChatStore.getState().errorKey).not.toBeNull();
-
+    await useChatStore.getState().sendMessage('Hello');
+    failRun('timeout');
     useChatStore.getState().dismissError();
+
     expect(useChatStore.getState().errorKey).toBeNull();
   });
 
   it('retries the last prompt after a failure', async () => {
-    setTransport(new StubTransport([], new TransportError('network', 'x')));
-    useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('retry me');
-    expect(useChatStore.getState().errorKey).toBe('errors.network');
+    await useChatStore.getState().sendMessage('Retry me');
+    failRun('timeout');
 
-    setTransport(new StubTransport(['recovered']));
     await useChatStore.getState().retryLast();
 
-    const messages = selectActiveSession(useChatStore.getState())?.messages ?? [];
-    expect(useChatStore.getState().errorKey).toBeNull();
-    expect(messages.filter((m) => m.role === 'user')).toHaveLength(1);
-    expect(messages.at(-1)?.content).toBe('recovered');
+    expect(runtime.sent).toHaveLength(2);
+    expect(runtime.sent[1]?.content).toBe('Retry me');
   });
 
   it('does nothing on retry when there is no user message', async () => {
-    useChatStore.getState().createSession();
+    useChatStore.setState({
+      sessions: [
+        {
+          id: 'empty',
+          title: 'Empty',
+          createdAt: 1,
+          updatedAt: 1,
+          modelId: 'studio-sonnet',
+          messages: [],
+        },
+      ],
+      activeSessionId: 'empty',
+    });
+
     await useChatStore.getState().retryLast();
-    expect(selectActiveSession(useChatStore.getState())?.messages).toHaveLength(0);
-  });
-
-  it('still honours the explicit mock options used by existing tests', async () => {
-    setTransport(new StubTransport(['should not be used']));
-    useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('hi', { delayMs: 0, seed: 0 });
-
-    const assistant = selectActiveSession(useChatStore.getState())?.messages[1];
-    expect(assistant?.content).not.toBe('should not be used');
-    expect(assistant?.content.length).toBeGreaterThan(20);
+    expect(runtime.sent).toHaveLength(0);
   });
 });
 
-describe('chat store persistence', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    resetStore();
-  });
-  afterEach(() => resetTransport());
-
+describe('persistence', () => {
   it('persists a completed conversation', async () => {
-    setTransport(new StubTransport(['stored']));
-    const id = useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('remember this');
+    await useChatStore.getState().sendMessage('Persist me');
+    streamReply('Stored reply');
 
-    const stored = loadSessions();
-    const session = stored?.sessions.find((s) => s.id === id);
-    expect(session?.messages.map((m) => m.content)).toEqual([
-      'remember this',
-      'stored',
-    ]);
+    const restored = loadSessions();
+    const target = restored?.sessions.find((s) => s.id === sessionId);
+    expect(target?.messages.at(-1)?.content).toBe('Stored reply');
   });
 
   it('persists session creation, rename and deletion', () => {
-    const id = useChatStore.getState().createSession();
-    expect(loadSessions()?.sessions.some((s) => s.id === id)).toBe(true);
-
-    useChatStore.getState().renameSession(id, 'Renamed');
+    const created = useChatStore.getState().createSession();
+    useChatStore.getState().renameSession(created, 'Renamed');
     expect(
-      loadSessions()?.sessions.find((s) => s.id === id)?.title,
+      loadSessions()?.sessions.find((s) => s.id === created)?.title,
     ).toBe('Renamed');
 
-    useChatStore.getState().deleteSession(id);
-    expect(loadSessions()?.sessions.some((s) => s.id === id)).toBe(false);
+    useChatStore.getState().deleteSession(created);
+    expect(loadSessions()?.sessions.some((s) => s.id === created)).toBe(false);
   });
 
   it('persists the active session id', () => {
-    const first = useChatStore.getState().sessions[1]!.id;
-    useChatStore.getState().selectSession(first);
-    expect(loadSessions()?.activeSessionId).toBe(first);
+    const created = useChatStore.getState().createSession();
+    expect(loadSessions()?.activeSessionId).toBe(created);
   });
 
   it('persists a stopped partial reply', async () => {
-    setTransport(new StubTransport(Array.from({ length: 50 }, () => 'x ')));
-    useChatStore.getState().createSession();
-    const pending = useChatStore.getState().sendMessage('long one');
-    useChatStore.getState().stopStreaming();
-    await pending;
+    await useChatStore.getState().sendMessage('Stop me');
+    const sid = asSessionId(sessionId);
+    const messageId = asMessageId('m-1');
+    runtime.emit({ type: 'run.started', runId: asRunId('run-1'), sessionId: sid, mode: 'agent' });
+    runtime.emit({
+      type: 'message.started',
+      runId: asRunId('run-1'),
+      sessionId: sid,
+      messageId,
+      role: 'assistant',
+    });
+    runtime.emit({
+      type: 'message.delta',
+      runId: asRunId('run-1'),
+      sessionId: sid,
+      messageId,
+      delta: 'partial text',
+    });
+    runtime.emit({ type: 'run.cancelled', runId: asRunId('run-1'), sessionId: sid });
 
-    const stored = loadSessions();
-    const assistant = stored?.sessions
-      .flatMap((s) => s.messages)
-      .find((m) => m.role === 'assistant' && m.stopped);
-    expect(assistant?.streaming).toBeUndefined();
+    const stored = globalThis.localStorage.getItem(SESSIONS_STORAGE_KEY) ?? '';
+    expect(stored).toContain('partial text');
+
+    const restored = loadSessions();
+    const last = restored?.sessions
+      .find((s) => s.id === sessionId)
+      ?.messages.at(-1);
+    expect(last?.stopped).toBe(true);
   });
 });

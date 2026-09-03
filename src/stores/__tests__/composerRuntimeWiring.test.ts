@@ -16,7 +16,7 @@ let disconnect: (() => void) | null = null;
 beforeEach(() => {
   resetRuntime();
   useRunStore.getState().reset();
-  useChatStore.setState({ isStreaming: false, controller: null });
+  useChatStore.setState({ isStreaming: false });
   disconnect = connectRunStore();
 });
 
@@ -28,7 +28,7 @@ afterEach(() => {
 /** Sends one prompt under a scenario and waits for the run to progress. */
 async function runUnder(scenario: ScenarioId): Promise<void> {
   applyScenario(scenario);
-  await useChatStore.getState().sendMessage('go', { delayMs: 0 });
+  await useChatStore.getState().sendMessage('go');
   await new Promise((resolve) => setTimeout(resolve, 800));
 }
 

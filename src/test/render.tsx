@@ -17,7 +17,7 @@ export function resetStores(): void {
     isStreaming: false,
     selectedMessageId: null,
     filter: '',
-    controller: null,
+
   });
   usePreferences.getState().reset();
   useUiStore.setState({

@@ -1,11 +1,11 @@
 # Frontend Final Adversarial Review — PR #1
 
-**Reviewed commit:** `fe70ee4afb59700f5054a567dc86cc71887c849e`
-**Diff reviewed:** `main...fe70ee4` — 191 files, +29,558 / −2
+**Reviewed commit:** `9773fef` (round 1 reviewed `fe70ee4`)
+**Diff reviewed:** `main...9773fef`, plus the round-2 remediation on top
 **Method:** the PR description was treated as a claim, not as evidence. Every
 conclusion below comes from reading the implementation, executing probe tests,
 or mutating the source and observing whether the suite noticed.
-**Round:** 1 of a maximum 3.
+**Round:** 2 of a maximum 3.
 
 Six reviewer roles were run as separate passes, each with its own question set
 and its own bias. Where a role could not prove a claim by execution, it is
@@ -18,16 +18,15 @@ marked as reasoned rather than verified.
 | Severity | Count | Status |
 | --- | --- | --- |
 | Critical | 0 | — |
-| High | 1 | Documented and justified; deliberately not fixed in this PR |
+| High | 1 | **FIXED** in round 2 and pinned by 17 regression tests |
 | Medium | 2 | **Both fixed** with regression tests |
-| Low | 2 | Documented, not fixed |
+| Low | 2 | L-1 fixed; L-2 open, non-blocking |
 | Informational | 4 | Recorded for the backend phase |
 
-**Pass criteria met.** Zero Critical. The single High finding is an accepted,
-documented architectural debt with a concrete migration path and no user-facing
-or security impact; it is explicitly justified below rather than silently
-waived. Both Medium findings are fixed and pinned by tests that were each
-confirmed to fail against the unfixed code.
+**No Critical or High finding is open.** The gate result below is derived from
+these counts, not asserted alongside them: round 1 recorded a PASS while A-1
+was open, which was a contradiction and was rejected. A-1 is now fixed, so the
+count of unresolved Critical and High findings is zero.
 
 ---
 
@@ -75,26 +74,74 @@ future: replacing `MockStudioRuntime` with real Jcode would produce plans and
 tool calls from Jcode while the reply text still came from the legacy
 transport.
 
-### Justification for not fixing here
+### Resolution *(round 2 — FIXED)*
 
-The fix is to delete the transport layer and render `run.text`, which rewrites
-the chat store's streaming, cancellation and persistence logic and touches the
-message rendering path. That is a substantial refactor with real regression
-risk, and this PR is explicitly a frozen, manually-approved deliverable that
-must not gain new features. It is the correct first task of the backend slice,
-when a real runtime makes the duplication observable and testable.
+Round 1 filed this as accepted architectural debt. That was wrong: it
+contradicted the claim that `StudioRuntimeBridge` is the single replaceable
+runtime boundary, so it was fixed before this foundation merges.
 
-### Minimal recommended fix (next PR)
+What changed:
 
-1. Render `useRunStore.text` for the in-flight assistant message.
-2. Delete `src/services/transport/` including the unused `HttpTransport`.
-3. Route cancellation through `cancelRun` only.
+1. **The circular import was inverted, not worked around.** `run.ts` owns a
+   module-level `chatProjection` callback and exports `setChatProjection`;
+   `chat.ts` registers itself at module scope. `run.ts` no longer imports
+   `chat.ts`, so the graph is acyclic and `connectRunStore()` fans one
+   validated subscription out to both stores.
+2. **The legacy transport was deleted outright** — `git rm -r
+   src/services/transport` — rather than kept dormant "for future use".
+3. **A second, dormant text generator was also removed.** `src/mocks/stream.ts`
+   still held `pickReply`/`runMockStream`; grepping every export showed only its
+   own test file consumed them. Both files were deleted and the one genuinely
+   needed helper, `estimateTokens`, moved to `src/lib/tokens.ts`. Deleting the
+   "legacy" module alone would have left a second source of assistant text.
+4. **`applyRuntimeEvent` is now the sole writer of assistant text**, keyed by
+   `activeRun`. Nothing renders `run.text` beside a transport response.
+5. **Coverage built on the removed layer was rewritten, not deleted.**
+   `chatTransport.test.ts` now exercises the bridge while keeping its real
+   assertions: error-key mapping per `RuntimeErrorKind`, dismiss, retry-last,
+   retry-noop and all four persistence tests.
 
-### Required regression test
+### Red-then-green evidence
 
-An integration test asserting a bridge-emitted `message.delta` reaches the
-rendered transcript, plus a guard test that `src/services/transport/` no longer
-exists.
+Every regression test was first run against the **unfixed** implementation.
+
+**RED — `Tests 11 failed | 5 passed (16)`.** The decisive assertion:
+
+```
+expected 'Short answer: keep state close to whe…' to contain 'ZQX-SENTINEL-4417'
+```
+
+The sentinel existed only inside a bridge `message.delta`. The transcript
+instead rendered `MockTransport`'s canned prose, proving the bridge's message
+stream was computed and discarded.
+
+**GREEN — `Tests 16 passed (16)`** on `transcriptProjection.test.ts`; full suite
+**`Test Files 45 passed (45)` / `Tests 594 passed (594)`**; `tsc -b`,
+`tsc -p tsconfig.e2e.json` and `eslint .` all clean.
+
+### End-to-end proof, not isolation-in-a-vacuum
+
+A store-level test cannot prove the feature is mounted. `src/components/__tests__/runtimeTranscript.test.tsx`
+renders the real `AppShell`, types a prompt, and asserts the on-screen reply
+matches `/I reviewed the workspace/` — a sentence that exists only in
+`MockStudioRuntime`'s `NORMAL_REPLY`. If a second message-generation path is
+ever reintroduced, this fails.
+
+### Mutation testing of the fix
+
+| # | Mutation | Result |
+| --- | --- | --- |
+| M1 | `message.delta` no longer appends to the transcript | **caught** — 8 failures |
+| M2 | drop `persist()` from `message.completed` only | survived — masked by the `run.completed` persist |
+| M2b | drop `persist()` from *both* completion handlers | **caught** — 2 failures |
+| M3 | allow a delta after cancellation | **caught** |
+| M4 | remove the session-id guard in `run.ts` | **caught** by the run-store suite |
+| M5 | stop mapping `run.failed` to an error key | **caught** — 4 failures |
+| M6 | never register the chat projection | **caught** — the bridge fan-out is pinned |
+
+M2 is a genuine limitation, disclosed rather than hidden: both handlers write
+full state, so either alone satisfies the assertions. The redundancy is
+defensive and harmless, and M2b confirms persistence itself is pinned.
 
 ---
 
@@ -178,20 +225,36 @@ restoration.
 
 ---
 
-## L-1 — GitHub Actions are tag-pinned, not SHA-pinned
+## L-1 — GitHub Actions were tag-pinned, not SHA-pinned *(FIXED)*
 
-**Severity:** Low · **Role:** Security · **File:** `.github/workflows/ci-windows.yml`
+All six `uses:` in `.github/workflows/ci-windows.yml` are pinned to commit SHAs
+with version comments. Every SHA was resolved from upstream with `gh api` and
+never invented; the annotated `swatinem/rust-cache` tag object was dereferenced
+to its commit, and each SHA's exact semver was confirmed via `repos/<r>/tags`.
+`.github/dependabot.yml` was added so the pins stay current (weekly,
+`github-actions`, limit 5).
 
-`actions/checkout@v4`, `dtolnay/rust-toolchain@stable`, `swatinem/rust-cache@v2`
-and others resolve to mutable tags. A compromised or retagged action would run
-with `pull-requests: write`.
+### Workflow security audit
 
-Mitigating: `permissions` is minimal (`contents: read`), the trigger is
-`pull_request` not `pull_request_target` (so fork PRs get no secrets), and the
-comment step uses `--body-file`, avoiding shell injection of test output.
+`zizmor` v1.30.0 was run against the workflow. It found real issues, which were
+fixed rather than suppressed:
 
-**Fix:** pin to full commit SHAs. **Test:** none required; a workflow lint or
-Dependabot policy is sufficient.
+| Finding | Severity | Fix |
+| --- | --- | --- |
+| `artipacked` — checkout persists credentials into `.git/config`, where a later step or uploaded artifact could carry them off the runner | Medium | `persist-credentials: false` |
+| `template-injection` — `${{ github.event.pull_request.number }}` expanded directly into a `run:` script | High (pedantic) | passed via a `PR_NUMBER` env var so it can never expand as shell code |
+| `excessive-permissions` — `pull-requests: write` at workflow level | High (pedantic) | workflow is `contents: read`; the write scope moved to the one job that needs it |
+
+`zizmor --persona=pedantic` now reports **0 high, 0 medium, 0 low** and a single
+informational note (it prefers a `rustup` script step over
+`dtolnay/rust-toolchain`); the action is kept because it pins the toolchain
+deterministically. The default persona reports no findings.
+
+`actionlint` could not be executed: release-asset downloads from
+`release-assets.githubusercontent.com` fail in this sandbox with
+`curl: (35) OpenSSL SSL_ERROR_SYSCALL`. This is disclosed rather than glossed
+over. The workflow's YAML was parsed successfully by `zizmor`, which validates
+structure, but the shell-level checks `actionlint` would add have not run.
 
 ---
 
@@ -261,49 +324,61 @@ and `chat.ts` (493) are the next candidates.
 
 ## Round 1 outcome
 
-Fixes applied in this round:
+Fixes applied in round 1:
 
 - `src/stores/run.ts` — session isolation guard (R-1)
 - `src/stores/__tests__/run.test.ts` — +2 regression tests
 - `src/components/agent/__tests__/RunSummary.test.tsx` — +1 wiring test
 - `src/components/sessions/__tests__/SessionList.test.tsx` — +2 rendering tests
 
-Local verification: TypeScript (app + e2e) clean, ESLint clean,
-**600/600 Vitest tests across 46 files**, production build succeeds.
+Round 1 then declared PASS while A-1 was still open. **That verdict was
+withdrawn.** A gate result cannot be asserted alongside an unresolved High
+finding; it must follow from the counts. Round 2 exists to fix A-1 rather than
+to re-justify it.
 
-No further review rounds were required: the remaining High finding is an
-accepted architectural debt scoped to the backend phase, and no Critical
-finding was raised at any point.
+---
+
+## Round 2 outcome
+
+- A-1 fixed: dependency inverted via `setChatProjection`, `src/services/transport/`
+  deleted, `src/mocks/stream.ts` (a second dormant text generator) deleted,
+  `estimateTokens` relocated to `src/lib/tokens.ts`.
+- `chatTransport.test.ts` rewritten against the bridge, preserving its real
+  error-mapping, retry and persistence coverage.
+- +17 regression tests: 16 in `transcriptProjection.test.ts` (including a source
+  guard that no file imports a transport module) and 1 end-to-end transcript
+  guard rendering the real `AppShell`.
+- L-1 fixed: six SHA pins, Dependabot, and three `zizmor` workflow findings
+  fixed (credential persistence, template injection, excessive permissions).
+
+Test count moved 600 → 594: the transport and `mocks/stream` suites were removed
+along with the code they covered, and 17 tests were added.
 
 ---
 
 ## Final verdict
 
-**Round 2 re-audit against the fixed head `1efecb2dc3c4ba38e7d0ea0a3ff25d3b6c9b6638`:**
-
 | Gate | Result |
 | --- | --- |
 | Critical findings | **0** |
-| High findings | **0 blocking** — A-1 documented and justified as backend-phase debt |
-| Medium findings | **2 of 2 fixed**, each pinned by a test confirmed to fail against the unfixed code |
-| Unit / component tests | **600 passed**, 46 files |
+| High findings | **0** — A-1 fixed and verified, not waived |
+| Medium findings | **2 of 2 fixed** |
+| Low findings | L-1 fixed; L-2 (`mockRuntime.ts` size) open, non-blocking |
+| Unit / component tests | **594 passed**, 45 files |
 | End-to-end tests | **100 passed**, 11 spec files |
 | Skipped tests | **0** |
-| No active Ollama code | ✅ |
-| No `127.0.0.1:11434` | ✅ |
+| Red-then-green evidence recorded | ✅ `11 failed, 5 passed` → `16 passed` |
+| Transcript originates from the bridge | ✅ proven through the real `AppShell` |
+| Single runtime boundary | ✅ one message-generation path |
+| No active Ollama code / no `127.0.0.1:11434` | ✅ |
 | No secrets, tokens or `console.*` in product code | ✅ |
-| No production Scenario Lab | ✅ 0 of 5 shipped chunks |
-| No console errors at runtime | ✅ 5 E2E guards green |
-| Unresolved runtime-contract defect | **None** — R-1 closed |
-| Windows CI | ✅ both checks green |
+| Workflow security audit | ✅ `zizmor` pedantic: 0 high / 0 medium / 0 low |
+| `actionlint` | ⚠️ not run — sandbox cannot reach `release-assets.githubusercontent.com` |
 
-Green CI on the reviewed head `1efecb2`:
+**Result: PASS**, derived from the table above: zero unresolved Critical and
+zero unresolved High findings. The one caveat is that `actionlint` could not be
+executed in this environment; `zizmor` was run in its place and the workflow
+parses cleanly.
 
-- Pull request run — [33779173144](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33779173144) ✅
-- Push run — [33779168225](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33779168225) ✅
-
-Only one review-and-fix round was needed of the three permitted.
-
-**Result: PASS.** The frontend meets the stated pass criteria. The PR remains a
-Draft and was not merged. A-1 should be the first task of the backend slice,
-before Jcode is wired in.
+The PR remains a **Draft** and was **not merged**. Jcode and real providers are
+still not integrated and all agent behaviour is mocked.

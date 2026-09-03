@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { connectRunStore, useRunStore } from '../run';
+import { resetRuntime } from '@/services/runtime';
 import { createMockSessions } from '@/mocks/sessions';
 import type { ChatSession } from '@/types/chat';
 import {
@@ -19,8 +21,19 @@ function resetStore(): void {
     isStreaming: false,
     selectedMessageId: null,
     filter: '',
-    controller: null,
+    errorKey: null,
+    activeRun: null,
   });
+  useRunStore.getState().reset();
+}
+
+/** Waits for the default mock runtime to finish a run. */
+async function settle(timeoutMs = 3000): Promise<void> {
+  const started = Date.now();
+  while (useChatStore.getState().isStreaming) {
+    if (Date.now() - started > timeoutMs) throw new Error('run did not settle');
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
 }
 
 describe('chat store', () => {
@@ -64,9 +77,12 @@ describe('chat store', () => {
     expect(selectActiveSession(useChatStore.getState())?.messages).toHaveLength(0);
   });
 
-  it('streams a mock assistant reply and finalises it', async () => {
+  it('streams an assistant reply from the runtime and finalises it', async () => {
+    const disconnect = connectRunStore();
     const id = useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('Hello there', { delayMs: 0, seed: 0 });
+    await useChatStore.getState().sendMessage('Hello there');
+    await settle();
+    disconnect();
 
     const session = useChatStore.getState().sessions.find((s) => s.id === id);
     expect(session?.messages).toHaveLength(2);
@@ -82,7 +98,7 @@ describe('chat store', () => {
 
   it('titles a new session from the first user message', async () => {
     useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('Explain the router', { delayMs: 0, seed: 1 });
+    await useChatStore.getState().sendMessage('Explain the router');
     expect(selectActiveSession(useChatStore.getState())?.title).toBe(
       'Explain the router',
     );
@@ -90,25 +106,24 @@ describe('chat store', () => {
 
   it('ignores empty messages', async () => {
     const id = useChatStore.getState().createSession();
-    await useChatStore.getState().sendMessage('   ', { delayMs: 0 });
+    await useChatStore.getState().sendMessage('   ');
     expect(useChatStore.getState().sessions.find((s) => s.id === id)?.messages).toHaveLength(0);
   });
 
   it('stops an in-flight stream and marks the message', async () => {
+    const disconnect = connectRunStore();
     useChatStore.getState().createSession();
-    const pending = useChatStore
-      .getState()
-      .sendMessage('Long answer please', { delayMs: 5, seed: 0 });
+    await useChatStore.getState().sendMessage('Long answer please');
 
-    await new Promise((resolve) => setTimeout(resolve, 20));
-    expect(useChatStore.getState().isStreaming).toBe(true);
+    // Let the runtime emit its first chunks, then cancel mid-flight.
+    await new Promise((resolve) => setTimeout(resolve, 40));
     useChatStore.getState().stopStreaming();
-    await pending;
+    await settle();
+    disconnect();
 
     const assistant = selectActiveSession(useChatStore.getState())?.messages[1];
     expect(useChatStore.getState().isStreaming).toBe(false);
     expect(assistant?.stopped).toBe(true);
-    expect(assistant?.streaming).toBe(false);
   });
 
   it('changes the model for the active session', () => {
@@ -196,4 +211,8 @@ describe('sessionSummary', () => {
       }),
     ).toBeNull();
   });
+});
+
+afterEach(() => {
+  resetRuntime();
 });

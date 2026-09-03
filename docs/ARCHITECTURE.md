@@ -61,6 +61,64 @@ to `chat` and calls `getRuntime().sendMessage()`. A regression where it only did
 the former left every agent surface silently empty, which is why
 `src/stores/__tests__/composerRuntimeWiring.test.ts` exists.
 
+### One writer for assistant text
+
+`applyRuntimeEvent` in `chat.ts` is the **sole** writer of assistant message
+text, keyed by `activeRun`. There is deliberately no second message-generation
+path: an earlier build kept a parallel transport layer whose canned prose was
+what actually reached the screen, while the bridge's `message.delta` events were
+computed and discarded. That layer and a dormant mock generator were both
+deleted. `src/stores/__tests__/transcriptProjection.test.ts` guards the rule at
+the store level and fails if any source file imports a transport module;
+`src/components/__tests__/runtimeTranscript.test.tsx` guards it end to end by
+asserting the text on screen came from the runtime.
+
+To keep the graph acyclic, `run.ts` does not import `chat.ts`. It owns a
+module-level projection callback and exports `setChatProjection`, which `chat.ts`
+calls at module scope. `connectRunStore()` subscribes once via
+`subscribeValidated` and fans each event out to the run store and that callback.
+
+## Run lifecycle
+
+`RunPhase` (`src/stores/run.ts`) has eight states:
+
+```
+idle ──beginRun──▶ starting ──run.started──▶ streaming ──run.completed──▶ completed
+                                   │  ▲                                        
+                    approval.requested │  │ approval.resolved                       
+                                   ▼  │                                        
+                          awaiting-approval                                    
+                                                                               
+   streaming / awaiting-approval ──cancelRun──▶ cancelling ──run.cancelled──▶ cancelled
+   any active phase ──run.failed──▶ failed
+```
+
+| Phase | Meaning | Leaves via |
+| --- | --- | --- |
+| `idle` | No run in flight; the composer is enabled. | `beginRun()` |
+| `starting` | Request sent, the runtime has not acknowledged yet. | `run.started`, `run.failed` |
+| `streaming` | Deltas are arriving and the transcript is growing. | `run.completed`, `run.cancelled`, `run.failed`, `approval.requested` |
+| `awaiting-approval` | Blocked on a human decision in the Approval Center. | `approval.resolved` → back to `streaming`; or cancel/fail |
+| `cancelling` | The user asked to stop; the runtime has not confirmed. | `run.cancelled` |
+| `cancelled` | Stopped by the user. Partial text is kept; later deltas are ignored. | `beginRun()` |
+| `completed` | Finished normally. | `beginRun()` |
+| `failed` | The runtime reported a `RuntimeErrorKind`; `chat.ts` maps it to `runtime.errors.<kind>`. | `beginRun()` |
+
+Two rules are enforced in code and pinned by tests:
+
+- **Terminal phases are sticky.** Once `cancelled` or `failed`, a late
+  `run.completed` is ignored, and a delta arriving after cancellation cannot
+  reappend to the message.
+- **Events are session-scoped.** Any event carrying a `sessionId` that does not
+  match the active run's is dropped. Session-scoped events without a `runId`
+  (notably `context.updated`) previously bypassed the run-id guard, which is
+  finding R-1.
+
+The mission brief named an `interrupted` state. It is not implemented as a
+distinct phase: user-initiated stops resolve to `cancelling` → `cancelled`, and
+runtime-side aborts resolve to `failed` with a typed error kind. Adding a ninth
+phase would duplicate those two without changing what the UI shows.
+
 ## Component boundaries
 
 ```

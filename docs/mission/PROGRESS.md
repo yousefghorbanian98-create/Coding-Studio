@@ -170,3 +170,48 @@ the unfixed hook before being kept.
 
 Bundle before `725.21 kB` / after `725.40 kB` (gzip 223.26 → 223.32); the
 increase is one small hook and the run-summary surface.
+
+## Round 2 — A-1 remediation (the runtime boundary is now real)
+
+Round 1's review closed with a PASS while a High finding was open. That verdict
+was withdrawn: a gate result has to follow from the finding counts, not sit
+beside them. A-1 said the transcript did not come from the bridge, which
+contradicts the whole premise that `StudioRuntimeBridge` is the single
+replaceable runtime boundary — so it was fixed here rather than deferred to the
+backend phase.
+
+The fix was not a rendering tweak. `src/services/transport/` was deleted, and so
+was `src/mocks/stream.ts`, a second dormant text generator that a
+delete-the-legacy-module-only fix would have left behind; grepping each of its
+exports showed only its own test file consumed them. The one helper still needed,
+`estimateTokens`, moved to `src/lib/tokens.ts`. `applyRuntimeEvent` is now the
+sole writer of assistant text.
+
+The circular import this exposed between `chat.ts` and `run.ts` was inverted
+rather than patched around: `run.ts` owns a projection callback and exports
+`setChatProjection`, `chat.ts` registers itself at module scope, and `run.ts` no
+longer imports `chat.ts`.
+
+`chatTransport.test.ts` was rewritten against the bridge instead of deleted —
+its error-mapping, retry and persistence assertions describe real behaviour that
+still matters.
+
+Evidence, run red before green: `Tests 11 failed | 5 passed (16)` against the
+unfixed code, with the sentinel assertion showing canned transport prose where a
+bridge delta should have been, then `16 passed (16)`. A permanent end-to-end
+guard renders the real `AppShell` and asserts the on-screen reply is text that
+exists only inside `MockStudioRuntime`, because a store-level test cannot prove
+the feature is mounted.
+
+Six mutations were run against the fix; five were caught outright. The sixth
+survived only because two `persist()` calls mask each other, which is recorded
+in `docs/TECH-DEBT.md` rather than quietly dropped.
+
+L-1 also closed: six SHA pins resolved from upstream via `gh api`, Dependabot
+added, and three real `zizmor` findings fixed — credential persistence through
+checkout, template injection of a PR number into a shell script, and
+workflow-level `pull-requests: write`. `actionlint` could not be downloaded in
+this sandbox; that gap is disclosed in the review and the tech-debt log.
+
+Test count moved 600 → 594: two suites left with the code they covered, 17
+regression tests arrived.
