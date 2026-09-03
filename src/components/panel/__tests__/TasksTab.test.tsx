@@ -77,3 +77,36 @@ describe('Tasks panel', () => {
     expect(screen.getByTestId('task-t1')).toHaveTextContent('Completed');
   });
 });
+
+describe('Tasks panel — active task and actions', () => {
+  beforeEach(() => {
+    useRunStore.setState({ tasks: [] });
+    useUiStore.setState({ panelOpen: true, panelTab: 'tasks' });
+  });
+
+  it('highlights the running task', () => {
+    useRunStore.setState({
+      tasks: [task('t1', 'pending', 'Later'), task('t2', 'running', 'Now')],
+    });
+    renderWithProviders(<BottomPanel />);
+    expect(screen.getByTestId('task-t2')).toHaveAttribute('data-active', 'true');
+    expect(screen.getByTestId('task-t1')).toHaveAttribute('data-active', 'false');
+  });
+
+  it('offers cancel only for the running task', () => {
+    useRunStore.setState({
+      tasks: [task('t1', 'pending', 'Later'), task('t2', 'running', 'Now')],
+    });
+    renderWithProviders(<BottomPanel />);
+    expect(screen.getByTestId('task-cancel-t2')).toBeInTheDocument();
+    expect(screen.queryByTestId('task-cancel-t1')).not.toBeInTheDocument();
+  });
+
+  it('marks retry inert and explains why the mock cannot do it', () => {
+    useRunStore.setState({ tasks: [task('t1', 'failed', 'Broke')] });
+    renderWithProviders(<BottomPanel />);
+    const retry = screen.getByTestId('task-retry-t1');
+    expect(retry).toHaveAttribute('aria-disabled', 'true');
+    expect(retry.getAttribute('title')).toMatch(/managed runtime/i);
+  });
+});

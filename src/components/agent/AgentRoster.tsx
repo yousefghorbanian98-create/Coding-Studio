@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
-import { useRunStore } from '@/stores/run';
+import { useRunStore, selectIsBusy } from '@/stores/run';
+import { useUiStore } from '@/stores/ui';
 import type { AgentState, AgentStatus } from '@/services/runtime';
 
 const STATUS_STYLE: Record<AgentStatus, string> = {
@@ -12,9 +14,31 @@ const STATUS_STYLE: Record<AgentStatus, string> = {
   failed: 'text-[var(--color-danger)]',
 };
 
+/** Elapsed time for a working agent; final duration once it has stopped. */
+function useDuration(agent: AgentState): string | null {
+  const [now, setNow] = useState(() => Date.now());
+  const running = agent.status === 'working' && agent.startedAt !== undefined;
+
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [running]);
+
+  if (agent.startedAt === undefined) return null;
+  const elapsed = Math.max(0, (running ? now : agent.startedAt) - agent.startedAt);
+  const seconds = Math.floor(elapsed / 1000);
+  if (seconds < 60) return `${String(seconds)}s`;
+  return `${String(Math.floor(seconds / 60))}m ${String(seconds % 60)}s`;
+}
+
 function AgentRow({ agent }: { agent: AgentState }): React.ReactElement {
   const { t } = useTranslation();
   const statusLabel = t(`agent.agentStatus.${agent.status}`);
+  const duration = useDuration(agent);
+  const busy = useRunStore(selectIsBusy);
+  const requestCancel = useRunStore((state) => state.requestCancel);
+  const setPanelTab = useUiStore((state) => state.setPanelTab);
 
   return (
     <li
@@ -52,12 +76,43 @@ function AgentRow({ agent }: { agent: AgentState }): React.ReactElement {
           {agent.currentTask ?? agent.role}
         </p>
       </div>
+      {duration !== null ? (
+        <span
+          data-testid={`agent-duration-${agent.id}`}
+          className="shrink-0 tabular-nums text-[10px] text-[var(--color-ink-soft)]"
+        >
+          {duration}
+        </span>
+      ) : null}
       <span
         className="shrink-0 text-[10px] text-[var(--color-ink-soft)]"
         title={t('agent.completedTasks', { count: agent.completedTasks })}
       >
         {agent.completedTasks}
       </span>
+
+      <button
+        type="button"
+        data-testid={`agent-inspect-${agent.id}`}
+        onClick={() => setPanelTab('tasks')}
+        aria-label={t('agent.inspect', { name: agent.name })}
+        className="shrink-0 rounded p-1 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+      >
+        <Icon name="search" size={11} />
+      </button>
+      <button
+        type="button"
+        data-testid={`agent-stop-${agent.id}`}
+        onClick={() => void requestCancel()}
+        // The mock has no per-agent cancellation, so stopping any agent stops
+        // the run. Disabled once nothing is running, rather than lying.
+        disabled={!busy}
+        aria-label={t('agent.stop', { name: agent.name })}
+        title={t('agent.stopHint')}
+        className="shrink-0 rounded p-1 text-[var(--color-ink-soft)] hover:text-[var(--color-danger)] disabled:pointer-events-none disabled:opacity-30"
+      >
+        <Icon name="stop" size={11} />
+      </button>
     </li>
   );
 }

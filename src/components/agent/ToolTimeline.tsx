@@ -1,28 +1,28 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/cn';
-import { Icon, type IconName } from '@/components/ui/Icon';
-import { useRunStore } from '@/stores/run';
-import type { ToolCall, ToolKind, ToolStatus } from '@/services/runtime';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/cn";
+import { Icon, type IconName } from "@/components/ui/Icon";
+import { useRunStore } from "@/stores/run";
+import type { ToolCall, ToolKind, ToolStatus } from "@/services/runtime";
 
 const KIND_ICON: Record<ToolKind, IconName> = {
-  thinking: 'sparkle',
-  'read-file': 'files',
-  search: 'search',
-  'edit-file': 'files',
-  'run-command': 'command',
-  'run-tests': 'check',
+  thinking: "sparkle",
+  "read-file": "files",
+  search: "search",
+  "edit-file": "files",
+  "run-command": "command",
+  "run-tests": "check",
 };
 
 const STATUS_STYLE: Record<ToolStatus, string> = {
-  running: 'text-[var(--color-warn)]',
-  completed: 'text-[var(--color-ok)]',
-  failed: 'text-[var(--color-danger)]',
-  cancelled: 'text-[var(--color-ink-soft)]',
+  running: "text-[var(--color-warn)]",
+  completed: "text-[var(--color-ok)]",
+  failed: "text-[var(--color-danger)]",
+  cancelled: "text-[var(--color-ink-soft)]",
 };
 
 function formatDuration(ms: number | undefined): string {
-  if (ms === undefined) return '';
+  if (ms === undefined) return "";
   return ms < 1000 ? `${ms} ms` : `${(ms / 1000).toFixed(1)} s`;
 }
 
@@ -37,15 +37,15 @@ function TimelineCard({ call }: { call: ToolCall }): React.ReactElement {
       data-testid={`tool-card-${call.id}`}
       data-status={call.status}
       className={cn(
-        'rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)]',
-        'px-2.5 py-2 text-xs',
+        "rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)]",
+        "px-2.5 py-2 text-xs",
       )}
     >
       <div className="flex items-center gap-2">
         <Icon
           name={KIND_ICON[call.kind]}
           size={13}
-          className={cn('shrink-0', STATUS_STYLE[call.status])}
+          className={cn("shrink-0", STATUS_STYLE[call.status])}
         />
         <span
           title={call.title}
@@ -53,7 +53,7 @@ function TimelineCard({ call }: { call: ToolCall }): React.ReactElement {
         >
           {call.title}
         </span>
-        <span className={cn('shrink-0 text-[10px]', STATUS_STYLE[call.status])}>
+        <span className={cn("shrink-0 text-[10px]", STATUS_STYLE[call.status])}>
           {statusLabel}
         </span>
         {call.durationMs !== undefined ? (
@@ -66,26 +66,45 @@ function TimelineCard({ call }: { call: ToolCall }): React.ReactElement {
             type="button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
-            aria-label={t(open ? 'agent.hideDetails' : 'agent.showDetails')}
+            aria-label={t(open ? "agent.hideDetails" : "agent.showDetails")}
             data-testid={`tool-toggle-${call.id}`}
             className="shrink-0 rounded p-0.5 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
           >
-            <Icon name="chevron" size={12} className={open ? 'rotate-90' : ''} />
+            <Icon
+              name="chevron"
+              size={12}
+              className={open ? "rotate-90" : ""}
+            />
           </button>
         ) : null}
       </div>
 
       {open && detail ? (
-        <pre
-          data-testid={`tool-detail-${call.id}`}
-          className={cn(
-            'mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-words rounded',
-            'bg-[var(--color-surface-2)] p-2 font-mono text-[10px]',
-            'text-[var(--color-ink-soft)]',
-          )}
-        >
-          {detail}
-        </pre>
+        <div className="relative">
+          <button
+            type="button"
+            data-testid={`tool-copy-${call.id}`}
+            aria-label={t("chat.copyCode")}
+            onClick={() => {
+              void navigator.clipboard?.writeText(detail).catch(() => {
+                // Clipboard can be denied; silence beats a crash.
+              });
+            }}
+            className="absolute end-1 top-2.5 rounded p-1 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+          >
+            <Icon name="copy" size={10} />
+          </button>
+          <pre
+            data-testid={`tool-detail-${call.id}`}
+            className={cn(
+              "mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-words rounded",
+              "bg-[var(--color-surface-2)] p-2 font-mono text-[10px]",
+              "text-[var(--color-ink-soft)]",
+            )}
+          >
+            {detail}
+          </pre>
+        </div>
       ) : null}
     </li>
   );
@@ -99,9 +118,9 @@ export function ToolTimeline(): React.ReactElement | null {
   if (calls.length === 0) return null;
 
   return (
-    <section data-testid="tool-timeline" aria-label={t('agent.timeline')}>
+    <section data-testid="tool-timeline" aria-label={t("agent.timeline")}>
       <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-ink-soft)]">
-        {t('agent.timeline')}
+        {t("agent.timeline")}
       </h3>
       <ul className="flex flex-col gap-1.5">
         {calls.map((call) => (

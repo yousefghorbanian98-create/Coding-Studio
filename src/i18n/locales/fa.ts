@@ -270,6 +270,9 @@ export const fa: Translation = {
     showDetails: 'نمایش جزئیات',
     hideDetails: 'پنهان‌کردن جزئیات',
     summary: 'خلاصه',
+    inspect: 'بررسی فعالیت {{name}}',
+    stop: 'توقف {{name}}',
+    stopHint: 'رانتایم ساختگی کل اجرا را لغو می‌کند، نه یک عامل را.',
     agentStatus: {
       idle: 'بی‌کار',
       working: 'در حال کار',
@@ -391,6 +394,10 @@ export const fa: Translation = {
     tasks: {
       empty: 'هنوز کاری نیست. وقتی عامل برنامه‌ای پیشنهاد دهد، کارها اینجا ظاهر می‌شوند.',
       filterAll: 'همه',
+      cancel: 'لغو {{title}}',
+      cancelHint: 'اجرایی را که این کار به آن تعلق دارد لغو می‌کند.',
+      retry: 'تلاش دوباره {{title}}',
+      retryHint: 'تلاش دوباره برای یک کار به رانتایم مدیریت‌شده نیاز دارد.',
       blocked: 'مسدود',
       progress: '{{done}} از {{total}} انجام شد',
     },

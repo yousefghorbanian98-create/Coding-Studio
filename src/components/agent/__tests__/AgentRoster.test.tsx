@@ -55,3 +55,43 @@ describe('AgentRoster', () => {
     expect(screen.getByRole('region', { name: 'Agents' })).toBeInTheDocument();
   });
 });
+
+describe('AgentRoster — duration and controls', () => {
+  beforeEach(() => {
+    useRunStore.setState({ agents: [], phase: 'idle', runId: null });
+  });
+
+  it('shows elapsed time for an agent that has started', () => {
+    useRunStore.setState({
+      agents: [{ ...agent(), startedAt: Date.now() - 5000 }],
+    });
+    renderWithProviders(<AgentRoster />);
+    expect(screen.getByTestId('agent-duration-a1')).toHaveTextContent(/\d+s/);
+  });
+
+  it('omits the duration when the agent never reported a start', () => {
+    useRunStore.setState({ agents: [agent()] });
+    renderWithProviders(<AgentRoster />);
+    expect(screen.queryByTestId('agent-duration-a1')).not.toBeInTheDocument();
+  });
+
+  it('disables stop when nothing is running rather than lying', () => {
+    useRunStore.setState({ agents: [agent()], phase: 'idle' });
+    renderWithProviders(<AgentRoster />);
+    expect(screen.getByTestId('agent-stop-a1')).toBeDisabled();
+  });
+
+  it('says plainly that stopping cancels the whole run', () => {
+    useRunStore.setState({ agents: [agent()] });
+    renderWithProviders(<AgentRoster />);
+    expect(
+      screen.getByTestId('agent-stop-a1').getAttribute('title'),
+    ).toMatch(/whole run|not one agent/i);
+  });
+
+  it('offers an inspect control per agent', () => {
+    useRunStore.setState({ agents: [agent()] });
+    renderWithProviders(<AgentRoster />);
+    expect(screen.getByTestId('agent-inspect-a1')).toBeInTheDocument();
+  });
+});

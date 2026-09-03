@@ -268,6 +268,9 @@ export const en = {
     showDetails: 'Show details',
     hideDetails: 'Hide details',
     summary: 'Summary',
+    inspect: 'Inspect {{name}} activity',
+    stop: 'Stop {{name}}',
+    stopHint: 'The mock runtime cancels the whole run, not one agent.',
     agentStatus: {
       idle: 'Idle',
       working: 'Working',
@@ -389,6 +392,10 @@ export const en = {
     tasks: {
       empty: 'No tasks yet. Tasks appear when the agent proposes a plan.',
       filterAll: 'All',
+      cancel: 'Cancel {{title}}',
+      cancelHint: 'Cancels the run this task belongs to.',
+      retry: 'Retry {{title}}',
+      retryHint: 'Retrying a single task needs the managed runtime.',
       blocked: 'Blocked',
       progress: '{{done}} of {{total}} done',
     },

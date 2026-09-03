@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
 import { useUiStore, type PanelTab } from '@/stores/ui';
 import { getDiagnostics, type TaskStatus } from '@/services/runtime';
-import { useRunStore } from '@/stores/run';
+import { useRunStore, selectIsBusy } from '@/stores/run';
 import {
   FIXTURE_OUTPUT,
   FIXTURE_PROBLEMS,
@@ -212,6 +212,8 @@ const TASK_ORDER: TaskStatus[] = [
 function TasksTab(): React.ReactElement {
   const { t } = useTranslation();
   const tasks = useRunStore((state) => state.tasks);
+  const busy = useRunStore(selectIsBusy);
+  const requestCancel = useRunStore((state) => state.requestCancel);
   const [filter, setFilter] = useState<TaskStatus | 'all'>('all');
 
   const done = tasks.filter((task) => task.status === 'completed').length;
@@ -271,7 +273,13 @@ function TasksTab(): React.ReactElement {
                 key={task.id}
                 data-testid={`task-${task.id}`}
                 data-status={task.status}
-                className="flex items-start gap-2 py-1 text-[11px]"
+                data-active={task.status === 'running'}
+                className={cn(
+                  'flex items-start gap-2 rounded px-1.5 py-1 text-[11px]',
+                  // The running task is the one the user is waiting on.
+                  task.status === 'running' &&
+                    'bg-[var(--color-brand-soft)] ring-1 ring-[var(--color-brand)]',
+                )}
               >
                 <span className="min-w-0 flex-1" title={task.title}>
                   <span className="block truncate text-[var(--color-ink)]">
@@ -287,6 +295,35 @@ function TasksTab(): React.ReactElement {
                 <span className="shrink-0 text-[10px] text-[var(--color-ink-soft)]">
                   {t(`agent.taskStatus.${task.status}`)}
                 </span>
+
+                {task.status === 'running' ? (
+                  <button
+                    type="button"
+                    data-testid={`task-cancel-${task.id}`}
+                    onClick={() => void requestCancel()}
+                    aria-label={t('panel.tasks.cancel', { title: task.title })}
+                    title={t('panel.tasks.cancelHint')}
+                    className="shrink-0 rounded p-0.5 text-[var(--color-ink-soft)] hover:text-[var(--color-danger)]"
+                  >
+                    <Icon name="stop" size={10} />
+                  </button>
+                ) : null}
+
+                {task.status === 'failed' ? (
+                  <button
+                    type="button"
+                    data-testid={`task-retry-${task.id}`}
+                    // Retry needs a real runtime to re-run a single task; the
+                    // mock cannot, so this states that instead of pretending.
+                    aria-disabled="true"
+                    disabled={busy}
+                    aria-label={t('panel.tasks.retry', { title: task.title })}
+                    title={t('panel.tasks.retryHint')}
+                    className="shrink-0 cursor-not-allowed rounded p-0.5 text-[var(--color-ink-soft)] opacity-50"
+                  >
+                    <Icon name="chevron" size={10} />
+                  </button>
+                ) : null}
               </li>
             ))}
           </ul>
