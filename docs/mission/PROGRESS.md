@@ -110,7 +110,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | Slice 8 completion — explorer menu, patch copy | `f81aceb` | 554 unit + component | CI verified |
 | Slice 9 completion — problems filter, output and log copy | `7f69795` | 564 unit + component | CI verified |
 | Slice 10 completion — session summary | `e092095` | 570 unit + component | CI verified ([33756413830](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33756413830)) |
-| Slice 13 completion — scenario app state, run summary | _pending_ | 591 unit + component, 4 E2E | pending |
+| Slice 13 completion — scenario app state, run summary | `4caa3c5` | 591 unit + component, 4 E2E | pending |
+| Slice 14 completion — copy-timer leak | _pending_ | 595 unit + component | pending |
 
 ## Baseline
 
@@ -147,3 +148,25 @@ that `applyScenario` hands to the stores. The Scenario Lab remains
 development-only: `import.meta.env.DEV` is statically false in a production
 build, and a grep of `dist/assets/*.js` confirms the toggle is absent from
 every shipped chunk (it survives only in the sourcemap).
+
+## Slice 14 audit — accessibility, performance, polish
+
+Verified present: landmarks, named regions, accessible names on every shell
+button, labelled inputs, dialog semantics with Escape, single-tab-stop
+tablist, focus restoration in the command palette and settings nav, severity
+and diff state spelled out in text rather than colour alone, a
+`prefers-reduced-motion` block in `globals.css`, consistent scrollbars,
+memoised message rows, and no syntax-highlighting dependency to lazy-load.
+Every `addEventListener` has a matching `removeEventListener`.
+
+One real defect found: the copy confirmation in `MessageItem` and
+`MessageContent` scheduled a 1.5s reset with a bare `setTimeout` and never
+cleared it, so switching sessions left a timer per unmounted message row that
+then set state on a dead component. Both now share `useCopyFeedback`, which
+clears its timer on unmount. The regression test asserts the timer count
+rather than a React warning — React no longer warns, so a warning-based test
+would have passed against the buggy code. It was confirmed to fail against
+the unfixed hook before being kept.
+
+Bundle before `725.21 kB` / after `725.40 kB` (gzip 223.26 → 223.32); the
+increase is one small hook and the run-summary surface.

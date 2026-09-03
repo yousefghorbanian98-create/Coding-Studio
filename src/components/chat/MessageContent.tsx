@@ -1,5 +1,6 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCopyFeedback } from '@/hooks/useCopyFeedback';
 import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/Icon';
 import { parseBlocks, parseInline, parseLines } from '@/lib/markdown';
@@ -120,19 +121,7 @@ function CodeBlock({
   lang?: string;
 }): React.ReactElement {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
-
-  const copy = (): void => {
-    void navigator.clipboard?.writeText(content).then(
-      () => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
-      },
-      () => {
-        // Clipboard can be denied; failing silently is better than a crash.
-      },
-    );
-  };
+  const { copied, copy } = useCopyFeedback();
 
   return (
     <div className="group relative">
@@ -143,7 +132,9 @@ function CodeBlock({
       ) : null}
       <button
         type="button"
-        onClick={copy}
+        onClick={() => {
+          copy(content);
+        }}
         data-testid="code-copy"
         aria-label={copied ? t('chat.copied') : t('chat.copyCode')}
         className={cn(

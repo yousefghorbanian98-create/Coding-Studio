@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/cn';
@@ -10,6 +10,7 @@ import { findModel } from '@/services/runtime/fixtures';
 import type { ChatMessage } from '@/types/chat';
 import { useChatStore } from '@/stores/chat';
 import { usePreferences } from '@/stores/preferences';
+import { useCopyFeedback } from '@/hooks/useCopyFeedback';
 
 export const MessageItem = memo(function MessageItem({
   message,
@@ -20,7 +21,7 @@ export const MessageItem = memo(function MessageItem({
   const language = usePreferences((s) => s.language);
   const selectMessage = useChatStore((s) => s.selectMessage);
   const selected = useChatStore((s) => s.selectedMessageId === message.id);
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyFeedback();
 
   const roleLabel =
     message.role === 'user'
@@ -30,10 +31,7 @@ export const MessageItem = memo(function MessageItem({
         : t('chat.system');
 
   const onCopy = (): void => {
-    void navigator.clipboard?.writeText(message.content).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
+    copy(message.content);
   };
 
   return (
