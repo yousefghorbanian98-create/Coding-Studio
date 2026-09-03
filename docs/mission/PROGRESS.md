@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 45 / 46 steps complete — 98%**
+**Overall progress: 46 / 46 steps complete — 100%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -48,8 +48,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 16 | Design system tokens and primitives | 3 | CI verified |
 | 17 | Application shell: title bar, activity bar, panels, status bar | 3 | CI verified |
 | 18 | Resizable, persisted layout verified at 1366×768 and 1920×1080 | 3 | CI verified |
-| 19 | Onboarding and Project Home | 4 | Locally verified |
-| 20 | Recent projects with pin, remove and keyboard navigation | 4 | Locally verified |
+| 19 | Onboarding and Project Home | 4 | CI verified |
+| 20 | Recent projects with pin, remove and keyboard navigation | 4 | CI verified |
 | 21 | Composer: multiline, auto-resize, drafts | 5 | CI verified |
 | 22 | Ask / Plan / Agent modes plus provider and model selectors | 5 | CI verified |
 | 23 | Message system, streaming and cancellation UX | 5 | CI verified |
@@ -57,7 +57,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 25 | Chat error states (11 variants) | 5 | CI verified |
 | 26 | Agent timeline event cards | 6 | CI verified |
 | 27 | Plan view with approve, reject and step status | 6 | CI verified |
-| 28 | Task panel with grouping, progress and filters | 6 | Locally verified |
+| 28 | Task panel with grouping, progress and filters | 6 | CI verified |
 | 29 | Agent panel (mock multi-agent) | 6 | CI verified — `AgentRoster` |
 | 30 | Approval card and the seven approval types | 7 | CI verified |
 | 31 | Permission settings with safe defaults | 7 | CI verified |
@@ -85,7 +85,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | --- | --- | --- |
 | 44 | Documentation: README, architecture, roadmap, testing | CI verified — `docs/ARCHITECTURE.md`, `docs/TESTING.md` |
 | 45 | Windows CI green with all artifacts | CI verified — bundle, Playwright report, screenshots |
-| 46 | Final report; PR remains Draft and unmerged | Planned |
+| 46 | Final report; PR remains Draft and unmerged | CI verified — PR #1 body is the final report |
 
 ---
 
@@ -104,6 +104,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 12 — Command palette and keyboard UX | `3957315` | 35 unit + component, 9 E2E | CI verified ([33731232200](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33731232200)) |
 | 13 — Scenario lab coverage + 12 CI screenshots | `6ac0755` | 104 scenario tests | CI verified ([33731232200](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33731232200)) |
 | 14 — Accessibility, performance and polish | `4ccf99e` | 499 unit + component, 15 E2E incl. 12 screenshots | CI verified ([33736586399](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33736586399)) |
+| Gap closure — tasks panel, project home | `bcded32` | 514 unit + component | CI verified ([33738543389](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33738543389)) |
 
 ## Baseline
 
