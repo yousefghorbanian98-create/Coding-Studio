@@ -65,6 +65,9 @@ UI screenshots. No signing or auto-update keys are configured or committed.
 
 ## Documentation
 
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — component boundaries, state ownership, the bridge, event model, persistence, security boundaries
+- [`docs/TESTING.md`](docs/TESTING.md) — the test layers, CI artifacts and the manual QA checklist
+- [`docs/ACCESSIBILITY.md`](docs/ACCESSIBILITY.md) — accessibility and performance audit, with before/after bundle sizes
 - [`docs/mission/MISSION.md`](docs/mission/MISSION.md) — the full mission brief
 - [`docs/mission/PROGRESS.md`](docs/mission/PROGRESS.md) — numbered plan and progress
 - [`docs/mission/BASELINE.md`](docs/mission/BASELINE.md) — audit taken at mission start

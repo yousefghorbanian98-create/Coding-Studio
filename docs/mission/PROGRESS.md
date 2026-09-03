@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 37 / 46 steps complete — 80%**
+**Overall progress: 38 / 46 steps complete — 83%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -83,7 +83,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 
 | # | Step | Status |
 | --- | --- | --- |
-| 44 | Documentation: README, architecture, roadmap, testing | Planned |
+| 44 | Documentation: README, architecture, roadmap, testing | Locally verified — `docs/ARCHITECTURE.md`, `docs/TESTING.md` |
 | 45 | Windows CI green with all artifacts | Planned |
 | 46 | Final report; PR remains Draft and unmerged | Planned |
 
