@@ -38,3 +38,24 @@ describe('RunSummary', () => {
     expect(screen.queryByTestId('run-summary')).toBeNull();
   });
 });
+
+/**
+ * Regression: RunSummary was covered only in isolation, so removing
+ * `<RunSummary />` from ChatArea kept all 595 tests green while the summary
+ * vanished from the product. This asserts it is actually mounted in the
+ * transcript.
+ */
+describe('RunSummary is wired into the chat transcript', () => {
+  it('appears inside ChatArea once a run completes', async () => {
+    const { ChatArea } = await import('@/components/chat/ChatArea');
+    useRunStore.setState({
+      phase: 'completed',
+      summary: 'Updated 3 files and ran the test suite.',
+    });
+    renderWithProviders(<ChatArea />);
+
+    expect(screen.getByTestId('run-summary')).toHaveTextContent(
+      'Updated 3 files and ran the test suite.',
+    );
+  });
+});

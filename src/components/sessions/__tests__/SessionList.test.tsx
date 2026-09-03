@@ -183,3 +183,52 @@ describe('SessionList', () => {
     ).toBe(false);
   });
 });
+
+/**
+ * Regression: the summary line was only covered by a unit test of the pure
+ * `sessionSummary` helper, so deleting the markup that renders it left the
+ * whole suite green while the feature disappeared from the sidebar. These
+ * assert the rendered output instead.
+ */
+describe('session summary line (rendered)', () => {
+  it('shows the last reply under the session title', () => {
+    useChatStore.setState({
+      sessions: [
+        session({
+          id: 'a',
+          title: 'Alpha',
+          messages: [
+            {
+              id: 'm1',
+              role: 'user',
+              content: 'How do I split the bridge?',
+              createdAt: 1,
+            },
+            {
+              id: 'm2',
+              role: 'assistant',
+              content: 'Extract the transport seam first.',
+              createdAt: 2,
+            },
+          ],
+        }),
+      ],
+      activeSessionId: 'a',
+    });
+    renderWithProviders(<SessionList />);
+
+    expect(screen.getByTestId('session-summary-a')).toHaveTextContent(
+      'Extract the transport seam first.',
+    );
+  });
+
+  it('renders no summary element for an empty session', () => {
+    useChatStore.setState({
+      sessions: [session({ id: 'a', title: 'Alpha', messages: [] })],
+      activeSessionId: 'a',
+    });
+    renderWithProviders(<SessionList />);
+
+    expect(screen.queryByTestId('session-summary-a')).toBeNull();
+  });
+});

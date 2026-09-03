@@ -96,6 +96,18 @@ export const useRunStore = create<RunState>()((set, get) => ({
       return;
     }
 
+    // Some events are session-scoped and carry no run id (context.updated is
+    // the notable one). Without this guard a background session's token usage
+    // would overwrite the meter for the run the user is actually watching.
+    if (
+      !('runId' in event) &&
+      'sessionId' in event &&
+      state.sessionId !== null &&
+      event.sessionId !== state.sessionId
+    ) {
+      return;
+    }
+
     switch (event.type) {
       case 'run.started':
         set({ phase: 'streaming', runId: event.runId, sessionId: event.sessionId });

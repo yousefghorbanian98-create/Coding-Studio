@@ -201,3 +201,38 @@ describe('run store', () => {
     expect(state.phase).toBe('idle');
   });
 });
+
+/**
+ * Regression: `context.updated` carries a sessionId but no runId, so it slipped
+ * past the run-id isolation guard and a background session could overwrite the
+ * context meter of the run the user was watching.
+ */
+describe('session isolation for run-less events', () => {
+  it('ignores context.updated from a different session', () => {
+    useRunStore.getState().reset();
+    useRunStore.getState().beginRun(asRunId('run-A'), asSessionId('sess-A'));
+
+    useRunStore.getState().apply({
+      type: 'context.updated',
+      sessionId: asSessionId('sess-OTHER'),
+      usedTokens: 99_999,
+      maxTokens: 128_000,
+    });
+
+    expect(useRunStore.getState().usedTokens).toBe(0);
+  });
+
+  it('still applies context.updated for the active session', () => {
+    useRunStore.getState().reset();
+    useRunStore.getState().beginRun(asRunId('run-A'), asSessionId('sess-A'));
+
+    useRunStore.getState().apply({
+      type: 'context.updated',
+      sessionId: asSessionId('sess-A'),
+      usedTokens: 1_234,
+      maxTokens: 128_000,
+    });
+
+    expect(useRunStore.getState().usedTokens).toBe(1_234);
+  });
+});
