@@ -1,7 +1,14 @@
 import { create } from 'zustand';
 import type { ChatMessage, ChatSession } from '@/types/chat';
 import { createMockSessions } from '@/mocks/sessions';
-import { DEFAULT_MODEL_ID } from '@/services/runtime';
+import {
+  DEFAULT_MODEL_ID,
+  asSessionId,
+  getRuntime,
+  type SendMessageInput,
+} from '@/services/runtime';
+import { useRunStore } from './run';
+import { useRuntimeStore } from './runtime';
 import { estimateTokens } from '@/mocks/stream';
 import {
   MockTransport,
@@ -232,6 +239,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   stopStreaming: () => {
     const { controller } = get();
     if (controller && !controller.signal.aborted) controller.abort();
+    // Stop the runtime-side run too, otherwise its tools keep reporting.
+    void useRunStore.getState().requestCancel();
     set({ controller: null, isStreaming: false });
     set((state) => ({
       sessions: state.sessions.map((s) => ({
@@ -302,6 +311,24 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         ),
       }));
     };
+
+    // Ask the runtime bridge to drive the run in parallel. This is what makes
+    // plans, tool calls and approvals appear: the run store is subscribed to
+    // those events. The text itself still streams over the transport below.
+    const runtimeState = useRuntimeStore.getState();
+    const runtimeInput: SendMessageInput = {
+      sessionId: asSessionId(sessionId),
+      content: text,
+      mode: runtimeState.mode,
+      providerId: runtimeState.providerId,
+      modelId: runtimeState.modelId,
+    };
+    void getRuntime()
+      .sendMessage(runtimeInput)
+      .catch(() => {
+        // A runtime that refuses the run is already reported through its own
+        // events and the connection banner; the transport reply still applies.
+      });
 
     // Route through the pluggable transport. The mock is the default, so a
     // missing backend degrades to canned replies instead of an error.
