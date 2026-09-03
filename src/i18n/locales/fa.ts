@@ -13,6 +13,7 @@ export const fa: Translation = {
     menu: 'منوی برنامه',
   },
   rail: {
+    home: 'خانه',
     changes: 'تغییرات',
     chat: 'گفت‌وگو',
     sessions: 'نشست‌ها',
@@ -311,6 +312,30 @@ export const fa: Translation = {
   providers: {
     needsRuntime: 'پس از یکپارچه‌سازی زمان اجرای مدیریت‌شده در دسترس خواهد بود.',
     demoBadge: 'نمایشی',
+  },
+  projects: {
+    title: 'کدینگ استودیو',
+    subtitle: 'یک فضای کاری مستقل از ارائه‌دهنده، روی رانتایم نمایشی.',
+    recent: 'پروژه‌های اخیر',
+    empty: 'پروژه اخیری نیست.',
+    newSession: 'نشست جدید',
+    recover: 'بازیابی نشست قبلی',
+    openFolder: 'باز کردن پوشه',
+    cloneRepo: 'کلون کردن مخزن',
+    needsRuntime:
+      'باز کردن و کلون کردن به رانتایم مدیریت‌شده نیاز دارند که بخشی از این نسخه نیست.',
+    version: 'نسخه {{version}}',
+    pin: 'سنجاق کردن {{name}}',
+    unpin: 'برداشتن سنجاق {{name}}',
+    remove: 'حذف {{name}} از فهرست اخیر',
+    runtime: {
+      demo: 'رانتایم نمایشی',
+      mockProvider: 'ارائه‌دهنده ساختگی',
+    },
+    state: {
+      missing: 'پوشه پیدا نشد',
+      'permission-denied': 'دسترسی رد شد',
+    },
   },
   explorer: {
     title: 'کاوشگر',

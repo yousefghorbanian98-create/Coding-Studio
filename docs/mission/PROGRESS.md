@@ -48,8 +48,8 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 16 | Design system tokens and primitives | 3 | CI verified |
 | 17 | Application shell: title bar, activity bar, panels, status bar | 3 | CI verified |
 | 18 | Resizable, persisted layout verified at 1366×768 and 1920×1080 | 3 | CI verified |
-| 19 | Onboarding and Project Home | 4 | Planned |
-| 20 | Recent projects with pin, remove and keyboard navigation | 4 | Planned |
+| 19 | Onboarding and Project Home | 4 | Locally verified |
+| 20 | Recent projects with pin, remove and keyboard navigation | 4 | Locally verified |
 | 21 | Composer: multiline, auto-resize, drafts | 5 | CI verified |
 | 22 | Ask / Plan / Agent modes plus provider and model selectors | 5 | CI verified |
 | 23 | Message system, streaming and cancellation UX | 5 | CI verified |

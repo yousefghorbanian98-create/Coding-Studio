@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { ChatArea } from '@/components/chat/ChatArea';
+import { ProjectHome } from '@/components/onboarding/ProjectHome';
+import { usePreferences } from '@/stores/preferences';
 import { Inspector } from '@/components/inspector/Inspector';
 import { CommandPalette } from '@/components/palette/CommandPalette';
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
@@ -32,6 +34,8 @@ export function AppShell(): React.ReactElement {
   // The cleanup keeps StrictMode's double mount from doubling the listeners.
   useEffect(() => connectRunStore(), []);
 
+  const activeRailItem = usePreferences((state) => state.activeRailItem);
+
   return (
     <div
       data-testid="app-shell"
@@ -41,7 +45,13 @@ export function AppShell(): React.ReactElement {
       <div className="flex min-h-0 flex-1">
         <ActivityRail />
         <Sidebar />
-        <ChatArea />
+        {activeRailItem === 'home' ? (
+          <main className="min-w-0 flex-1 overflow-y-auto bg-[var(--color-canvas)]">
+            <ProjectHome />
+          </main>
+        ) : (
+          <ChatArea />
+        )}
         <Inspector />
       </div>
       <BottomPanel />

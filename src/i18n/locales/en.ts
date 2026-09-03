@@ -11,6 +11,7 @@ export const en = {
     menu: 'Application menu',
   },
   rail: {
+    home: 'Home',
     changes: 'Changes',
     chat: 'Chat',
     sessions: 'Sessions',
@@ -309,6 +310,30 @@ export const en = {
   providers: {
     needsRuntime: 'Available once the managed runtime is integrated.',
     demoBadge: 'Demo',
+  },
+  projects: {
+    title: 'Coding Studio',
+    subtitle: 'A provider-neutral workspace running on a demo runtime.',
+    recent: 'Recent projects',
+    empty: 'No recent projects.',
+    newSession: 'New session',
+    recover: 'Recover previous session',
+    openFolder: 'Open folder',
+    cloneRepo: 'Clone repository',
+    needsRuntime:
+      'Opening and cloning need the managed runtime, which is not part of this build.',
+    version: 'Version {{version}}',
+    pin: 'Pin {{name}}',
+    unpin: 'Unpin {{name}}',
+    remove: 'Remove {{name}} from recent',
+    runtime: {
+      demo: 'Demo runtime',
+      mockProvider: 'Mock provider',
+    },
+    state: {
+      missing: 'Folder not found',
+      'permission-denied': 'Permission denied',
+    },
   },
   explorer: {
     title: 'Explorer',

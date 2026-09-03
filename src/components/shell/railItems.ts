@@ -7,6 +7,7 @@ export interface RailItem {
 }
 
 export const RAIL_ITEMS: RailItem[] = [
+  { id: 'home', icon: 'sparkle', labelKey: 'rail.home' },
   { id: 'chat', icon: 'chat', labelKey: 'rail.chat' },
   { id: 'sessions', icon: 'sessions', labelKey: 'rail.sessions' },
   { id: 'files', icon: 'files', labelKey: 'rail.files' },
