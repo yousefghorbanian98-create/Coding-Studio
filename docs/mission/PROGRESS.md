@@ -1,0 +1,246 @@
+# Mission progress — Frontend Completion (Finn Loop)
+
+Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omitted.
+
+Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
+
+**Overall progress: 46 / 46 steps complete — 100%**
+
+Progress is weighted by step, counting only steps that are fully `CI verified`
+(or `Locally verified` for steps that CI cannot exercise).
+
+---
+
+## Phase 0 — Setup and audit (steps 1–6)
+
+| # | Step | Status |
+| --- | --- | --- |
+| 1 | Save the full mission as a document in the repository | CI verified |
+| 2 | Produce the numbered step list with a progress percentage | CI verified |
+| 3 | Verify branch, git status and recover the workspace pointer | CI verified |
+| 4 | Review PR #1 and the latest CI run | CI verified |
+| 5 | Baseline audit: structure, deps, configs, Ollama surface, tests, artifacts | CI verified |
+| 6 | Record the baseline report and the keep / refactor / delete decision | CI verified |
+
+## Phase 1 — Slice 1: remove Ollama (steps 7–11)
+
+| # | Step | Status |
+| --- | --- | --- |
+| 7 | Delete the Rust Ollama client, adapter, registry, types, errors and tests | CI verified |
+| 8 | Remove the Ollama Tauri commands and their registration | CI verified |
+| 9 | Remove the Ollama TypeScript services, store, schemas and UI | CI verified |
+| 10 | Purge Ollama strings, i18n keys, docs and unused dependencies | CI verified |
+| 11 | Verify a case-insensitive `ollama` search returns nothing in active source | CI verified |
+
+## Phase 2 — Slice 2: StudioRuntimeBridge (steps 12–15)
+
+| # | Step | Status |
+| --- | --- | --- |
+| 12 | Define the typed contract and the 28 discriminated-union events | CI verified |
+| 13 | Add Zod validation with non-crashing, loggable invalid-event handling | CI verified |
+| 14 | Implement the deterministic MockStudioRuntime with real cancellation | CI verified |
+| 15 | Subscription cleanup, StrictMode safety and ID-namespace separation | CI verified |
+
+## Phase 3 — Slices 3–14: frontend build-out (steps 16–39)
+
+| # | Step | Slice | Status |
+| --- | --- | --- | --- |
+| 16 | Design system tokens and primitives | 3 | CI verified |
+| 17 | Application shell: title bar, activity bar, panels, status bar | 3 | CI verified |
+| 18 | Resizable, persisted layout verified at 1366×768 and 1920×1080 | 3 | CI verified |
+| 19 | Onboarding and Project Home | 4 | CI verified |
+| 20 | Recent projects with pin, remove and keyboard navigation | 4 | CI verified |
+| 21 | Composer: multiline, auto-resize, drafts | 5 | CI verified |
+| 22 | Ask / Plan / Agent modes plus provider and model selectors | 5 | CI verified |
+| 23 | Message system, streaming and cancellation UX | 5 | CI verified |
+| 24 | Safe markdown rendering with code blocks and copy | 5 | CI verified |
+| 25 | Chat error states (11 variants) | 5 | CI verified |
+| 26 | Agent timeline event cards | 6 | CI verified |
+| 27 | Plan view with approve, reject and step status | 6 | CI verified |
+| 28 | Task panel with grouping, progress and filters | 6 | CI verified |
+| 29 | Agent panel (mock multi-agent) | 6 | CI verified — `AgentRoster` |
+| 30 | Approval card and the seven approval types | 7 | CI verified |
+| 31 | Permission settings with safe defaults | 7 | CI verified |
+| 32 | Explorer file tree | 8 | CI verified |
+| 33 | Search with grouped results and highlighting | 8 | CI verified |
+| 34 | Changes list and diff viewer | 8 | CI verified |
+| 35 | Bottom panel: Terminal, Problems, Output, Agent Logs | 9 | CI verified |
+| 36 | Session management and resilient persistence | 10 | CI verified |
+| 37 | Provider-neutral settings and diagnostics | 11 | CI verified |
+| 38 | Command palette and keyboard reference | 12 | CI verified |
+| 39 | Mock Scenario Lab with all 30 scenarios | 13 | CI verified |
+
+## Phase 4 — Quality (steps 40–43)
+
+| # | Step | Status |
+| --- | --- | --- |
+| 40 | Accessibility pass | CI verified — `docs/ACCESSIBILITY.md` |
+| 41 | Performance pass and bundle measurement | CI verified — vendor chunk split, stream listener leak fixed |
+| 42 | Visual polish and state coverage | CI verified — overflow, tooltips, empty states |
+| 43 | Full test suite: unit, component, Playwright, screenshots | CI verified — run `33736586399` |
+
+## Phase 5 — Delivery (steps 44–46)
+
+| # | Step | Status |
+| --- | --- | --- |
+| 44 | Documentation: README, architecture, roadmap, testing | CI verified — `docs/ARCHITECTURE.md`, `docs/TESTING.md` |
+| 45 | Windows CI green with all artifacts | CI verified — bundle, Playwright report, screenshots |
+| 46 | Final report; PR remains Draft and unmerged | CI verified — PR #1 body is the final report |
+
+---
+
+## Slice log
+
+| Slice | Commit | Tests | Status |
+| --- | --- | --- | --- |
+| 1 — Remove Ollama | `5af265e` | 188 unit | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
+| 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
+| 3 — Agent UI (plan, timeline, approvals) | `f8b6643` | 27 component + store | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
+| 4 — Modes, drafts, Scenario Lab | `8ff2f1f` | 13 component + 8 E2E | CI verified ([33678393808](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33678393808)) |
+| 8 — Explorer, search, changes and diff | `d98cfec` | 32 unit + component, 8 E2E | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
+| 9 — Bottom panel (terminal, problems, output, agent logs) | `f753963` | 12 component | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
+| 10 — Session management and persistence | `d2081af` | 35 unit + component, 7 E2E | CI verified ([33689394001](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33689394001)) |
+| 11 — Settings, providers and permissions | `5d97287` | 30 unit + component, 9 E2E | CI verified ([33720031181](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33720031181)) |
+| 12 — Command palette and keyboard UX | `3957315` | 35 unit + component, 9 E2E | CI verified ([33731232200](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33731232200)) |
+| 13 — Scenario lab coverage + 12 CI screenshots | `6ac0755` | 104 scenario tests | CI verified ([33731232200](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33731232200)) |
+| 14 — Accessibility, performance and polish | `4ccf99e` | 499 unit + component, 15 E2E incl. 12 screenshots | CI verified ([33736586399](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33736586399)) |
+| Gap closure — tasks panel, project home | `bcded32` | 514 unit + component | CI verified ([33738543389](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33738543389)) |
+| Slice 5 completion — markdown, autoscroll, composer | `4100631` | 537 unit + component | CI verified |
+| Slice 6 completion — agent duration, stop, task actions | `ee8725a` | 545 unit + component | CI verified |
+| Slice 8 completion — explorer menu, patch copy | `f81aceb` | 554 unit + component | CI verified |
+| Slice 9 completion — problems filter, output and log copy | `7f69795` | 564 unit + component | CI verified |
+| Slice 10 completion — session summary | `e092095` | 570 unit + component | CI verified ([33756413830](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33756413830)) |
+| Slice 13 completion — scenario app state, run summary | `4caa3c5` | 591 unit + component, 4 E2E | CI verified ([33759862921](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33759862921)) |
+| Slice 14 completion — copy-timer leak | `d0acc2a` | 595 unit + component | CI verified ([33759862921](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33759862921)) |
+
+## Baseline
+
+Recorded at mission start, commit `9e516df`:
+
+| Check | Result |
+| --- | --- |
+| ESLint | green |
+| TypeScript | green |
+| Vitest | 141 passed |
+| Playwright | green |
+| `cargo test` | 25 passed |
+| `tauri build` | green |
+| CI run | [33612304555](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33612304555) |
+
+## Slice 13 audit — what the catalogue did not cover
+
+All thirty mandatory scenarios were declared, deterministic and schema-valid,
+but four of them were labels with no behaviour behind them:
+
+| Scenario | Gap | Fix |
+| --- | --- | --- |
+| Empty project | Nothing cleared the workspace | `scenarioAppState` empties sessions and recent projects |
+| Recent projects | Identical to the default | Sessions cleared so the project home is the subject |
+| Interrupted restored session | No interrupted message existed | `createInterruptedSession` seeds one |
+| Successful task summary | `run.completed.summary` was stored, never rendered | New `RunSummary` component |
+
+`plan-edited` was also indistinguishable from `plan-awaiting-approval`; the
+agent now revises a step before asking, so the two produce different streams.
+
+Pre-run state cannot be expressed as a runtime event, so it lives in
+`src/services/runtime/scenarioState.ts` as a pure, fixed-timestamp description
+that `applyScenario` hands to the stores. The Scenario Lab remains
+development-only: `import.meta.env.DEV` is statically false in a production
+build, and a grep of `dist/assets/*.js` confirms the toggle is absent from
+every shipped chunk (it survives only in the sourcemap).
+
+## Slice 14 audit — accessibility, performance, polish
+
+Verified present: landmarks, named regions, accessible names on every shell
+button, labelled inputs, dialog semantics with Escape, single-tab-stop
+tablist, focus restoration in the command palette and settings nav, severity
+and diff state spelled out in text rather than colour alone, a
+`prefers-reduced-motion` block in `globals.css`, consistent scrollbars,
+memoised message rows, and no syntax-highlighting dependency to lazy-load.
+Every `addEventListener` has a matching `removeEventListener`.
+
+One real defect found: the copy confirmation in `MessageItem` and
+`MessageContent` scheduled a 1.5s reset with a bare `setTimeout` and never
+cleared it, so switching sessions left a timer per unmounted message row that
+then set state on a dead component. Both now share `useCopyFeedback`, which
+clears its timer on unmount. The regression test asserts the timer count
+rather than a React warning — React no longer warns, so a warning-based test
+would have passed against the buggy code. It was confirmed to fail against
+the unfixed hook before being kept.
+
+Bundle before `725.21 kB` / after `725.40 kB` (gzip 223.26 → 223.32); the
+increase is one small hook and the run-summary surface.
+
+## Round 2 — A-1 remediation (the runtime boundary is now real)
+
+Round 1's review closed with a PASS while a High finding was open. That verdict
+was withdrawn: a gate result has to follow from the finding counts, not sit
+beside them. A-1 said the transcript did not come from the bridge, which
+contradicts the whole premise that `StudioRuntimeBridge` is the single
+replaceable runtime boundary — so it was fixed here rather than deferred to the
+backend phase.
+
+The fix was not a rendering tweak. `src/services/transport/` was deleted, and so
+was `src/mocks/stream.ts`, a second dormant text generator that a
+delete-the-legacy-module-only fix would have left behind; grepping each of its
+exports showed only its own test file consumed them. The one helper still needed,
+`estimateTokens`, moved to `src/lib/tokens.ts`. `applyRuntimeEvent` is now the
+sole writer of assistant text.
+
+The circular import this exposed between `chat.ts` and `run.ts` was inverted
+rather than patched around: `run.ts` owns a projection callback and exports
+`setChatProjection`, `chat.ts` registers itself at module scope, and `run.ts` no
+longer imports `chat.ts`.
+
+`chatTransport.test.ts` was rewritten against the bridge instead of deleted —
+its error-mapping, retry and persistence assertions describe real behaviour that
+still matters.
+
+Evidence, run red before green: `Tests 11 failed | 5 passed (16)` against the
+unfixed code, with the sentinel assertion showing canned transport prose where a
+bridge delta should have been, then `16 passed (16)`. A permanent end-to-end
+guard renders the real `AppShell` and asserts the on-screen reply is text that
+exists only inside `MockStudioRuntime`, because a store-level test cannot prove
+the feature is mounted.
+
+Six mutations were run against the fix; five were caught outright. The sixth
+survived only because two `persist()` calls mask each other, which is recorded
+in `docs/TECH-DEBT.md` rather than quietly dropped.
+
+L-1 also closed: six SHA pins resolved from upstream via `gh api`, Dependabot
+added, and three real `zizmor` findings fixed — credential persistence through
+checkout, template injection of a PR number into a shell script, and
+workflow-level `pull-requests: write`. `actionlint` could not be downloaded in
+this sandbox; that gap is disclosed in the review and the tech-debt log.
+
+Test count moved 600 → 594: two suites left with the code they covered, 17
+regression tests arrived.
+
+## Round 2 CI — green on Windows
+
+Fixing A-1 surfaced three latent races that the Linux dev box won and the
+slower Windows runner lost. The failing assertion was
+`expected undefined to be true`: the test cancelled a run while the assistant
+message did not yet exist, because the stop button appearing proves a run is
+active but not that a delta has been projected.
+
+None of the three was a product defect. The zero-delta cancellation path was
+probed directly first and already behaved correctly — cancelled run, no phantom
+reply, no late delta — so it was specified in a deterministic test rather than
+"fixed" in production code. The diagnosis was proven rather than assumed: under
+CPU contention the unfixed test failed 8/8 and the fixed one passed 6/6, and the
+full suite then passed three consecutive contended runs.
+
+The CI summary was also corrected. `No JSON report was produced` had implicated
+Playwright whenever an earlier step failed; it now distinguishes skipped, failed
+before reporting, and ran-with-failures. That distinction is what pinpointed the
+single genuinely failing E2E test on the following run.
+
+Finally the pinned actions were moved off deprecated Node 20 to releases
+declaring `using: node24`, each SHA resolved from the official upstream
+repository and verified by reading the manifest at that commit. The Windows run
+now produces zero annotations.
+
+Final state at `e49ea22`: 595 unit tests, 100 Playwright tests, Rust tests and
+the Tauri Windows build all green, three artifacts produced, PR clean and still
+Draft.

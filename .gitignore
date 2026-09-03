@@ -141,3 +141,16 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Coding Studio
+dist/
+dist-ssr/
+playwright-report/
+test-results/
+blob-report/
+coverage/
+src-tauri/target/
+src-tauri/gen/
+
+# Playwright screenshot output
+screenshots/

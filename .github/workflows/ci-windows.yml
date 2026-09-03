@@ -1,0 +1,192 @@
+name: CI (Windows)
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to keep the queue short.
+concurrency:
+  group: ci-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+# Read-only by default. The one step that needs write access declares it at
+# job level instead, so nothing else in the workflow inherits it.
+permissions:
+  contents: read
+
+env:
+  # Never fetch the Rust toolchain's docs; keeps the runner fast.
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  build:
+    name: Lint, test and bundle on Windows
+    runs-on: windows-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pull-requests: write # only to post the E2E failure summary on the PR
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Keep the job token out of .git/config so no later step or uploaded
+          # artifact can carry it off the runner.
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ---- Static analysis -------------------------------------------------
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run typecheck
+
+      # ---- Unit / integration tests ---------------------------------------
+      - name: Unit tests (Vitest)
+        shell: bash
+        # Captured so a Windows-only failure is readable from the job summary;
+        # raw log storage is not reachable from every review environment.
+        run: set -o pipefail && npm run test 2>&1 | tee vitest-output.txt
+
+      - name: Summarise unit test failures
+        if: failure()
+        shell: bash
+        run: |
+          {
+            echo '## Vitest failures'
+            echo
+            echo '```'
+            tail -n 150 vitest-output.txt
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY" > vitest-failures.md
+
+      - name: Comment unit test failures on the pull request
+        if: failure() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr comment "$PR_NUMBER" --body-file vitest-failures.md
+
+      # ---- End-to-end tests -------------------------------------------------
+      - name: Build frontend
+        run: npm run build
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~\AppData\Local\ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tests (Playwright)
+        shell: bash
+        # Captured so the failure is readable even when artifact and log
+        # storage cannot be reached from a review environment.
+        run: set -o pipefail && npm run test:e2e 2>&1 | tee pw-output.txt
+        env:
+          # Emit a machine-readable report next to the list output so failures
+          # can be summarised below even when artifacts are unavailable.
+          PLAYWRIGHT_JSON_OUTPUT_NAME: playwright-report/results.json
+
+      # Surfaces the failing spec, message and stack in the job summary. This is
+      # readable through the checks API, unlike raw logs behind artifact storage.
+      # Surfaces the failing spec, message and stack. Written to the job
+      # summary and mirrored to the pull request so the failure is visible
+      # without downloading artifacts.
+      - name: Summarise E2E failures
+        if: failure()
+        shell: bash
+        run: |
+          node .github/scripts/summarise-playwright.cjs | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -f pw-output.txt ]; then
+            {
+              echo
+              echo '<details><summary>Playwright console output (last 200 lines)</summary>'
+              echo
+              echo '```'
+              tail -n 200 pw-output.txt
+              echo '```'
+              echo
+              echo '</details>'
+            } | tee -a "$GITHUB_STEP_SUMMARY" >> pw-failures.md
+          fi
+
+      - name: Comment E2E failures on the pull request
+        if: failure() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # Passed as an environment variable rather than interpolated into the
+          # script, so the value can never be expanded as shell code.
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr comment "$PR_NUMBER" --body-file pw-failures.md
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload UI screenshots
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ui-screenshots
+          path: screenshots/
+          retention-days: 14
+          if-no-files-found: warn
+
+      # ---- Native desktop bundle ------------------------------------------
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable branch @ 2026-09-03
+
+      - name: Cache Rust build
+        uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: src-tauri -> target
+
+      # Compiles the desktop crate and runs its unit tests. No external
+      # service is required.
+      - name: Rust tests (cargo test)
+        working-directory: src-tauri
+        run: cargo test --all-features
+
+      - name: Tauri build
+        # No signing keys are configured on purpose: this produces an unsigned
+        # bundle. Code-signing and auto-update keys must live in repository
+        # secrets and are deliberately absent from this workflow.
+        run: npm run tauri build -- --ci
+
+      - name: Upload Windows artifacts
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coding-studio-windows
+          # productName is "Coding Studio", so the binary and installers are
+          # named accordingly — globs keep this resilient to renames.
+          path: |
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/nsis/*setup.exe
+            src-tauri/target/release/*.exe
+          retention-days: 14
+          if-no-files-found: error
