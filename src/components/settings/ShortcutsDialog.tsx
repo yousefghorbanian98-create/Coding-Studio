@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog } from '@base-ui-components/react/dialog';
 import { cn } from '@/lib/cn';
@@ -10,6 +11,21 @@ export function ShortcutsDialog(): React.ReactElement {
   const { t } = useTranslation();
   const open = useUiStore((s) => s.shortcutsOpen);
   const setShortcutsOpen = useUiStore((s) => s.setShortcutsOpen);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    if (!open) setQuery('');
+  }, [open]);
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (q.length === 0) return SHORTCUTS;
+    return SHORTCUTS.filter(
+      (shortcut) =>
+        String(t(shortcut.labelKey)).toLowerCase().includes(q) ||
+        shortcut.keys.join(' ').toLowerCase().includes(q),
+    );
+  }, [query, t]);
 
   return (
     <Dialog.Root open={open} onOpenChange={setShortcutsOpen}>
@@ -35,10 +51,36 @@ export function ShortcutsDialog(): React.ReactElement {
             </Dialog.Close>
           </div>
 
-          <ul className="flex flex-col">
-            {SHORTCUTS.map((shortcut) => (
+          <label className="mb-2 block">
+            <span className="sr-only">{t('shortcuts.search')}</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={t('shortcuts.search')}
+              data-testid="shortcuts-search"
+              className={cn(
+                'h-8 w-full rounded-md border border-[var(--color-line)]',
+                'bg-[var(--color-surface-2)] px-2 text-xs text-[var(--color-ink)]',
+                'placeholder:text-[var(--color-ink-soft)]',
+                'focus:border-[var(--color-brand)] focus:outline-none',
+              )}
+            />
+          </label>
+
+          {visible.length === 0 ? (
+            <p
+              data-testid="shortcuts-empty"
+              className="py-6 text-center text-xs text-[var(--color-ink-soft)]"
+            >
+              {t('shortcuts.empty')}
+            </p>
+          ) : (
+          <ul className="flex flex-col" data-testid="shortcuts-list">
+            {visible.map((shortcut) => (
               <li
                 key={shortcut.id}
+                data-testid={`shortcut-${shortcut.id}`}
                 className="flex items-center justify-between gap-3 border-b border-[var(--color-line)] py-2 text-xs last:border-b-0"
               >
                 <span className="text-[var(--color-ink-soft)]">
@@ -48,6 +90,7 @@ export function ShortcutsDialog(): React.ReactElement {
               </li>
             ))}
           </ul>
+          )}
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>

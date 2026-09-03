@@ -4,7 +4,7 @@ Full mission text: [`MISSION.md`](./MISSION.md) — saved verbatim, nothing omit
 
 Status vocabulary: `Planned` · `In progress` · `Implemented` · `Locally verified` · `CI verified`
 
-**Overall progress: 31 / 46 steps complete — 67%**
+**Overall progress: 32 / 46 steps complete — 70%**
 
 Progress is weighted by step, counting only steps that are fully `CI verified`
 (or `Locally verified` for steps that CI cannot exercise).
@@ -67,7 +67,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 35 | Bottom panel: Terminal, Problems, Output, Agent Logs | 9 | CI verified |
 | 36 | Session management and resilient persistence | 10 | CI verified |
 | 37 | Provider-neutral settings and diagnostics | 11 | CI verified |
-| 38 | Command palette and keyboard reference | 12 | Planned |
+| 38 | Command palette and keyboard reference | 12 | Locally verified |
 | 39 | Mock Scenario Lab with all 30 scenarios | 13 | CI verified |
 
 ## Phase 4 — Quality (steps 40–43)
@@ -100,6 +100,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 9 — Bottom panel (terminal, problems, output, agent logs) | `f753963` | 12 component | CI verified ([33686402891](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33686402891)) |
 | 10 — Session management and persistence | `d2081af` | 35 unit + component, 7 E2E | CI verified ([33689394001](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33689394001)) |
 | 11 — Settings, providers and permissions | `5d97287` | 30 unit + component, 9 E2E | CI verified ([33720031181](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33720031181)) |
+| 12 — Command palette and keyboard UX | pending | 35 unit + component, 9 E2E | Locally verified |
 | 2 — StudioRuntimeBridge | `5af265e` | 66 runtime + 11 store | CI verified ([33676324421](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33676324421)) |
 
 ## Baseline

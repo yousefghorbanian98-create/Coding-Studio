@@ -105,6 +105,12 @@ export const fa: Translation = {
     focusComposer: 'فوکوس روی جعبه پیام',
     stopStreaming: 'توقف دریافت پاسخ',
     togglePanel: 'نمایش یا پنهان‌کردن پنل پایین',
+    openProject: 'باز کردن پروژه…',
+    modeAsk: 'تغییر به حالت پرسش',
+    modePlan: 'تغییر به حالت برنامه',
+    modeAgent: 'تغییر به حالت عامل',
+    noActiveRun: 'هم‌اکنون چیزی در حال اجرا نیست.',
+    needsRuntime: 'پس از یکپارچه‌سازی زمان اجرای مدیریت‌شده در دسترس خواهد بود.',
     clearSession: 'پاک کردن نشست فعلی',
   },
   settings: {
@@ -191,6 +197,8 @@ export const fa: Translation = {
   },
   shortcuts: {
     title: 'میان‌برهای صفحه‌کلید',
+    search: 'جست‌وجوی میان‌برها',
+    empty: 'میان‌بری با این جست‌وجو پیدا نشد.',
   },
   errors: {
     network: 'دسترسی به سرویس مدل ممکن نشد. اتصال خود را بررسی کنید.',

@@ -3,6 +3,8 @@ import type { IconName } from '@/components/ui/Icon';
 import { useChatStore } from '@/stores/chat';
 import { usePreferences } from '@/stores/preferences';
 import { useUiStore } from '@/stores/ui';
+import { useRuntimeStore } from '@/stores/runtime';
+import { fuzzyRank } from '@/lib/fuzzy';
 
 export type CommandGroup = 'general' | 'view' | 'appearance' | 'session';
 
@@ -13,6 +15,8 @@ export interface Command {
   icon: IconName;
   keys?: string[];
   run: () => void;
+  /** When set, the command is shown but not runnable, with this reason. */
+  disabledReasonKey?: string;
 }
 
 export function createCommands(): Command[] {
@@ -21,6 +25,10 @@ export function createCommands(): Command[] {
     usePreferences.getState();
   const chat = (): ReturnType<typeof useChatStore.getState> =>
     useChatStore.getState();
+  const runtime = (): ReturnType<typeof useRuntimeStore.getState> =>
+    useRuntimeStore.getState();
+
+  const streaming = useChatStore.getState().isStreaming;
 
   return [
     {
@@ -47,7 +55,38 @@ export function createCommands(): Command[] {
       group: 'session',
       icon: 'stop',
       keys: ['Esc'],
+      // Cancelling with nothing running would be a no-op button.
+      ...(streaming ? {} : { disabledReasonKey: 'commands.noActiveRun' }),
       run: () => chat().stopStreaming(),
+    },
+    {
+      id: 'open-project',
+      labelKey: 'commands.openProject',
+      group: 'general',
+      icon: 'files',
+      disabledReasonKey: 'commands.needsRuntime',
+      run: () => undefined,
+    },
+    {
+      id: 'mode-ask',
+      labelKey: 'commands.modeAsk',
+      group: 'session',
+      icon: 'chat',
+      run: () => runtime().setMode('ask'),
+    },
+    {
+      id: 'mode-plan',
+      labelKey: 'commands.modePlan',
+      group: 'session',
+      icon: 'sessions',
+      run: () => runtime().setMode('plan'),
+    },
+    {
+      id: 'mode-agent',
+      labelKey: 'commands.modeAgent',
+      group: 'session',
+      icon: 'sparkle',
+      run: () => runtime().setMode('agent'),
     },
     {
       id: 'toggle-sidebar',
@@ -135,14 +174,22 @@ export function createCommands(): Command[] {
   ];
 }
 
+/**
+ * Ranks commands with a subsequence match so "tsb" finds "Toggle sidebar".
+ *
+ * The group name is appended to the searchable text, which lets someone type
+ * "appearance" to see everything in that group.
+ */
 export function filterCommands(
   commands: Command[],
   query: string,
   t: TFunction,
 ): Command[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return commands;
-  return commands.filter((command) =>
-    String(t(command.labelKey)).toLowerCase().includes(q),
-  );
+  if (query.trim().length === 0) return commands;
+  return fuzzyRank(
+    commands,
+    query,
+    (command) =>
+      `${String(t(command.labelKey))} ${String(t(`palette.groups.${command.group}`))}`,
+  ).map((scored) => scored.item);
 }

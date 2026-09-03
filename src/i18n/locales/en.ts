@@ -103,6 +103,12 @@ export const en = {
     focusComposer: 'Focus message composer',
     stopStreaming: 'Stop streaming response',
     togglePanel: 'Toggle bottom panel',
+    openProject: 'Open project…',
+    modeAsk: 'Switch to Ask mode',
+    modePlan: 'Switch to Plan mode',
+    modeAgent: 'Switch to Agent mode',
+    noActiveRun: 'Nothing is running right now.',
+    needsRuntime: 'Available once the managed runtime is integrated.',
     clearSession: 'Clear current session',
   },
   settings: {
@@ -189,6 +195,8 @@ export const en = {
   },
   shortcuts: {
     title: 'Keyboard shortcuts',
+    search: 'Search shortcuts',
+    empty: 'No shortcut matches that search.',
   },
   errors: {
     network: 'Could not reach the model service. Check your connection.',
