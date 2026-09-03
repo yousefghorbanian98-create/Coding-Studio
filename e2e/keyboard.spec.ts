@@ -42,7 +42,9 @@ test('explains a disabled command instead of failing on click', async ({
   await expect(cancel).toHaveAttribute('aria-disabled', 'true');
   await expect(page.getByTestId('palette-disabled-stop-streaming')).toBeVisible();
 
-  await cancel.click();
+  // Forced, because Playwright refuses to click an aria-disabled target —
+  // which is itself the guarantee we want. The palette must stay open.
+  await cancel.click({ force: true });
   await expect(page.getByTestId('command-palette')).toBeVisible();
 });
 
