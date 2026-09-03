@@ -43,7 +43,9 @@ test('pins a session so it sorts to the top', async ({ page }) => {
   await pinned.locator('[data-testid^="session-action-pin-"]').click();
 
   const target = list.getByRole('listitem').nth(1);
-  const title = await target.locator('.truncate').innerText();
+  const title = await target
+    .locator('[data-testid^="session-title-"]')
+    .innerText();
   await target.locator('[data-testid^="session-actions-"]').click();
   await target.locator('[data-testid^="session-action-pin-"]').click();
 
@@ -53,7 +55,9 @@ test('pins a session so it sorts to the top', async ({ page }) => {
 test('archives and restores a session', async ({ page }) => {
   const list = page.getByTestId('session-list');
   const target = list.getByRole('listitem').nth(1);
-  const title = await target.locator('.truncate').innerText();
+  const title = await target
+    .locator('[data-testid^="session-title-"]')
+    .innerText();
 
   await target.locator('[data-testid^="session-actions-"]').click();
   await target.locator('[data-testid^="session-action-archive-"]').click();

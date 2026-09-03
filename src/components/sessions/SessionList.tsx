@@ -105,6 +105,7 @@ export function SessionList(): React.ReactElement {
                       ) : null}
                       <span
                         title={session.title}
+                        data-testid={`session-title-${session.id}`}
                         className="truncate text-xs font-medium"
                       >
                         {session.title}
