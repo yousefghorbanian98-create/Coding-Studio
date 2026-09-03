@@ -531,7 +531,13 @@ export class MockStudioRuntime implements StudioRuntimeBridge {
         usedTokens: tokens * 12,
         maxTokens: 128_000,
       });
-      this.completeRun(run, undefined, tokens);
+      this.completeRun(
+        run,
+        this.scenario === 'task-summary'
+          ? 'Updated 3 files, ran the test suite and left the workspace clean.'
+          : undefined,
+        tokens,
+      );
     });
   }
 
@@ -598,6 +604,27 @@ export class MockStudioRuntime implements StudioRuntimeBridge {
         this.completeRun(run, 'Plan rejected. No changes were made.');
       });
       return;
+    }
+
+    if (this.scenario === 'plan-edited') {
+      // The agent revises its own plan before asking, so the UI has to render
+      // a changed step list rather than the originally proposed one.
+      steps[0] = {
+        ...steps[0]!,
+        title: 'Read the affected modules and their tests',
+        detail: 'Widened after noticing the tests cover the same seam.',
+      };
+      this.emit({
+        type: 'plan.updated',
+        plan: {
+          id: planId,
+          runId: run.runId,
+          sessionId: run.sessionId,
+          title: 'Proposed approach (revised)',
+          status: 'draft',
+          steps,
+        },
+      });
     }
 
     // plan-awaiting-approval and plan-edited stop here: the UI drives the

@@ -53,6 +53,8 @@ export interface ChatState {
   setArchived: (id: string, archived: boolean) => void;
   duplicateSession: (id: string) => string | null;
   clearSession: (id?: string) => void;
+  /** Replaces the whole workspace. Used by the Scenario Lab and tests. */
+  loadSessions: (sessions: ChatSession[]) => void;
   sendMessage: (content: string, options?: { seed?: number; delayMs?: number }) => Promise<void>;
   stopStreaming: () => void;
   retryLast: () => Promise<void>;
@@ -181,6 +183,18 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   },
 
   selectMessage: (selectedMessageId) => set({ selectedMessageId }),
+
+  loadSessions: (sessions) => {
+    get().stopStreaming();
+    set({
+      sessions,
+      activeSessionId: sessions[0]?.id ?? '',
+      selectedMessageId: null,
+      filter: '',
+      errorKey: null,
+    });
+    persist();
+  },
 
   createSession: () => {
     get().stopStreaming();

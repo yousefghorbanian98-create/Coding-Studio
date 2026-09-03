@@ -8,6 +8,7 @@ import { ErrorBanner } from './ErrorBanner';
 import { RuntimeBanner } from '@/components/runtime/RuntimeBanner';
 import { PlanCard } from '@/components/agent/PlanCard';
 import { ToolTimeline } from '@/components/agent/ToolTimeline';
+import { RunSummary } from '@/components/agent/RunSummary';
 import { ApprovalCard } from '@/components/agent/ApprovalCard';
 import { AgentRoster } from '@/components/agent/AgentRoster';
 import { MessageItem } from './MessageItem';
@@ -108,6 +109,7 @@ export function ChatArea(): React.ReactElement {
           <AgentRoster />
           <ToolTimeline />
           <ApprovalCard />
+          <RunSummary />
         </div>
       </div>
 

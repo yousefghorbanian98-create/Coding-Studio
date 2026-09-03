@@ -247,6 +247,36 @@ describe('scenarios cover the required product situations', () => {
     expect(deltas.length).toBeGreaterThan(5);
   });
 
+  it('narrates the outcome for the task-summary scenario', () => {
+    const completed = runScenario('task-summary').events.find(
+      (e) => e.type === 'run.completed',
+    );
+    expect(completed).toBeDefined();
+    // Without a summary the scenario would be indistinguishable from a
+    // normal response, which is exactly what it is meant to demonstrate.
+    expect(
+      completed && 'summary' in completed ? completed.summary : undefined,
+    ).toMatch(/\S/);
+  });
+
+  it('revises the plan for the plan-edited scenario', () => {
+    const updates = runScenario('plan-edited').events.filter(
+      (e) => e.type === 'plan.updated',
+    );
+    expect(updates.length).toBeGreaterThan(0);
+    const revised = updates[0];
+    expect(revised && 'plan' in revised ? revised.plan.title : '').toContain(
+      'revised',
+    );
+  });
+
+  it('does not revise the plan for plan-awaiting-approval', () => {
+    const updates = runScenario('plan-awaiting-approval').events.filter(
+      (e) => e.type === 'plan.updated',
+    );
+    expect(updates).toEqual([]);
+  });
+
   it('keeps distinct scenarios from producing identical streams', () => {
     const normal = eventTypesFor('normal-response').join(',');
     const failed = eventTypesFor('tests-failed').join(',');

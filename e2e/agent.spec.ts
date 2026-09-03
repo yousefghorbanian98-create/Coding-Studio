@@ -116,3 +116,48 @@ test('drops an invalid runtime event without breaking the app', async ({
   await expect(page.getByTestId('send-button')).toBeVisible({ timeout: 30_000 });
   expect(pageErrors).toEqual([]);
 });
+
+/**
+ * The four scenarios that describe workspace state rather than an event
+ * stream. They exist so screenshots and manual review can reach these
+ * situations deterministically, so each one is pinned here.
+ */
+
+test('empty-project starts with no sessions and no recent projects', async ({
+  page,
+}) => {
+  await openScenario(page, 'empty-project');
+
+  await expect(page.getByTestId('chat-empty')).toBeVisible();
+  await page.getByTestId('rail-home').click();
+  await expect(page.getByTestId('projects-empty')).toBeVisible();
+});
+
+test('recent-projects fills the project home', async ({ page }) => {
+  await openScenario(page, 'recent-projects');
+
+  await page.getByTestId('rail-home').click();
+  await expect(page.getByTestId('projects-empty')).toHaveCount(0);
+  await expect(
+    page.getByTestId('project-home').getByRole('option').first(),
+  ).toBeVisible();
+});
+
+test('interrupted-session explains a run that cannot be resumed', async ({
+  page,
+}) => {
+  await openScenario(page, 'interrupted-session');
+
+  await expect(
+    page.locator('[data-testid^="message-interrupted-"]').first(),
+  ).toBeVisible();
+});
+
+test('task-summary narrates the outcome of a finished run', async ({
+  page,
+}) => {
+  await openScenario(page, 'task-summary');
+  await send(page, 'Summarise what you changed.');
+
+  await expect(page.getByTestId('run-summary')).toBeVisible({ timeout: 15_000 });
+});

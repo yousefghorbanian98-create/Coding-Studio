@@ -4,6 +4,7 @@ import type { StudioRuntimeBridge, StudioRuntimeEvent } from './types';
 
 export * from './types';
 export * from './scenarios';
+export * from './scenarioState';
 export {
   runtimeEventSchema,
   safeParseRuntimeEvent,

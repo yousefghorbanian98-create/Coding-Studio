@@ -110,6 +110,7 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | Slice 8 completion — explorer menu, patch copy | `f81aceb` | 554 unit + component | CI verified |
 | Slice 9 completion — problems filter, output and log copy | `7f69795` | 564 unit + component | CI verified |
 | Slice 10 completion — session summary | `e092095` | 570 unit + component | CI verified ([33756413830](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33756413830)) |
+| Slice 13 completion — scenario app state, run summary | _pending_ | 591 unit + component, 4 E2E | pending |
 
 ## Baseline
 
@@ -124,3 +125,25 @@ Recorded at mission start, commit `9e516df`:
 | `cargo test` | 25 passed |
 | `tauri build` | green |
 | CI run | [33612304555](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33612304555) |
+
+## Slice 13 audit — what the catalogue did not cover
+
+All thirty mandatory scenarios were declared, deterministic and schema-valid,
+but four of them were labels with no behaviour behind them:
+
+| Scenario | Gap | Fix |
+| --- | --- | --- |
+| Empty project | Nothing cleared the workspace | `scenarioAppState` empties sessions and recent projects |
+| Recent projects | Identical to the default | Sessions cleared so the project home is the subject |
+| Interrupted restored session | No interrupted message existed | `createInterruptedSession` seeds one |
+| Successful task summary | `run.completed.summary` was stored, never rendered | New `RunSummary` component |
+
+`plan-edited` was also indistinguishable from `plan-awaiting-approval`; the
+agent now revises a step before asking, so the two produce different streams.
+
+Pre-run state cannot be expressed as a runtime event, so it lives in
+`src/services/runtime/scenarioState.ts` as a pure, fixed-timestamp description
+that `applyScenario` hands to the stores. The Scenario Lab remains
+development-only: `import.meta.env.DEV` is statically false in a production
+build, and a grep of `dist/assets/*.js` confirms the toggle is absent from
+every shipped chunk (it survives only in the sourcemap).

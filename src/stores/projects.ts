@@ -64,6 +64,8 @@ export interface ProjectsState {
   remove: (id: string) => void;
   /** Restores the fixture list; used by tests and the Scenario Lab. */
   reset: () => void;
+  /** Empties the list, for the empty-project scenario. */
+  clear: () => void;
 }
 
 export const useProjectsStore = create<ProjectsState>((set) => ({
@@ -97,5 +99,14 @@ export const useProjectsStore = create<ProjectsState>((set) => ({
     const empty: Overrides = { pinned: {}, removed: [] };
     save(empty);
     set({ projects: build(empty) });
+  },
+
+  clear: () => {
+    const next: Overrides = {
+      pinned: {},
+      removed: FIXTURE_RECENT_PROJECTS.map((project) => project.id),
+    };
+    save(next);
+    set({ projects: build(next) });
   },
 }));
