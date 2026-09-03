@@ -118,3 +118,21 @@ Run against `npm run dev`, or the packaged build for the last three items.
 - [ ] Custom title bar minimises, maximises and closes.
 - [ ] High-DPI display renders crisply at 125% and 150% scaling.
 - [ ] No devtools-only surface (Scenario Lab) is visible in the release build.
+
+## Test-environment gotchas
+
+Recorded because each one cost real debugging time and none is obvious:
+
+- **`userEvent.setup()` installs its own clipboard stub.** A `navigator.clipboard`
+  spy must be planted *after* `setup()`, or it is silently overwritten and the
+  assertion fails for a reason unrelated to the code under test.
+- **`navigator.clipboard` is getter-only in jsdom** — use `Object.defineProperty`
+  with `configurable: true`, not `Object.assign`.
+- **jsdom has no layout**, so a full-screen backdrop is reported as the hit
+  target for everything beneath it and `userEvent.click` refuses the click.
+  `fireEvent.click` is the right tool for those cases.
+- **A document-level `click` listener fires before React's synthetic click.**
+  Closing a popover that way tears it down before the chosen item's own handler
+  runs; use a backdrop element instead.
+- **`vi.fn(() => Promise.resolve())` infers a zero-argument signature**, so
+  `mock.calls[0][0]` is a type error. Declare the parameter explicitly.

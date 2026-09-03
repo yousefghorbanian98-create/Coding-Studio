@@ -105,6 +105,11 @@ Progress is weighted by step, counting only steps that are fully `CI verified`
 | 13 — Scenario lab coverage + 12 CI screenshots | `6ac0755` | 104 scenario tests | CI verified ([33731232200](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33731232200)) |
 | 14 — Accessibility, performance and polish | `4ccf99e` | 499 unit + component, 15 E2E incl. 12 screenshots | CI verified ([33736586399](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33736586399)) |
 | Gap closure — tasks panel, project home | `bcded32` | 514 unit + component | CI verified ([33738543389](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33738543389)) |
+| Slice 5 completion — markdown, autoscroll, composer | `4100631` | 537 unit + component | CI verified |
+| Slice 6 completion — agent duration, stop, task actions | `ee8725a` | 545 unit + component | CI verified |
+| Slice 8 completion — explorer menu, patch copy | `f81aceb` | 554 unit + component | CI verified |
+| Slice 9 completion — problems filter, output and log copy | `7f69795` | 564 unit + component | CI verified |
+| Slice 10 completion — session summary | `e8b26b3` | 570 unit + component | CI verified |
 
 ## Baseline
 
