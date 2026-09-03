@@ -157,7 +157,9 @@ test('11 session history', async ({ page }) => {
 test('12 multi-agent demonstration', async ({ page }) => {
   await boot(page, 'multi-agent');
   await send(page, 'Coordinate the refactor across agents');
-  await expect(page.getByTestId('tool-timeline')).toBeVisible({
+  // This scenario emits agent.* events, not tool calls, so the roster is the
+  // surface that proves it arrived.
+  await expect(page.getByTestId('agent-roster')).toBeVisible({
     timeout: 30_000,
   });
   await shoot(page, '12-multi-agent');

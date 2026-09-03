@@ -258,6 +258,14 @@ export const fa: Translation = {
     showDetails: 'نمایش جزئیات',
     hideDetails: 'پنهان‌کردن جزئیات',
     summary: 'خلاصه',
+    agentStatus: {
+      idle: 'بی‌کار',
+      working: 'در حال کار',
+      blocked: 'مسدود',
+      done: 'انجام شد',
+      failed: 'ناموفق',
+    },
+    completedTasks: 'کارهای انجام‌شده: {{count}}',
     toolStatus: {
       running: 'در حال اجرا',
       completed: 'انجام شد',

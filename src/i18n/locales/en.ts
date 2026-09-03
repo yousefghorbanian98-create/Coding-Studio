@@ -256,6 +256,14 @@ export const en = {
     showDetails: 'Show details',
     hideDetails: 'Hide details',
     summary: 'Summary',
+    agentStatus: {
+      idle: 'Idle',
+      working: 'Working',
+      blocked: 'Blocked',
+      done: 'Done',
+      failed: 'Failed',
+    },
+    completedTasks: 'Completed tasks: {{count}}',
     toolStatus: {
       running: 'Running',
       completed: 'Done',

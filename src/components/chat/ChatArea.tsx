@@ -9,6 +9,7 @@ import { RuntimeBanner } from '@/components/runtime/RuntimeBanner';
 import { PlanCard } from '@/components/agent/PlanCard';
 import { ToolTimeline } from '@/components/agent/ToolTimeline';
 import { ApprovalCard } from '@/components/agent/ApprovalCard';
+import { AgentRoster } from '@/components/agent/AgentRoster';
 import { MessageItem } from './MessageItem';
 
 export function ChatArea(): React.ReactElement {
@@ -79,6 +80,7 @@ export function ChatArea(): React.ReactElement {
           )}
 
           <PlanCard />
+          <AgentRoster />
           <ToolTimeline />
           <ApprovalCard />
         </div>
