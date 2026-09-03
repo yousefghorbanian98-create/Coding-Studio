@@ -62,7 +62,10 @@ export const MessageContent = memo(function MessageContent({
               .split('\n')
               .filter((line) => line.trim().length > 0)
               .map((line, lineIndex) => (
-                <p key={lineIndex} className="whitespace-pre-wrap">
+                <p
+                  key={lineIndex}
+                  className="whitespace-pre-wrap break-words"
+                >
                   <InlineText text={line} />
                 </p>
               ))}

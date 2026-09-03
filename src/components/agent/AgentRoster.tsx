@@ -32,7 +32,10 @@ function AgentRow({ agent }: { agent: AgentState }): React.ReactElement {
       />
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <span className="truncate font-medium text-[var(--color-ink)]">
+          <span
+            title={agent.name}
+            className="truncate font-medium text-[var(--color-ink)]"
+          >
             {agent.name}
           </span>
           {/* Status is text, never colour alone. */}
@@ -42,7 +45,10 @@ function AgentRow({ agent }: { agent: AgentState }): React.ReactElement {
             {statusLabel}
           </span>
         </div>
-        <p className="truncate text-[11px] text-[var(--color-ink-soft)]">
+        <p
+          title={agent.currentTask ?? agent.role}
+          className="truncate text-[11px] text-[var(--color-ink-soft)]"
+        >
           {agent.currentTask ?? agent.role}
         </p>
       </div>

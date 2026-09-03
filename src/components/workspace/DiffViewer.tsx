@@ -131,7 +131,11 @@ export function DiffViewer(): React.ReactElement {
               )}
             >
               <Icon name="files" size={11} className="shrink-0" />
-              <span className="min-w-0 flex-1 truncate" dir="ltr">
+              <span
+                title={diff.path}
+                className="min-w-0 flex-1 truncate"
+                dir="ltr"
+              >
                 {diff.path}
               </span>
               <span className="shrink-0 text-[10px]">

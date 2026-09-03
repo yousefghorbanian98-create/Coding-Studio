@@ -101,6 +101,14 @@ export function Explorer(): React.ReactElement {
         aria-label={t('explorer.title')}
         className="min-h-0 flex-1 overflow-y-auto px-1 pb-2"
       >
+        {rows.length === 0 ? (
+          <li
+            data-testid="explorer-empty"
+            className="px-2 py-6 text-center text-[11px] text-[var(--color-ink-soft)]"
+          >
+            {t('explorer.empty')}
+          </li>
+        ) : null}
         {rows.map((row, index) => {
           const isDir = row.node.kind === 'directory';
           const open = expanded.has(row.node.path);
@@ -150,7 +158,9 @@ export function Explorer(): React.ReactElement {
                   size={12}
                   className="shrink-0"
                 />
-                <span className="min-w-0 flex-1 truncate">{row.node.name}</span>
+                <span title={row.node.path} className="min-w-0 flex-1 truncate">
+                  {row.node.name}
+                </span>
                 {mark ? (
                   <span
                     aria-label={t(`explorer.status.${row.node.status ?? ''}`)}

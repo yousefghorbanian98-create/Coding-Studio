@@ -47,7 +47,10 @@ function TimelineCard({ call }: { call: ToolCall }): React.ReactElement {
           size={13}
           className={cn('shrink-0', STATUS_STYLE[call.status])}
         />
-        <span className="min-w-0 flex-1 truncate font-medium text-[var(--color-ink)]">
+        <span
+          title={call.title}
+          className="min-w-0 flex-1 truncate font-medium text-[var(--color-ink)]"
+        >
           {call.title}
         </span>
         <span className={cn('shrink-0 text-[10px]', STATUS_STYLE[call.status])}>

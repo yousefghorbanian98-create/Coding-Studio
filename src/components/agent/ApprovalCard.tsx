@@ -116,7 +116,7 @@ export function ApprovalCard(): React.ReactElement | null {
           />
         </label>
       ) : approval.command ? (
-        <pre className="mt-2 overflow-x-auto rounded bg-[var(--color-surface-2)] p-2 font-mono text-[10px]">
+        <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap break-all rounded bg-[var(--color-surface-2)] p-2 font-mono text-[10px]">
           {approval.command}
         </pre>
       ) : null}

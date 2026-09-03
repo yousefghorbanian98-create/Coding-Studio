@@ -46,7 +46,10 @@ export function ChatArea(): React.ReactElement {
       >
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 p-4">
           {messageCount === 0 ? (
-            <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <div
+              data-testid="chat-empty"
+              className="flex flex-col items-center gap-3 py-16 text-center"
+            >
               <span className="grid h-12 w-12 place-items-center rounded-xl bg-[var(--color-brand-soft)] text-[var(--color-brand)]">
                 <Icon name="sparkle" size={22} />
               </span>

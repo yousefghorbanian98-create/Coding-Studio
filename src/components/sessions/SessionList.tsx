@@ -103,7 +103,10 @@ export function SessionList(): React.ReactElement {
                           className="shrink-0 text-[var(--color-brand)]"
                         />
                       ) : null}
-                      <span className="truncate text-xs font-medium">
+                      <span
+                        title={session.title}
+                        className="truncate text-xs font-medium"
+                      >
                         {session.title}
                       </span>
                     </span>

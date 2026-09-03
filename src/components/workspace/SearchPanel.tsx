@@ -79,7 +79,11 @@ export function SearchPanel(): React.ReactElement {
             <section key={file.path} className="mb-2">
               <h3 className="flex items-center gap-1.5 px-1.5 py-1 text-[11px] font-medium text-[var(--color-ink)]">
                 <Icon name="files" size={12} className="shrink-0" />
-                <span className="min-w-0 flex-1 truncate" dir="ltr">
+                <span
+                  title={file.path}
+                  className="min-w-0 flex-1 truncate"
+                  dir="ltr"
+                >
                   {file.path}
                 </span>
                 <span className="shrink-0 text-[10px] text-[var(--color-ink-soft)]">

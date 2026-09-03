@@ -314,6 +314,7 @@ export const fa: Translation = {
   },
   explorer: {
     title: 'کاوشگر',
+    empty: 'هنوز فایلی در این فضای کاری نیست.',
     collapseAll: 'بستن همه پوشه‌ها',
     status: {
       added: 'افزوده‌شده',

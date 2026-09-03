@@ -312,6 +312,7 @@ export const en = {
   },
   explorer: {
     title: 'Explorer',
+    empty: 'No files in this workspace yet.',
     collapseAll: 'Collapse all folders',
     status: {
       added: 'Added',
