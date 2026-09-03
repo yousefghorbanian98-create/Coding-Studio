@@ -44,3 +44,14 @@ coverage. Mutation M2b, which removes both, is caught.
 User-initiated stops resolve to `cancelling` → `cancelled`; runtime-side aborts
 resolve to `failed` with a typed error kind. See `docs/ARCHITECTURE.md`. Revisit
 only if a real runtime reports an abort that is neither of those.
+
+## Timing-sensitive tests are a recurring failure mode
+
+Three tests failed only on the Windows CI runner because they waited a fixed
+number of milliseconds and then asserted. Each was rewritten to wait on an
+observable condition. The rule to keep: never assert after a sleep — wait for
+the state the assertion depends on, and if a run must still be in flight, use a
+scenario and tick that guarantee it.
+
+**Trigger to fix further:** if a fourth instance appears, add a lint rule
+banning `waitForTimeout` and bare `setTimeout` sleeps in test files.

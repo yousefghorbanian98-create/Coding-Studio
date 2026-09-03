@@ -356,29 +356,104 @@ along with the code they covered, and 17 tests were added.
 
 ---
 
+## Round 2 CI remediation
+
+Fixing A-1 exposed three latent test races that only lost on the slower
+Windows runner. None was a product defect, and no production code was changed
+to satisfy a timing-sensitive assertion.
+
+| Test | Cause | Fix |
+| --- | --- | --- |
+| `Chat.test.tsx` · *allows stopping* | The stop button proves a run is active, not that a `message.delta` was projected. Cancellation was asserted while the assistant message was still `undefined` (`expected undefined to be true`). Separately, the default 3-chunk reply could finish before the assertions ran, removing the stop button entirely. | Drive `long-streaming` with an explicit tick, and wait for non-empty assistant text before clicking Stop. |
+| `composerRuntimeWiring.test.ts` | Slept a fixed 800 ms per scenario. | Polls for the surface it is about to assert on. |
+| `persistence.spec.ts` · *a stopped reply is kept* | Waited a fixed 500 ms, by which time the run had finished and the stop button was gone, so the click hung until the 30 s timeout. | Waits for real streamed text, and now also asserts the partial text survives the reload — which the test name claimed but never checked. |
+
+The diagnosis was verified rather than assumed: under CPU contention the
+unfixed cancellation test failed **8 out of 8** runs, and the fixed test passed
+**6 out of 6** under the same load. The full suite was then run three times
+under the same contention at **595 passed** each time.
+
+### Zero-delta cancellation is specified, not just patched
+
+Cancelling before any delta arrives was probed directly before writing a test.
+The observed behaviour was already correct, so it was pinned rather than
+changed:
+
+- no crash;
+- no phantom completed reply — an assistant turn may be opened by
+  `message.started`, but its content stays empty and it is sealed and marked
+  stopped, rendering a "Stopped" label rather than invented text;
+- the run reaches `cancelled`;
+- no later delta is appended, verified by waiting out the full reply.
+
+`Chat.test.tsx` covers this with a tick longer than the test itself, so the
+zero-delta path is exercised deterministically instead of by timing luck.
+
+### CI summary no longer misreports
+
+`No JSON report was produced` previously implicated Playwright whenever an
+earlier step failed. The summariser now distinguishes three cases: Playwright
+**skipped** because an earlier step failed, Playwright **failed before writing
+a report** (with console output attached), and Playwright **ran with failing
+tests** (with per-test errors). The gate itself was not weakened. This is what
+identified the single genuinely failing E2E test on the next run.
+
+### Action runtime refresh
+
+The pinned actions ran on the deprecated Node 20 and were being forced onto
+Node 24 by the runner. Each was upgraded to a release whose `action.yml`
+declares `using: node24`, verified by reading the manifest at the pinned
+commit. Every SHA was resolved from the official upstream repository; none was
+guessed and no mutable tag is used.
+
+| Action | Version | SHA |
+| --- | --- | --- |
+| `actions/checkout` | v7.0.1 | `3d3c42e5aac5ba805825da76410c181273ba90b1` |
+| `actions/setup-node` | v7.0.0 | `820762786026740c76f36085b0efc47a31fe5020` |
+| `actions/cache` | v6.1.0 | `55cc8345863c7cc4c66a329aec7e433d2d1c52a9` |
+| `actions/upload-artifact` | v7.0.1 | `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` |
+| `dtolnay/rust-toolchain` | stable @ 2026-09-03 | `6bed0761d98439e5a578e2877258200ad565ba87` (composite) |
+| `swatinem/rust-cache` | v2.9.2 | `6323deb102c322ba6fcbdcafc7e3dddab59af2b6` (node24) |
+
+Every input still in use was checked against each new manifest. The Windows run
+now produces **zero annotations**, so the deprecation warnings are cleared.
+
+---
+
 ## Final verdict
+
+**Final commit:** `e49ea22eb9e6e8e01706e8cd58d1e2e78e7bbcfd`
 
 | Gate | Result |
 | --- | --- |
 | Critical findings | **0** |
 | High findings | **0** — A-1 fixed and verified, not waived |
-| Medium findings | **2 of 2 fixed** |
-| Low findings | L-1 fixed; L-2 (`mockRuntime.ts` size) open, non-blocking |
-| Unit / component tests | **594 passed**, 45 files |
-| End-to-end tests | **100 passed**, 11 spec files |
-| Skipped tests | **0** |
-| Red-then-green evidence recorded | ✅ `11 failed, 5 passed` → `16 passed` |
-| Transcript originates from the bridge | ✅ proven through the real `AppShell` |
-| Single runtime boundary | ✅ one message-generation path |
-| No active Ollama code / no `127.0.0.1:11434` | ✅ |
-| No secrets, tokens or `console.*` in product code | ✅ |
-| Workflow security audit | ✅ `zizmor` pedantic: 0 high / 0 medium / 0 low |
-| `actionlint` | ⚠️ not run — sandbox cannot reach `release-assets.githubusercontent.com` |
+| Medium findings | **2 of 2 fixed** (R-1, T-1) |
+| Low findings | L-1 fixed; L-2 open, non-blocking, recorded in `docs/TECH-DEBT.md` |
+| Unit / component tests | **595 passed**, 45 files, **0 skipped** |
+| Playwright tests | **100 passed**, 11 spec files |
+| Rust tests (`cargo test`) | ✅ |
+| Tauri Windows build | ✅ |
+| ESLint / TypeScript / production build | ✅ |
+| Workflow security (`zizmor` pedantic) | 0 high / 0 medium / 0 low |
+| CI annotations | **0** — Node 20 deprecation cleared |
+| Windows CI | ✅ both checks green |
+| Artifacts | `coding-studio-windows`, `ui-screenshots`, `playwright-report` |
+| PR | Draft, unmerged, `mergeable=true`, `mergeable_state=clean` |
+| Backend work started | **No** |
 
-**Result: PASS**, derived from the table above: zero unresolved Critical and
-zero unresolved High findings. The one caveat is that `actionlint` could not be
-executed in this environment; `zizmor` was run in its place and the workflow
-parses cleanly.
+Green CI on the final head `e49ea22`:
 
-The PR remains a **Draft** and was **not merged**. Jcode and real providers are
-still not integrated and all agent behaviour is mocked.
+- Pull request run — [33808838488](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33808838488) ✅
+- Push run — [33808835692](https://github.com/yousefghorbanian98-create/Coding-Studio/actions/runs/33808835692) ✅
+
+**Result: PASS**, derived from the counts above: zero unresolved Critical and
+zero unresolved High findings, with every CI stage green. The one disclosed
+limitation is that `actionlint` could not be executed in the development
+sandbox (`release-assets.githubusercontent.com` is unreachable); `zizmor`
+v1.30.0 was run in its place and the workflow parses cleanly. This is tracked
+in `docs/TECH-DEBT.md`.
+
+The PR remains a **Draft** and was **not merged**. Jcode, Ruflo, Soup,
+OmniRoute and all real providers remain unintegrated; every agent behaviour is
+produced by `MockStudioRuntime`.

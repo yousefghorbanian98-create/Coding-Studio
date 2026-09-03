@@ -215,3 +215,32 @@ this sandbox; that gap is disclosed in the review and the tech-debt log.
 
 Test count moved 600 → 594: two suites left with the code they covered, 17
 regression tests arrived.
+
+## Round 2 CI — green on Windows
+
+Fixing A-1 surfaced three latent races that the Linux dev box won and the
+slower Windows runner lost. The failing assertion was
+`expected undefined to be true`: the test cancelled a run while the assistant
+message did not yet exist, because the stop button appearing proves a run is
+active but not that a delta has been projected.
+
+None of the three was a product defect. The zero-delta cancellation path was
+probed directly first and already behaved correctly — cancelled run, no phantom
+reply, no late delta — so it was specified in a deterministic test rather than
+"fixed" in production code. The diagnosis was proven rather than assumed: under
+CPU contention the unfixed test failed 8/8 and the fixed one passed 6/6, and the
+full suite then passed three consecutive contended runs.
+
+The CI summary was also corrected. `No JSON report was produced` had implicated
+Playwright whenever an earlier step failed; it now distinguishes skipped, failed
+before reporting, and ran-with-failures. That distinction is what pinpointed the
+single genuinely failing E2E test on the following run.
+
+Finally the pinned actions were moved off deprecated Node 20 to releases
+declaring `using: node24`, each SHA resolved from the official upstream
+repository and verified by reading the manifest at that commit. The Windows run
+now produces zero annotations.
+
+Final state at `e49ea22`: 595 unit tests, 100 Playwright tests, Rust tests and
+the Tauri Windows build all green, three artifacts produced, PR clean and still
+Draft.
