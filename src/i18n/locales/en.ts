@@ -118,6 +118,74 @@ export const en = {
     fontSize: 'Font size',
     reset: 'Reset to defaults',
     saved: 'Preferences are saved locally.',
+    sections: {
+      appearance: 'Appearance',
+      runtime: 'Runtime',
+      providers: 'Providers',
+      permissions: 'Permissions',
+      privacy: 'Privacy',
+      about: 'About',
+    },
+    runtime: {
+      intro:
+        'This build talks to a deterministic mock runtime. No provider process is started and no network call is made.',
+      active: 'Active runtime',
+      status: 'Status',
+      version: 'Runtime version',
+      schema: 'Event schema version',
+      appVersion: 'Application version',
+      rejectedEvents: 'Rejected events',
+      jcode: 'Jcode',
+      ruflo: 'Ruflo',
+      notInstalled: 'Not installed',
+      futureIntegration: 'Future integration',
+      recheck: 'Re-check runtime',
+      lastChecked: 'Last checked at {{time}}',
+      neverChecked: 'Not checked yet.',
+    },
+    providers: {
+      intro:
+        'Pick the provider the interface should be arranged around. Only the demo runtime can be selected until the managed runtime ships.',
+      loading: 'Loading providers…',
+      empty: 'No providers were reported by the runtime.',
+      models: 'Models',
+      noModels: 'This provider reports no models.',
+      noCredentials:
+        'No sign-in is performed and no API key is requested or stored. Credentials will be handled by the managed runtime, never by the interface.',
+      auth: {
+        demo: 'Demo',
+        configured: 'Configured',
+        'not-configured': 'Not configured',
+        unavailable: 'Unavailable',
+      },
+    },
+    permissions: {
+      intro:
+        'Decide what the agent may do on its own. Every action starts at Ask, so nothing runs unattended unless you choose it.',
+      highRisk: 'High risk',
+      allowWarning: 'Runs without asking you first.',
+      relaxed: 'Some actions are set to run without confirmation.',
+      allSafe: 'Every action asks for confirmation.',
+      reset: 'Restore safe defaults',
+      policy: { ask: 'Ask', allow: 'Allow', never: 'Never' },
+    },
+    privacy: {
+      intro: 'What this build does and does not do with your data.',
+      local: 'Sessions, drafts and preferences stay in this browser profile.',
+      noTelemetry: 'No analytics or telemetry is collected or sent.',
+      noCredentials: 'No API keys or credentials are requested or stored.',
+      noNetwork: 'No provider network requests are made; all replies are mocked.',
+      storageNote:
+        'Clearing site data removes every stored session and preference. There is no server-side copy.',
+    },
+    about: {
+      intro: 'Coding Studio — a Tauri and React desktop workspace for agents.',
+      mocked:
+        'Jcode and the real providers are not integrated yet. Every agent reply, plan, tool call and approval in this build comes from a deterministic mock.',
+      futureSections: 'Planned sections',
+      futureNote:
+        'These are deliberately not shown yet: they would be empty pages until the managed runtime exists.',
+    },
   },
   shortcuts: {
     title: 'Keyboard shortcuts',
@@ -211,6 +279,15 @@ export const en = {
     approveSession: 'Approve for session',
     reject: 'Reject',
     edited: 'Command edited',
+    kind: {
+      'file-modification': 'Modify files',
+      'shell-command': 'Run shell commands',
+      'package-install': 'Install packages',
+      'network-access': 'Access the network',
+      'git-operation': 'Run git operations',
+      delete: 'Delete files',
+      'external-path': 'Touch paths outside the project',
+    },
     risk: { low: 'Low risk', medium: 'Medium risk', high: 'High risk' },
   },
   providers: {
