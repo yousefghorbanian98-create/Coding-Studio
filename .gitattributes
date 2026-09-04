@@ -1,0 +1,7 @@
+# Keep the frozen mission documents and machine files byte-stable on Windows so
+# the SHA-256 manifest hashes match the committed bytes regardless of
+# core.autocrlf. This is Stage Zero factory infrastructure; it does not unpin
+# or weaken any existing action or security control.
+*.md text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
