@@ -13,7 +13,7 @@ import {
 
 const REPO_ROOT = process.cwd();
 const DIRS: string[] = [];
-const TEST_FIXTURE_DIR = '/home/user/Coding-Studio';
+const TEST_FIXTURE_DIR = REPO_ROOT;
 
 const RESERVED_DOCS = [
   '00-USER-DIRECTIVE.md',
