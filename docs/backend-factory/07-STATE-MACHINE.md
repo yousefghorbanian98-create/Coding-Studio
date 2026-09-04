@@ -58,6 +58,14 @@ contract-first discipline:
 journal. Git and GitHub are higher sources of truth than stale local state.
 Recovery must never discard uncommitted user changes.
 
+`lastCommit` records the most recent verified commit SHA on this branch at the
+time the record was last updated; it is `null` until such a commit is recorded,
+and it is not required to pre-record the current uncommitted working tree.
+`lastCIrun` records the most recent completed Windows CI run identifier for that
+recorded commit; it is `null` when no verified CI run for that commit has been
+observed. A CI run generated only after committing the record is intentionally
+not required to exist when the record is written.
+
 ## Stage transitions
 
 ```text

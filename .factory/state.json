@@ -6,23 +6,24 @@
   "baseCommit": "710324911da56856ae6a67bdb2f24bbfe3031b87",
   "activeMilestone": 0,
   "activeStage": "stage-zero-freeze",
-  "activeGate": "freeze",
+  "activeGate": "external-review-remediation",
   "status": "stage-zero",
   "attemptCounters": {
-    "healingAttempts": 0,
-    "ciRemediationAttempts": 0,
-    "reviewAndFixRounds": 0,
+    "healingAttempts": 2,
+    "ciRemediationAttempts": 1,
+    "reviewAndFixRounds": 1,
     "noProgressIterations": 0,
-    "identicalFailureFingerprints": 0
+    "identicalFailureFingerprints": 1
   },
   "lastProgressTime": "2026-09-04T00:00:00.000Z",
-  "lastCommit": null,
-  "lastCIrun": null,
+  "lastCommit": "95156f5f4b9d1e5279cbc6dd6a2ee7d57918b41f",
+  "lastCIrun": "33850825544",
+  "semantics": {
+    "lastCommit": "Most recent verified commit SHA on this branch at the time the record was last updated. Null until a verified commit has been recorded for the change set. It does not require the current uncommitted working tree to be pre-recorded.",
+    "lastCIrun": "Most recent completed Windows CI run identifier for the recorded lastCommit. Null when no verified CI run for that commit has been observed. A CI run that is generated only after a commit is recorded intentionally is not required to exist when that record is written."
+  },
   "completedStages": [],
   "pendingStages": [
-    "stage-zero-materialize",
-    "stage-zero-validate",
-    "stage-zero-freeze",
     "m1-jcode-compat",
     "m2-install-supervisor",
     "m3-tauri-ipc",
@@ -31,5 +32,12 @@
     "m6-ruflo-orchestration"
   ],
   "blockedStages": ["m7-soup-routing", "m8-omni-route"],
-  "blockers": []
+  "blockers": [
+    {
+      "id": "external-review-round-1",
+      "title": "External Review Round 1 findings under remediation; external re-review still required.",
+      "status": "open",
+      "createdAt": "2026-09-04T00:00:00.000Z"
+    }
+  ]
 }

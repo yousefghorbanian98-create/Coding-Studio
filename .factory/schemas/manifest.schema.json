@@ -29,7 +29,7 @@
       "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
     },
     "generationTime": { "type": "string", "minLength": 1 },
-    "reviewStatus": { "enum": ["pending", "passed", "failed"] },
+    "reviewStatus": { "enum": ["pending", "remediation-required", "passed", "failed"] },
     "validatorVersion": { "type": "string", "minLength": 1 }
   }
 }

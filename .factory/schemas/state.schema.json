@@ -18,6 +18,7 @@
     "lastProgressTime",
     "lastCommit",
     "lastCIrun",
+    "semantics",
     "completedStages",
     "pendingStages",
     "blockedStages",
@@ -37,6 +38,7 @@
     "lastProgressTime": { "type": "string" },
     "lastCommit": { "type": ["string", "null"] },
     "lastCIrun": { "type": ["string", "null"] },
+    "semantics": { "$ref": "#/$defs/semantics" },
     "completedStages": { "type": "array", "items": { "type": "string" } },
     "pendingStages": { "type": "array", "items": { "type": "string" } },
     "blockedStages": { "type": "array", "items": { "type": "string" } },
@@ -53,6 +55,15 @@
         "reviewAndFixRounds": { "type": "integer", "minimum": 0 },
         "noProgressIterations": { "type": "integer", "minimum": 0 },
         "identicalFailureFingerprints": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lastCommit", "lastCIrun"],
+      "properties": {
+        "lastCommit": { "type": "string", "minLength": 1 },
+        "lastCIrun": { "type": "string", "minLength": 1 }
       }
     },
     "blocker": {

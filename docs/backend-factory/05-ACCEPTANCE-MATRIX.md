@@ -3,13 +3,12 @@
 Generated from `.factory/requirements.json`. Each requirement lists its
 acceptance criteria, non-goals and planned tests.
 
-## Requirements
-
 
 ### FACTORY-001: Materialize the verbatim original user directive
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Preserve the original user directive verbatim at docs/backend-factory/00-USER-DIRECTIVE.md without paraphrase or omission.
 
 Acceptance criteria:
 
@@ -36,6 +35,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Produce docs/backend-factory/01-MASTER-MISSION.md containing all six backend milestones plus future milestones seven and eight.
 
 Acceptance criteria:
 
@@ -62,6 +62,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Produce 02-BACKEND-ROADMAP.md and 03-ARCHITECTURE.md with milestones, stages, gates and the provider-neutral architecture.
 
 Acceptance criteria:
 
@@ -89,6 +90,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Produce 04-REQUIREMENTS.md, 05-ACCEPTANCE-MATRIX.md and 06-TRACEABILITY-MATRIX.md that agree with .factory/requirements.json.
 
 Acceptance criteria:
 
@@ -117,6 +119,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Produce 07-STATE-MACHINE.md, 12-SELF-HEAL-RUNBOOK.md and 13-RECOVERY-RUNBOOK.md describing the autonomous Finn-derived loop, limits, circuit breakers and recovery state.
 
 Acceptance criteria:
 
@@ -146,6 +149,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Produce 14-PROVIDER-PLAN.md and 15-RUFLO-PLAN.md including provider order, selection gates and optional Ruflo integration boundary.
 
 Acceptance criteria:
 
@@ -173,6 +177,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Produce 08-THREAT-MODEL.md and 09-TEST-STRATEGY.md with mapped threats and a test strategy that forbids weakened assertions and deleted tests.
 
 Acceptance criteria:
 
@@ -200,6 +205,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Produce 10-N8N-RESEARCH-POLICY.md and 11-OSS-ADOPTION-POLICY.md with untrusted-input handling and mandatory provenance fields.
 
 Acceptance criteria:
 
@@ -228,6 +234,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Inspect finna/Finn-loop, record inspected SHA, license, files, adopted and rejected patterns, deviations and the safe autonomous derived model.
 
 Acceptance criteria:
 
@@ -254,6 +261,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Inspect up to three genuinely relevant workflows from Zie619/n8n-workflows without executing them and record candidate details and rejected patterns.
 
 Acceptance criteria:
 
@@ -280,6 +288,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Inspect Leonxlnx/taste-skill and record SHA, license, selected skill, applicable and rejected rules and backend limitations.
 
 Acceptance criteria:
 
@@ -306,6 +315,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Create an OSS register covering the external sources inspected in Stage Zero and the OSS research policy evidence fields.
 
 Acceptance criteria:
 
@@ -332,6 +342,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
 - Status: **planned** - Security sensitive: **no**
+- Description: Create .factory/state.json, journal.jsonl, requirements.json and stages.json with a schema version and no secrets.
 
 Acceptance criteria:
 
@@ -362,6 +373,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
 - Status: **planned** - Security sensitive: **no**
+- Description: Create JSON schemas for requirements, stages, state and manifest under .factory/schemas/.
 
 Acceptance criteria:
 
@@ -391,6 +403,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
 - Status: **planned** - Security sensitive: **no**
+- Description: Create scripts/factory/validate-mission.mjs with no network dependency that validates every required rule and emits coded errors.
 
 Acceptance criteria:
 
@@ -418,6 +431,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
 - Status: **planned** - Security sensitive: **no**
+- Description: Create tests proving every validation rule by starting with a valid fixture, mutating a field, proving failure, restoring and proving pass.
 
 Acceptance criteria:
 
@@ -444,6 +458,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
 - Status: **planned** - Security sensitive: **no**
+- Description: Add the validate:mission npm script that runs the mission validator against the repository.
 
 Acceptance criteria:
 
@@ -470,6 +485,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
 - Status: **planned** - Security sensitive: **no**
+- Description: Run npm run validate:mission in the existing Windows CI workflow without unpinning or weakening existing actions.
 
 Acceptance criteria:
 
@@ -497,6 +513,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-freeze**
 - Status: **planned** - Security sensitive: **no**
+- Description: Hash frozen mission documents, machine requirements, stages and schemas into .factory/manifest.json with SHA-256 values.
 
 Acceptance criteria:
 
@@ -523,6 +540,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-freeze**
 - Status: **planned** - Security sensitive: **no**
+- Description: Run fresh Completeness, Architecture, Security, Test Strategy, Windows and Autonomous Loop review passes and record the consolidated report.
 
 Acceptance criteria:
 
@@ -547,8 +565,9 @@ Evidence:
 
 ### FACTORY-021: Document Soup as a future milestone
 
-- Milestone: **M0** - Stage: **m7-soup-routing**
+- Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Document Future Milestone Seven (Soup skill routing) but do not start it until all six backend milestones pass.
 
 Acceptance criteria:
 
@@ -574,8 +593,9 @@ Evidence:
 
 ### FACTORY-022: Document OmniRoute as a future milestone
 
-- Milestone: **M0** - Stage: **m8-omni-route**
+- Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Document Future Milestone Eight (OmniRoute provider routing) but do not start it until all six backend milestones pass.
 
 Acceptance criteria:
 
@@ -599,10 +619,65 @@ Evidence:
 - docs/backend-factory/02-BACKEND-ROADMAP.md
 
 
+### SOUP-001: Soup skill routing future placeholder
+
+- Milestone: **M7** - Stage: **m7-soup-routing**
+- Status: **planned** - Security sensitive: **no**
+- Description: Future Milestone Seven (Soup skill routing). Documented only. Must not begin until all six backend milestones pass and an explicit external approval is given.
+
+Acceptance criteria:
+
+- [ ] AC-1 - Future milestone is documented, blocked in machine state, and not started before all backend milestones pass.
+
+Non-goals:
+
+- No Soup implementation, no early start.
+
+Planned tests:
+
+- FUTURE_STARTED_TOO_EARLY check covers future placeholder requirements.
+
+Threats:
+
+- None
+
+Evidence:
+
+- No evidence yet (planned).
+
+
+### OMNIROUTE-001: OmniRoute provider routing future placeholder
+
+- Milestone: **M8** - Stage: **m8-omni-route**
+- Status: **planned** - Security sensitive: **no**
+- Description: Future Milestone Eight (OmniRoute provider routing). Documented only. Must not begin until all six backend milestones pass and an explicit external approval is given.
+
+Acceptance criteria:
+
+- [ ] AC-1 - Future milestone is documented, blocked in machine state, and not started before all backend milestones pass.
+
+Non-goals:
+
+- No OmniRoute implementation, no early start.
+
+Planned tests:
+
+- FUTURE_STARTED_TOO_EARLY check covers future placeholder requirements.
+
+Threats:
+
+- None
+
+Evidence:
+
+- No evidence yet (planned).
+
+
 ### JCODE-001: Verify the official Jcode repository
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Establish the official Jcode repository and verify provenance, maintenance, and binaries before any integration.
 
 Acceptance criteria:
 
@@ -631,6 +706,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Verify the Jcode license is compatible with Coding Studio and forbidden licenses require explicit approval.
 
 Acceptance criteria:
 
@@ -657,6 +733,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Select a pinned stable Jcode version with documented Windows support and supported architectures.
 
 Acceptance criteria:
 
@@ -684,6 +761,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Define the Jcode machine protocol: structured output, JSON-or-equivalent event protocol, headless mode, session create/resume, streaming and cancellation.
 
 Acceptance criteria:
 
@@ -711,6 +789,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Prove that Jcode run headless exposes session creation, resume, streaming, cancellation and approval prompts without a visual terminal.
 
 Acceptance criteria:
 
@@ -738,6 +817,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Define provider authentication handoff in the protocol and the health/doctor/version commands.
 
 Acceptance criteria:
 
@@ -765,6 +845,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Document and validate configuration locations and guarantee exit codes, stdout and stderr contracts.
 
 Acceptance criteria:
 
@@ -793,6 +874,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Define supported and unsupported version behavior and explicitly prohibit scraping a visual terminal interface.
 
 Acceptance criteria:
 
@@ -819,6 +901,7 @@ Evidence:
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
 - Status: **planned** - Security sensitive: **no**
+- Description: Create compatibility test fixtures, a compatibility ADR and Windows evidence that the machine protocol runs on Windows.
 
 Acceptance criteria:
 
@@ -847,6 +930,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Discover a Jcode binary from explicit paths and pinned versions without uncontrolled PATH mutation.
 
 Acceptance criteria:
 
@@ -874,6 +958,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Install Jcode from a trusted origin with checksum verification, atomic installation, temporary downloads, interrupted-download recovery and rollback.
 
 Acceptance criteria:
 
@@ -903,6 +988,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Detect the target architecture and verify version compatibility before install or execution.
 
 Acceptance criteria:
 
@@ -930,6 +1016,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Spawn Jcode without shell interpolation, with separated arguments and an environment allowlist.
 
 Acceptance criteria:
 
@@ -957,6 +1044,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Validate working directories and canonical workspace paths and protect against symbolic-link or junction escape.
 
 Acceptance criteria:
 
@@ -985,6 +1073,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Stream stdout and stderr with bounded buffers, backpressure and a hard timeout.
 
 Acceptance criteria:
 
@@ -1012,6 +1101,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Cancel runs gracefully and fall back to forced termination including Windows process-tree termination.
 
 Acceptance criteria:
 
@@ -1041,6 +1131,7 @@ Evidence:
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Detect crashes, clean orphans, apply a restart policy and emit structured diagnostics with secret redaction.
 
 Acceptance criteria:
 
@@ -1069,6 +1160,7 @@ Evidence:
 
 - Milestone: **M3** - Stage: **m3-tauri-ipc**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Expose provider-neutral Tauri commands with typed Rust request and response payloads and typed TypeScript payloads.
 
 Acceptance criteria:
 
@@ -1096,6 +1188,7 @@ Evidence:
 
 - Milestone: **M3** - Stage: **m3-tauri-ipc**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Use stable error codes, validate on both Rust and TypeScript sides and never panic across IPC.
 
 Acceptance criteria:
 
@@ -1123,6 +1216,7 @@ Evidence:
 
 - Milestone: **M3** - Stage: **m3-tauri-ipc**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Bound event queues, clean up listeners and remain StrictMode safe.
 
 Acceptance criteria:
 
@@ -1149,6 +1243,7 @@ Evidence:
 
 - Milestone: **M3** - Stage: **m3-tauri-ipc**
 - Status: **planned** - Security sensitive: **no**
+- Description: Detect runtime health, capabilities, version and installation state via IPC.
 
 Acceptance criteria:
 
@@ -1176,6 +1271,7 @@ Evidence:
 
 - Milestone: **M3** - Stage: **m3-tauri-ipc**
 - Status: **planned** - Security sensitive: **no**
+- Description: Expose runtime start/shutdown, session create/resume, send message, cancel run, resolve approval and diagnostics.
 
 Acceptance criteria:
 
@@ -1203,6 +1299,7 @@ Evidence:
 
 - Milestone: **M3** - Stage: **m3-tauri-ipc**
 - Status: **planned** - Security sensitive: **no**
+- Description: Keep MockStudioRuntime for browser preview and choose RealJcodeRuntime only where real Jcode is installed; CI must not require a real Jcode.
 
 Acceptance criteria:
 
@@ -1230,6 +1327,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Normalize into a versioned event schema with ordering and sequence numbers and deduplication.
 
 Acceptance criteria:
 
@@ -1256,6 +1354,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Correlate events by session, run, task and tool call and handle malformed, unknown, partial frame and partial message events.
 
 Acceptance criteria:
 
@@ -1283,6 +1382,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Prevent duplicate completion and stale event effects and guarantee cross-session and cross-run isolation.
 
 Acceptance criteria:
 
@@ -1309,6 +1409,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Resume sessions and preserve partial responses across application shutdown, runtime restart and Jcode crash.
 
 Acceptance criteria:
 
@@ -1337,6 +1438,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Cancel before the first delta, during streaming, during a tool call and while an approval is pending.
 
 Acceptance criteria:
 
@@ -1364,6 +1466,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Enforce approvals and permissions in the backend with safe defaults.
 
 Acceptance criteria:
 
@@ -1390,6 +1493,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Reject stale and duplicate approval resolutions deterministically.
 
 Acceptance criteria:
 
@@ -1416,6 +1520,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Define a recovery state machine for application shutdown, Jcode crash, Coding Studio restart and runtime restart.
 
 Acceptance criteria:
 
@@ -1444,6 +1549,7 @@ Evidence:
 
 - Milestone: **M4** - Stage: **m4-events-lifecycle**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Handle runtime restart, Jcode crash and application shutdown without losing approved or user-visible work.
 
 Acceptance criteria:
 
@@ -1472,6 +1578,7 @@ Evidence:
 
 - Milestone: **M5** - Stage: **m5-provider-onboarding**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Perform provider capability discovery, availability checks, model discovery and provider diagnostics through Jcode.
 
 Acceptance criteria:
 
@@ -1498,6 +1605,7 @@ Evidence:
 
 - Milestone: **M5** - Stage: **m5-provider-onboarding**
 - Status: **planned** - Security sensitive: **no**
+- Description: Use a fake-provider test harness and avoid an independent duplicate provider client when Jcode already supports it.
 
 Acceptance criteria:
 
@@ -1525,6 +1633,7 @@ Evidence:
 
 - Milestone: **M5** - Stage: **m5-provider-onboarding**
 - Status: **planned** - Security sensitive: **no**
+- Description: Research provider order based on Jcode protocol stability, testability and authentication support instead of assuming it.
 
 Acceptance criteria:
 
@@ -1551,6 +1660,7 @@ Evidence:
 
 - Milestone: **M5** - Stage: **m5-provider-onboarding**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Support browser authentication handoff, device-code handoff and headless authentication with success, cancellation, expiry and failure paths.
 
 Acceptance criteria:
 
@@ -1579,6 +1689,7 @@ Evidence:
 
 - Milestone: **M5** - Stage: **m5-provider-onboarding**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Handle logout handoff and unavailable provider states without leaving stale credentials.
 
 Acceptance criteria:
 
@@ -1605,6 +1716,7 @@ Evidence:
 
 - Milestone: **M5** - Stage: **m5-provider-onboarding**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Keep credentials out of React state, localStorage, Tauri events, diagnostics and CI logs.
 
 Acceptance criteria:
 
@@ -1632,6 +1744,7 @@ Evidence:
 
 - Milestone: **M5** - Stage: **m5-provider-onboarding**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Document real Windows validation as a manual release gate for provider onboarding.
 
 Acceptance criteria:
 
@@ -1658,6 +1771,7 @@ Evidence:
 
 - Milestone: **M6** - Stage: **m6-ruflo-orchestration**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Verify the official Ruflo repository, license and stable version and define the supported Jcode integration boundary.
 
 Acceptance criteria:
 
@@ -1685,6 +1799,7 @@ Evidence:
 
 - Milestone: **M6** - Stage: **m6-ruflo-orchestration**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Define supported MCP-or-equivalent protocol, prohibition on terminal scraping, managed installation, pinned version and compatibility policy.
 
 Acceptance criteria:
 
@@ -1712,6 +1827,7 @@ Evidence:
 
 - Milestone: **M6** - Stage: **m6-ruflo-orchestration**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Support agent roles, task graph, shared memory and swarm lifecycle with concurrency limits and cancellation.
 
 Acceptance criteria:
 
@@ -1739,6 +1855,7 @@ Evidence:
 
 - Milestone: **M6** - Stage: **m6-ruflo-orchestration**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Handle worker crash and partial failure with orchestration recovery, provider cost controls, resource controls, audit trail and approval boundary.
 
 Acceptance criteria:
 
@@ -1766,6 +1883,7 @@ Evidence:
 
 - Milestone: **M6** - Stage: **m6-ruflo-orchestration**
 - Status: **planned** - Security sensitive: **no**
+- Description: Keep Ruflo behind an optional feature flag with normal Jcode fallback and default limits suitable for sixteen gigabytes of system memory.
 
 Acceptance criteria:
 
@@ -1794,6 +1912,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Require redaction of secrets across logs, events, Git and CI and forbid committing credentials.
 
 Acceptance criteria:
 
@@ -1820,6 +1939,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Forbid remote script piping, unknown installers, mutable latest references, unpinned actions, unattributed code and incompatible licenses.
 
 Acceptance criteria:
 
@@ -1847,6 +1967,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Require a regression test proven red against each defect and forbid weakened or deleted tests.
 
 Acceptance criteria:
 
@@ -1873,6 +1994,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Keep Windows CI authoritative for Playwright, Rust tests, Tauri build and Windows artifacts.
 
 Acceptance criteria:
 
@@ -1900,6 +2022,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Before every stage, search n8n-workflows for relevant patterns and treat workflows as untrusted input that is scanned and sanitized.
 
 Acceptance criteria:
 
@@ -1926,6 +2049,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **yes**
+- Description: Record external sources and cover every proposed adoption with the complete provenance review fields.
 
 Acceptance criteria:
 
@@ -1952,6 +2076,7 @@ Evidence:
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
 - Status: **planned** - Security sensitive: **no**
+- Description: Taste Skill supervises only user-facing changes and never controls backend architecture or security; conflicting recommendations are rejected.
 
 Acceptance criteria:
 

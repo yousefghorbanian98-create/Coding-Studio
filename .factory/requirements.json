@@ -777,9 +777,9 @@
       "identifier": "FACTORY-021",
       "title": "Document Soup as a future milestone",
       "description": "Document Future Milestone Seven (Soup skill routing) but do not start it until all six backend milestones pass.",
-      "kind": "future",
+      "kind": "factory",
       "milestone": 0,
-      "stage": "m7-soup-routing",
+      "stage": "stage-zero-materialize",
       "status": "planned",
       "securitySensitive": false,
       "acceptanceCriteria": [
@@ -815,9 +815,9 @@
       "identifier": "FACTORY-022",
       "title": "Document OmniRoute as a future milestone",
       "description": "Document Future Milestone Eight (OmniRoute provider routing) but do not start it until all six backend milestones pass.",
-      "kind": "future",
+      "kind": "factory",
       "milestone": 0,
-      "stage": "m8-omni-route",
+      "stage": "stage-zero-materialize",
       "status": "planned",
       "securitySensitive": false,
       "acceptanceCriteria": [
@@ -848,6 +848,70 @@
       ],
       "implementationCommit": null,
       "ciRun": null
+    },
+    {
+      "identifier": "SOUP-001",
+      "title": "Soup skill routing future placeholder",
+      "description": "Future Milestone Seven (Soup skill routing). Documented only. Must not begin until all six backend milestones pass and an explicit external approval is given.",
+      "kind": "future",
+      "milestone": 7,
+      "stage": "m7-soup-routing",
+      "status": "planned",
+      "securitySensitive": false,
+      "threats": [],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "implementationFiles": [],
+      "implementationCommit": null,
+      "ciRun": null,
+      "acceptanceCriteria": [
+        "Future milestone is documented, blocked in machine state, and not started before all backend milestones pass."
+      ],
+      "nonGoals": [
+        "No Soup implementation, no early start."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "tasteDecision": "Documented only; any future UI change is taste-gated.",
+      "evidencePaths": [],
+      "plannedUnitTests": [
+        "FUTURE_STARTED_TOO_EARLY check covers future placeholder requirements."
+      ]
+    },
+    {
+      "identifier": "OMNIROUTE-001",
+      "title": "OmniRoute provider routing future placeholder",
+      "description": "Future Milestone Eight (OmniRoute provider routing). Documented only. Must not begin until all six backend milestones pass and an explicit external approval is given.",
+      "kind": "future",
+      "milestone": 8,
+      "stage": "m8-omni-route",
+      "status": "planned",
+      "securitySensitive": false,
+      "threats": [],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "implementationFiles": [],
+      "implementationCommit": null,
+      "ciRun": null,
+      "acceptanceCriteria": [
+        "Future milestone is documented, blocked in machine state, and not started before all backend milestones pass."
+      ],
+      "nonGoals": [
+        "No OmniRoute implementation, no early start."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "tasteDecision": "Documented only; any future UI change is taste-gated.",
+      "evidencePaths": [],
+      "plannedUnitTests": [
+        "FUTURE_STARTED_TOO_EARLY check covers future placeholder requirements."
+      ]
     },
     {
       "identifier": "JCODE-001",

@@ -47,6 +47,11 @@ Ruflo is an optional advanced orchestrator layered on this architecture. Soup
 and OmniRoute are future milestones and must not start until all six backend
 milestones pass.
 
+Milestone graph: Milestone One depends on Milestone Zero (Stage Zero); each
+later backend milestone depends on the previous one; Future Milestones Seven and
+Eight depend on Milestone Six and remain blocked until all backend milestones
+pass.
+
 ## Every requirement maps to this chain
 
 ```text
@@ -355,13 +360,17 @@ architecture or security.
 
 Documented only. Must not start until all six backend milestones pass. Any
 future user-facing UI change for Soup is Taste-gated. Machine state records this
-milestone as `future` and blocked.
+milestone as `future` and blocked. Future placeholder requirement `SOUP-001` is
+assigned to stage `m7-soup-routing` and remains `planned`; it is not implemented
+in Stage Zero.
 
 ## Future Milestone Eight: OmniRoute provider routing
 
 Documented only. Must not start until all six backend milestones pass. Any
 future user-facing UI change for OmniRoute is Taste-gated. Machine state records
-this milestone as `future` and blocked.
+this milestone as `future` and blocked. Future placeholder requirement
+`OMNIROUTE-001` is assigned to stage `m8-omni-route` and remains `planned`; it
+is not implemented in Stage Zero.
 
 ## Research and review gates
 
