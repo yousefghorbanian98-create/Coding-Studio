@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "tauri": "tauri",
     "test:e2e:install": "playwright install chromium",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "validate:mission": "node scripts/factory/validate-mission.mjs"
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-beta.1",

@@ -1,0 +1,250 @@
+{
+  "schemaVersion": "1.0.0",
+  "milestones": [
+    {
+      "number": 0,
+      "title": "Backend Factory Stage Zero",
+      "name": "Stage Zero",
+      "status": "active",
+      "stage": "stage-zero-freeze",
+      "requires": [],
+      "stages": [
+        {
+          "id": "stage-zero-materialize",
+          "name": "Materialize mission and evidence",
+          "milestone": 0,
+          "status": "active",
+          "dependsOn": [],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": false,
+          "tasteDecision": "Taste gate not applicable to product UI in Stage Zero.",
+          "gates": ["finn-loop-research", "n8n-research", "taste-decision", "oss-register", "mission-freeze"],
+          "acceptanceCriteriaRefs": ["FACTORY-001", "FACTORY-002", "FACTORY-003", "FACTORY-004", "FACTORY-005", "FACTORY-006", "FACTORY-007", "FACTORY-008", "FACTORY-009", "FACTORY-010", "FACTORY-011", "FACTORY-012", "FACTORY-021", "FACTORY-022"],
+          "evidencePaths": [
+            "docs/backend-factory/evidence/stage-zero/finn-loop-research.md",
+            "docs/backend-factory/evidence/stage-zero/n8n-research.md",
+            "docs/backend-factory/evidence/stage-zero/taste-decision.md",
+            "docs/backend-factory/evidence/stage-zero/oss-register.md"
+          ]
+        },
+        {
+          "id": "stage-zero-validate",
+          "name": "Validate mission deterministically",
+          "milestone": 0,
+          "status": "active",
+          "dependsOn": ["stage-zero-materialize"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": false,
+          "tasteDecision": "Taste gate not applicable to product UI in Stage Zero.",
+          "gates": ["validator-rule-coverage", "validator-mutation-tests", "windows-ci-mission-validator"],
+          "acceptanceCriteriaRefs": ["FACTORY-013", "FACTORY-014", "FACTORY-015", "FACTORY-016", "FACTORY-017", "FACTORY-018"],
+          "evidencePaths": [
+            "scripts/factory/validate-mission.mjs",
+            "scripts/factory/validator.test.ts",
+            ".github/workflows/ci-windows.yml"
+          ]
+        },
+        {
+          "id": "stage-zero-freeze",
+          "name": "Freeze manifest and independent review",
+          "milestone": 0,
+          "status": "active",
+          "dependsOn": ["stage-zero-validate"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": false,
+          "tasteDecision": "Taste gate not applicable to product UI in Stage Zero.",
+          "gates": ["independent-review", "manifest-freeze", "draft-pr"],
+          "acceptanceCriteriaRefs": ["FACTORY-019", "FACTORY-020"],
+          "evidencePaths": [
+            ".factory/manifest.json",
+            "docs/backend-factory/evidence/stage-zero/mission-review.md"
+          ]
+        }
+      ]
+    },
+    {
+      "number": 1,
+      "title": "Jcode compatibility and stable machine protocol",
+      "name": "Milestone One",
+      "status": "planned",
+      "stage": "m1-jcode-compat",
+      "requires": [],
+      "stages": [
+        {
+          "id": "m1-jcode-compat",
+          "name": "Jcode compatibility gates",
+          "milestone": 1,
+          "status": "planned",
+          "dependsOn": ["stage-zero-freeze"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": false,
+          "tasteDecision": "No product UI change in Milestone One.",
+          "gates": ["jcode-official-repo", "jcode-license", "jcode-protocol-stability", "jcode-windows-evidence"],
+          "acceptanceCriteriaRefs": ["JCODE-001", "JCODE-002", "JCODE-003", "JCODE-004", "JCODE-005", "JCODE-006", "JCODE-007", "JCODE-008", "JCODE-009"],
+          "evidencePaths": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Managed Jcode installation and Rust process supervisor",
+      "name": "Milestone Two",
+      "status": "planned",
+      "stage": "m2-install-supervisor",
+      "requires": [1],
+      "stages": [
+        {
+          "id": "m2-install-supervisor",
+          "name": "Managed install and supervisor",
+          "milestone": 2,
+          "status": "planned",
+          "dependsOn": ["m1-jcode-compat"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": false,
+          "tasteDecision": "No product UI change in Milestone Two.",
+          "gates": ["install-security", "process-supervisor-safety", "windows-process-tree"],
+          "acceptanceCriteriaRefs": ["INSTALL-001", "INSTALL-002", "INSTALL-003", "SUPERVISOR-001", "SUPERVISOR-002", "SUPERVISOR-003", "SUPERVISOR-004", "SUPERVISOR-005"],
+          "evidencePaths": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Tauri IPC and StudioRuntimeBridge integration",
+      "name": "Milestone Three",
+      "status": "planned",
+      "stage": "m3-tauri-ipc",
+      "requires": [2],
+      "stages": [
+        {
+          "id": "m3-tauri-ipc",
+          "name": "Tauri IPC bridge",
+          "milestone": 3,
+          "status": "planned",
+          "dependsOn": ["m2-install-supervisor"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": true,
+          "tasteDecision": "IPC keeps the existing Typed StudioRuntimeBridge and mock runtime. Runtime state may surface in the existing status UI and must follow the existing design system.",
+          "gates": ["typed-ipc", "no-panic-across-ipc", "mock-runtime-retention", "ci-no-real-jcode"],
+          "acceptanceCriteriaRefs": ["IPC-001", "IPC-002", "IPC-003", "IPC-004", "IPC-005", "IPC-006"],
+          "evidencePaths": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Event normalization, sessions, approvals, cancellation and recovery",
+      "name": "Milestone Four",
+      "status": "planned",
+      "stage": "m4-events-lifecycle",
+      "requires": [3],
+      "stages": [
+        {
+          "id": "m4-events-lifecycle",
+          "name": "Events and lifecycle recovery",
+          "milestone": 4,
+          "status": "planned",
+          "dependsOn": ["m3-tauri-ipc"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": false,
+          "tasteDecision": "No user-facing visual redesign in Milestone Four; approval permission defaults must respect accessibility and existing design system.",
+          "gates": ["event-schema", "approval-enforcement", "recovery-state-machine", "windows-lifecycle"],
+          "acceptanceCriteriaRefs": ["EVENT-001", "EVENT-002", "EVENT-003", "SESSION-001", "CANCEL-001", "APPROVAL-001", "APPROVAL-002", "RECOVERY-001", "RECOVERY-002"],
+          "evidencePaths": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Provider onboarding through Jcode",
+      "name": "Milestone Five",
+      "status": "planned",
+      "stage": "m5-provider-onboarding",
+      "requires": [4],
+      "stages": [
+        {
+          "id": "m5-provider-onboarding",
+          "name": "Provider onboarding",
+          "milestone": 5,
+          "status": "planned",
+          "dependsOn": ["m4-events-lifecycle"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": true,
+          "tasteDecision": "Provider and model selection surfaces in existing UI. Changes must follow the design system, accessibility and performance constraints; backend architecture and security decisions are out of Taste scope.",
+          "gates": ["provider-order-research", "credential-hygiene", "windows-manual-release-gate"],
+          "acceptanceCriteriaRefs": ["PROVIDER-001", "PROVIDER-002", "PROVIDER-003", "AUTH-001", "AUTH-002", "AUTH-003", "AUTH-004"],
+          "evidencePaths": []
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Ruflo advanced orchestration",
+      "name": "Milestone Six",
+      "status": "planned",
+      "stage": "m6-ruflo-orchestration",
+      "requires": [5],
+      "stages": [
+        {
+          "id": "m6-ruflo-orchestration",
+          "name": "Ruflo optional orchestration",
+          "milestone": 6,
+          "status": "planned",
+          "dependsOn": ["m5-provider-onboarding"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": false,
+          "tasteDecision": "Ruflo is optional and behind a feature flag; UI surface, if introduced later, must follow the design system. Ruflo never overrides backend architecture or security.",
+          "gates": ["ruflo-license", "ruflo-optional-feature-flag", "ruflo-fallback", "ruflo-windows"],
+          "acceptanceCriteriaRefs": ["RUFLO-001", "RUFLO-002", "RUFLO-003", "RUFLO-004", "RUFLO-005"],
+          "evidencePaths": []
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "Soup skill routing",
+      "name": "Future Milestone Seven",
+      "status": "future",
+      "stage": "m7-soup-routing",
+      "requires": [6],
+      "stages": [
+        {
+          "id": "m7-soup-routing",
+          "name": "Soup skill routing (future)",
+          "milestone": 7,
+          "status": "future",
+          "dependsOn": ["m6-ruflo-orchestration"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": true,
+          "tasteDecision": "Documented only. Must not start until all backend milestones pass; any future UI change is Taste-gated.",
+          "gates": ["no-early-start", "explicit-approval-before-start"],
+          "acceptanceCriteriaRefs": ["FACTORY-021"],
+          "evidencePaths": []
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "OmniRoute provider routing",
+      "name": "Future Milestone Eight",
+      "status": "future",
+      "stage": "m8-omni-route",
+      "requires": [6],
+      "stages": [
+        {
+          "id": "m8-omni-route",
+          "name": "OmniRoute provider routing (future)",
+          "milestone": 8,
+          "status": "future",
+          "dependsOn": ["m6-ruflo-orchestration"],
+          "n8nResearchGate": true,
+          "changesUserFacingUi": true,
+          "tasteDecision": "Documented only. Must not start until all backend milestones pass; any future UI change is Taste-gated.",
+          "gates": ["no-early-start", "explicit-approval-before-start"],
+          "acceptanceCriteriaRefs": ["FACTORY-022"],
+          "evidencePaths": []
+        }
+      ]
+    }
+  ]
+}

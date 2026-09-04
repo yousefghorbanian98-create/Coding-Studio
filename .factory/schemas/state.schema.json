@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-studio.dev/schemas/factory/state.schema.json",
+  "title": "Coding Studio Backend Factory state",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "runIdentifier",
+    "repository",
+    "branch",
+    "baseCommit",
+    "activeMilestone",
+    "activeStage",
+    "activeGate",
+    "status",
+    "attemptCounters",
+    "lastProgressTime",
+    "lastCommit",
+    "lastCIrun",
+    "completedStages",
+    "pendingStages",
+    "blockedStages",
+    "blockers"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string", "minLength": 1 },
+    "runIdentifier": { "type": "string", "minLength": 1 },
+    "repository": { "type": "string", "minLength": 1 },
+    "branch": { "type": "string", "minLength": 1 },
+    "baseCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "activeMilestone": { "type": "integer", "minimum": 0, "maximum": 8 },
+    "activeStage": { "type": "string", "minLength": 1 },
+    "activeGate": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["preflight", "stage-zero", "active", "blocked", "complete"] },
+    "attemptCounters": { "$ref": "#/$defs/counters" },
+    "lastProgressTime": { "type": "string" },
+    "lastCommit": { "type": ["string", "null"] },
+    "lastCIrun": { "type": ["string", "null"] },
+    "completedStages": { "type": "array", "items": { "type": "string" } },
+    "pendingStages": { "type": "array", "items": { "type": "string" } },
+    "blockedStages": { "type": "array", "items": { "type": "string" } },
+    "blockers": { "type": "array", "items": { "$ref": "#/$defs/blocker" } }
+  },
+  "$defs": {
+    "counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["healingAttempts", "ciRemediationAttempts", "reviewAndFixRounds", "noProgressIterations", "identicalFailureFingerprints"],
+      "properties": {
+        "healingAttempts": { "type": "integer", "minimum": 0 },
+        "ciRemediationAttempts": { "type": "integer", "minimum": 0 },
+        "reviewAndFixRounds": { "type": "integer", "minimum": 0 },
+        "noProgressIterations": { "type": "integer", "minimum": 0 },
+        "identicalFailureFingerprints": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status", "createdAt"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "createdAt": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

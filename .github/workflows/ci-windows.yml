@@ -47,6 +47,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # ---- Backend Factory mission validator --------------------------------
+      # Deterministic, network-free mission validation before static analysis.
+      - name: Validate frozen mission
+        run: npm run validate:mission
+
       # ---- Static analysis -------------------------------------------------
       - name: Lint
         run: npm run lint

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0.0",
+  "runIdentifier": "factory-stage-zero-2026-09-04",
+  "repository": "yousefghorbanian98-create/Coding-Studio",
+  "branch": "arena/01a06b4c-coding-studio",
+  "baseCommit": "710324911da56856ae6a67bdb2f24bbfe3031b87",
+  "activeMilestone": 0,
+  "activeStage": "stage-zero-freeze",
+  "activeGate": "freeze",
+  "status": "stage-zero",
+  "attemptCounters": {
+    "healingAttempts": 0,
+    "ciRemediationAttempts": 0,
+    "reviewAndFixRounds": 0,
+    "noProgressIterations": 0,
+    "identicalFailureFingerprints": 0
+  },
+  "lastProgressTime": "2026-09-04T00:00:00.000Z",
+  "lastCommit": null,
+  "lastCIrun": null,
+  "completedStages": [],
+  "pendingStages": [
+    "stage-zero-materialize",
+    "stage-zero-validate",
+    "stage-zero-freeze",
+    "m1-jcode-compat",
+    "m2-install-supervisor",
+    "m3-tauri-ipc",
+    "m4-events-lifecycle",
+    "m5-provider-onboarding",
+    "m6-ruflo-orchestration"
+  ],
+  "blockedStages": ["m7-soup-routing", "m8-omni-route"],
+  "blockers": []
+}
