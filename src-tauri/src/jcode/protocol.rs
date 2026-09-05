@@ -1248,38 +1248,119 @@ mod tests {
     fn all_supported_normalized_events_decode() {
         let cases = [
             (r#"{"v":1,"reply_to":2,"ev":"ok"}"#, "ok"),
-            (r#"{"v":1,"reply_to":2,"ev":"error","code":"unknown_session","message":"no such session"}"#, "error"),
-            (r#"{"v":1,"reply_to":2,"ev":"sessions","sessions":[{"session_id":"s-1","status":"idle"}]}"#, "sessions"),
-            (r#"{"v":1,"reply_to":2,"ev":"attached","session":{"session_id":"s-1","status":"idle"}}"#, "attached"),
-            (r#"{"v":1,"reply_to":2,"ev":"session_forked","session":{"session_id":"s-2"}}"#, "attached"),
-            (r#"{"v":1,"reply_to":2,"ev":"history","session_id":"s-1","messages":[{"role":"user","content":"hi"}]}"#, "history"),
+            (
+                r#"{"v":1,"reply_to":2,"ev":"error","code":"unknown_session","message":"no such session"}"#,
+                "error",
+            ),
+            (
+                r#"{"v":1,"reply_to":2,"ev":"sessions","sessions":[{"session_id":"s-1","status":"idle"}]}"#,
+                "sessions",
+            ),
+            (
+                r#"{"v":1,"reply_to":2,"ev":"attached","session":{"session_id":"s-1","status":"idle"}}"#,
+                "attached",
+            ),
+            (
+                r#"{"v":1,"reply_to":2,"ev":"session_forked","session":{"session_id":"s-2"}}"#,
+                "attached",
+            ),
+            (
+                r#"{"v":1,"reply_to":2,"ev":"history","session_id":"s-1","messages":[{"role":"user","content":"hi"}]}"#,
+                "history",
+            ),
             (r#"{"v":1,"reply_to":2,"ev":"pong"}"#, "pong"),
             (r#"{"v":1,"ev":"text_delta","session_id":"s-1","text":"Hello"}"#, "text_delta"),
-            (r#"{"v":1,"ev":"reasoning_delta","session_id":"s-1","text":"thinking"}"#, "reasoning_delta"),
-            (r#"{"v":1,"ev":"reasoning_done","session_id":"s-1","duration_secs":1.2}"#, "reasoning_done"),
-            (r#"{"v":1,"ev":"tool_start","session_id":"s-1","call_id":"c-1","name":"read"}"#, "tool_call_start"),
-            (r#"{"v":1,"ev":"tool_exec","session_id":"s-1","call_id":"c-1","name":"read"}"#, "tool_call_start"),
-            (r#"{"v":1,"ev":"tool_input_delta","session_id":"s-1","call_id":"c-1","delta":"{\"path\":"}"#, "tool_call_input"),
-            (r#"{"v":1,"ev":"tool_done","session_id":"s-1","call_id":"c-1","name":"read","output":"data","error":null}"#, "tool_call_done"),
-            (r#"{"v":1,"ev":"side_pane_images","session_id":"s-1","images":[{"media_type":"image/png","data":"iVBOR","label":null,"source":{"kind":"other","role":"tool"}}]}"#, "media_available"),
-            (r#"{"v":1,"ev":"token_usage","session_id":"s-1","input":10,"output":20,"cache_read_input":5}"#, "token_usage"),
+            (
+                r#"{"v":1,"ev":"reasoning_delta","session_id":"s-1","text":"thinking"}"#,
+                "reasoning_delta",
+            ),
+            (
+                r#"{"v":1,"ev":"reasoning_done","session_id":"s-1","duration_secs":1.2}"#,
+                "reasoning_done",
+            ),
+            (
+                r#"{"v":1,"ev":"tool_start","session_id":"s-1","call_id":"c-1","name":"read"}"#,
+                "tool_call_start",
+            ),
+            (
+                r#"{"v":1,"ev":"tool_exec","session_id":"s-1","call_id":"c-1","name":"read"}"#,
+                "tool_call_start",
+            ),
+            (
+                r#"{"v":1,"ev":"tool_input_delta","session_id":"s-1","call_id":"c-1","delta":"{\"path\":"}"#,
+                "tool_call_input",
+            ),
+            (
+                r#"{"v":1,"ev":"tool_done","session_id":"s-1","call_id":"c-1","name":"read","output":"data","error":null}"#,
+                "tool_call_done",
+            ),
+            (
+                r#"{"v":1,"ev":"side_pane_images","session_id":"s-1","images":[{"media_type":"image/png","data":"iVBOR","label":null,"source":{"kind":"other","role":"tool"}}]}"#,
+                "media_available",
+            ),
+            (
+                r#"{"v":1,"ev":"token_usage","session_id":"s-1","input":10,"output":20,"cache_read_input":5}"#,
+                "token_usage",
+            ),
             (r#"{"v":1,"ev":"turn_done","session_id":"s-1"}"#, "turn_completed"),
             (r#"{"v":1,"ev":"message_accepted","session_id":"s-1"}"#, "message_accepted"),
-            (r#"{"v":1,"ev":"permission_request","session_id":"s-1","request_id":"pr-1","tool_name":"bash","description":"run ls"}"#, "permission_requested"),
-            (r#"{"v":1,"ev":"session_status","session_id":"s-1","status":"generating"}"#, "status_changed"),
-            (r#"{"v":1,"ev":"connection_phase","session_id":"s-1","phase":"streaming"}"#, "connection_phase"),
-            (r#"{"v":1,"ev":"model_info","session_id":"s-1","provider":"anthropic","model":"claude-sonnet-4-20250514","reasoning_effort":"high"}"#, "model_info"),
-            (r#"{"v":1,"reply_to":3,"ev":"models","session_id":"s-1","models":["a","b"],"current":"a"}"#, "models_listed"),
-            (r#"{"v":1,"ev":"runtime_info","session_id":"s-1","provider":"anthropic","model":"claude-sonnet-4-20250514","routes":[{"model":"m1","provider":"p1","api_method":"oauth","available":true,"detail":"ok"}]}"#, "runtime_info"),
-            (r#"{"v":1,"ev":"credential_updated","provider":"anthropic","configured":true}"#, "credential_updated"),
+            (
+                r#"{"v":1,"ev":"permission_request","session_id":"s-1","request_id":"pr-1","tool_name":"bash","description":"run ls"}"#,
+                "permission_requested",
+            ),
+            (
+                r#"{"v":1,"ev":"session_status","session_id":"s-1","status":"generating"}"#,
+                "status_changed",
+            ),
+            (
+                r#"{"v":1,"ev":"connection_phase","session_id":"s-1","phase":"streaming"}"#,
+                "connection_phase",
+            ),
+            (
+                r#"{"v":1,"ev":"model_info","session_id":"s-1","provider":"anthropic","model":"claude-sonnet-4-20250514","reasoning_effort":"high"}"#,
+                "model_info",
+            ),
+            (
+                r#"{"v":1,"reply_to":3,"ev":"models","session_id":"s-1","models":["a","b"],"current":"a"}"#,
+                "models_listed",
+            ),
+            (
+                r#"{"v":1,"ev":"runtime_info","session_id":"s-1","provider":"anthropic","model":"claude-sonnet-4-20250514","routes":[{"model":"m1","provider":"p1","api_method":"oauth","available":true,"detail":"ok"}]}"#,
+                "runtime_info",
+            ),
+            (
+                r#"{"v":1,"ev":"credential_updated","provider":"anthropic","configured":true}"#,
+                "credential_updated",
+            ),
             (r#"{"v":1,"ev":"compacted","session_id":"s-1","message":"scheduled"}"#, "compacted"),
-            (r#"{"v":1,"ev":"session_renamed","session_id":"s-1","display_title":"Fix the bug"}"#, "session_renamed"),
-            (r#"{"v":1,"ev":"wake_requested","session_id":"s-1","reason":"timer","notification":"wake"}"#, "wake_requested"),
-            (r#"{"v":1,"ev":"background_progress","session_id":"s-1","task_id":"bg-1","label":"bash","percent":42.0,"summary":"42% · Running tests","done":false}"#, "background_progress"),
-            (r#"{"v":1,"reply_to":9,"ev":"file_content","session_id":"s-1","path":"x","content":"...","size":3,"truncated":false}"#, "uncarried_known"),
-            (r#"{"v":1,"reply_to":9,"ev":"files","session_id":"s-1","paths":["a"]}"#, "uncarried_known"),
-            (r#"{"v":1,"reply_to":9,"ev":"text_matches","session_id":"s-1","matches":[]}"#, "uncarried_known"),
-            (r#"{"v":1,"reply_to":9,"ev":"file_status","session_id":"s-1","path":"x","exists":true,"kind":"file"}"#, "uncarried_known"),
+            (
+                r#"{"v":1,"ev":"session_renamed","session_id":"s-1","display_title":"Fix the bug"}"#,
+                "session_renamed",
+            ),
+            (
+                r#"{"v":1,"ev":"wake_requested","session_id":"s-1","reason":"timer","notification":"wake"}"#,
+                "wake_requested",
+            ),
+            (
+                r#"{"v":1,"ev":"background_progress","session_id":"s-1","task_id":"bg-1","label":"bash","percent":42.0,"summary":"42% · Running tests","done":false}"#,
+                "background_progress",
+            ),
+            (
+                r#"{"v":1,"reply_to":9,"ev":"file_content","session_id":"s-1","path":"x","content":"...","size":3,"truncated":false}"#,
+                "uncarried_known",
+            ),
+            (
+                r#"{"v":1,"reply_to":9,"ev":"files","session_id":"s-1","paths":["a"]}"#,
+                "uncarried_known",
+            ),
+            (
+                r#"{"v":1,"reply_to":9,"ev":"text_matches","session_id":"s-1","matches":[]}"#,
+                "uncarried_known",
+            ),
+            (
+                r#"{"v":1,"reply_to":9,"ev":"file_status","session_id":"s-1","path":"x","exists":true,"kind":"file"}"#,
+                "uncarried_known",
+            ),
         ];
         for (line, expected) in cases {
             let v = decode(line).unwrap_or_else(|e| panic!("{expected} failed: {e}"));
@@ -1337,7 +1418,14 @@ mod tests {
     fn identifiers_are_validated() {
         assert!(SessionId::new("s-2026_09.05:abc@def").is_ok());
         let too_long = "x".repeat(129);
-        for bad in ["", "with space", "with/slash", "with\\backslash", "semi;colon", too_long.as_str()] {
+        for bad in [
+            "",
+            "with space",
+            "with/slash",
+            "with\\backslash",
+            "semi;colon",
+            too_long.as_str(),
+        ] {
             assert!(SessionId::new(bad).is_err(), "accepted {bad:?}");
         }
         assert!(PermissionRequestId::new("pr-1").is_ok());
@@ -1490,7 +1578,10 @@ mod tests {
     #[test]
     fn stream_classification_never_promotes_tui() {
         assert_eq!(classify_stream_bytes(b"{\"v\":1,\"ev\":\"ok\"}"), StreamClass::Protocol);
-        assert_eq!(classify_stream_bytes(b"[windows] Named pipe busy, retrying"), StreamClass::Diagnostics);
+        assert_eq!(
+            classify_stream_bytes(b"[windows] Named pipe busy, retrying"),
+            StreamClass::Diagnostics,
+        );
         // Colorized TUI frame sample (box drawing + ANSI):
         let tui = b"\x1b[38;5;99m\xe2\x95\xad\xe2\x94\x80 jcode \xe2\x94\x80\xe2\x95\xae\x1b[0m\n\x1b[2mdim status\x1b[0m";
         assert_eq!(classify_stream_bytes(tui), StreamClass::TerminalControl);

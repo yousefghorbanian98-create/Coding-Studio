@@ -283,7 +283,10 @@ mod tests {
         assert_eq!(tail.len(), 16);
         assert!(tail.bytes().all(|b| b.is_ascii_hexdigit()));
         // Deterministic and case-insensitive on the path text:
-        assert_eq!(p, windows_pipe_name(r"c:\users\amina\appdata\local\temp\jcode-amina\jcode-api.sock"));
+        assert_eq!(
+            p,
+            windows_pipe_name(r"c:\users\amina\appdata\local\temp\jcode-amina\jcode-api.sock"),
+        );
         // Same-directory sibling sockets share nothing but the scheme:
         let legacy = windows_pipe_name(r"C:\Users\Amina\AppData\Local\Temp\jcode-Amina\jcode.sock");
         assert_ne!(p, legacy);

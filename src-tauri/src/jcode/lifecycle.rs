@@ -48,44 +48,229 @@ pub struct CapabilityRow {
 /// Capability inventory for the pinned release (`v0.81.7`, harness API v1).
 /// Row-by-row prose mapping lives in the capability-matrix evidence doc.
 pub const CAPABILITIES: &[CapabilityRow] = &[
-    CapabilityRow { id: "version-output", support: Support::Supported, evidence: "src/cli/commands/report_info.rs:415 `jcode version --json`", product_facing: true },
-    CapabilityRow { id: "health-doctor", support: Support::Supported, evidence: "src/cli/args.rs AuthCommand::Doctor/Status; docs/PROVIDER_DOCTOR.md (`--tier offline` keyless)", product_facing: true },
-    CapabilityRow { id: "headless-run", support: Support::Supported, evidence: "src/cli/args.rs Command::Run (--json/--ndjson)", product_facing: false },
-    CapabilityRow { id: "structured-events", support: Support::Supported, evidence: "crates/jcode-harness-api/src/events.rs ApiEvent (ev-tagged, v1)", product_facing: true },
-    CapabilityRow { id: "server-client-mode", support: Support::Supported, evidence: "src/cli/args.rs:557 `api-bridge`; crates/jcode-sdk/src/launch.rs:505 ensure_runtime", product_facing: false },
-    CapabilityRow { id: "rust-sdk-inrepo", support: Support::Supported, evidence: "crates/jcode-sdk (publish=false, not on crates.io)", product_facing: false },
-    CapabilityRow { id: "typescript-sdk", support: Support::Supported, evidence: "sdk/typescript @1jehuang/jcode-sdk (npm 1.1.0, repo 1.2.0, MIT)", product_facing: false },
-    CapabilityRow { id: "session-create", support: Support::Supported, evidence: "harness-api requests.rs CreateSession -> events.rs Attached", product_facing: true },
-    CapabilityRow { id: "session-resume", support: Support::Supported, evidence: "AttachSession+ListSessions (persisted); docs/RESUME_BEHAVIOR.md", product_facing: true },
-    CapabilityRow { id: "streaming-response", support: Support::Supported, evidence: "events.rs TextDelta/ReasoningDelta", product_facing: true },
-    CapabilityRow { id: "tool-call-events", support: Support::Supported, evidence: "events.rs ToolStart/ToolInputDelta/ToolExec/ToolDone", product_facing: true },
-    CapabilityRow { id: "approval-request-events", support: Support::Supported, evidence: "events.rs PermissionRequest{request_id}", product_facing: true },
-    CapabilityRow { id: "approval-response-input", support: Support::Supported, evidence: "requests.rs PermissionResponse{decision: allow|allow_always|deny}", product_facing: true },
-    CapabilityRow { id: "cancellation-request", support: Support::Supported, evidence: "requests.rs Cancel{session_id}", product_facing: true },
-    CapabilityRow { id: "cancellation-completion-event", support: Support::Unknown, evidence: "no dedicated cancelled/interrupted event in harness v1; `run --ndjson` emits {\"type\":\"interrupted\"} (commands.rs:3133)", product_facing: false },
-    CapabilityRow { id: "graceful-shutdown-cli", support: Support::Supported, evidence: "src/cli/args.rs `jcode server stop`", product_facing: false },
-    CapabilityRow { id: "graceful-shutdown-protocol", support: Support::Unknown, evidence: "no shutdown frame in harness v1 (events.rs)", product_facing: false },
-    CapabilityRow { id: "forced-termination", support: Support::Unknown, evidence: "no protocol concept; upstream issue #1081 (Windows descendants can survive)", product_facing: false },
-    CapabilityRow { id: "exit-codes", support: Support::Unknown, evidence: "no documented table; nonzero on error paths (e.g. commands.rs:1992)", product_facing: false },
-    CapabilityRow { id: "stdout-contract", support: Support::Supported, evidence: "NDJSON/JSON only on stdout (commands.rs write_json_line)", product_facing: false },
-    CapabilityRow { id: "stderr-contract", support: Support::Supported, evidence: "bridge operator notices via eprintln (harness-api-server)", product_facing: false },
-    CapabilityRow { id: "configuration-discovery", support: Support::Supported, evidence: "sockets.rs runtime_dir(); sdk launch.rs user_jcode_home (JCODE_HOME); docs/WINDOWS.md install paths", product_facing: false },
-    CapabilityRow { id: "provider-discovery", support: Support::Supported, evidence: "events.rs RuntimeInfo/ModelInfo/Models; `jcode provider` family", product_facing: true },
-    CapabilityRow { id: "authentication-handoff", support: Support::Supported, evidence: "`jcode login`; set_api_key (owner-only store; OAuth excluded); jcode auth status/doctor", product_facing: true },
-    CapabilityRow { id: "error-events", support: Support::Supported, evidence: "events.rs Error{code:5 variants,message}", product_facing: true },
-    CapabilityRow { id: "protocol-version-negotiation", support: Support::Supported, evidence: "harness-api lib.rs API_VERSION_MAJOR=1/MINOR=0; api-server lib.rs hello range check", product_facing: true },
-    CapabilityRow { id: "event-sequence-ids", support: Support::Unsupported, evidence: "ServerFrame{v,reply_to,event} carries no global sequence (lib.rs)", product_facing: false },
-    CapabilityRow { id: "correlation-ids", support: Support::Supported, evidence: "id/reply_to + session_id + call_id + permission request_id", product_facing: true },
-    CapabilityRow { id: "duplicate-event-behavior", support: Support::Unknown, evidence: "no dedup ids in protocol v1", product_facing: false },
-    CapabilityRow { id: "malformed-frame-behavior", support: Support::Supported, evidence: "api-server lib.rs: invalid_request error + close; oversized frame closes stream", product_facing: false },
-    CapabilityRow { id: "max-frame-limits", support: Support::Supported, evidence: "api-server lib.rs:42 MAX_FRAME_BYTES=16 MiB; CS bound 4 MiB", product_facing: false },
-    CapabilityRow { id: "windows-x86-64", support: Support::Supported, evidence: "release.yml build-windows x86_64-pc-windows-msvc on windows-latest; docs/WINDOWS.md manually verified", product_facing: true },
-    CapabilityRow { id: "windows-aarch64", support: Support::Supported, evidence: "release.yml aarch64-pc-windows-msvc on windows-11-arm + verify_windows_install.ps1", product_facing: true },
-    CapabilityRow { id: "local-embeddings-disabled-policy", support: Support::Supported, evidence: "config-types FeatureConfig.memory (default true) -> CS overrides false; jcode-embedding is in-process ONNX (no network)", product_facing: false },
+    CapabilityRow {
+        id: "version-output",
+        support: Support::Supported,
+        evidence: "src/cli/commands/report_info.rs:415 `jcode version --json`",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "health-doctor",
+        support: Support::Supported,
+        evidence: "src/cli/args.rs AuthCommand::Doctor/Status; docs/PROVIDER_DOCTOR.md (`--tier offline` keyless)",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "headless-run",
+        support: Support::Supported,
+        evidence: "src/cli/args.rs Command::Run (--json/--ndjson)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "structured-events",
+        support: Support::Supported,
+        evidence: "crates/jcode-harness-api/src/events.rs ApiEvent (ev-tagged, v1)",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "server-client-mode",
+        support: Support::Supported,
+        evidence: "src/cli/args.rs:557 `api-bridge`; crates/jcode-sdk/src/launch.rs:505 ensure_runtime",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "rust-sdk-inrepo",
+        support: Support::Supported,
+        evidence: "crates/jcode-sdk (publish=false, not on crates.io)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "typescript-sdk",
+        support: Support::Supported,
+        evidence: "sdk/typescript @1jehuang/jcode-sdk (npm 1.1.0, repo 1.2.0, MIT)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "session-create",
+        support: Support::Supported,
+        evidence: "harness-api requests.rs CreateSession -> events.rs Attached",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "session-resume",
+        support: Support::Supported,
+        evidence: "AttachSession+ListSessions (persisted); docs/RESUME_BEHAVIOR.md",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "streaming-response",
+        support: Support::Supported,
+        evidence: "events.rs TextDelta/ReasoningDelta",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "tool-call-events",
+        support: Support::Supported,
+        evidence: "events.rs ToolStart/ToolInputDelta/ToolExec/ToolDone",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "approval-request-events",
+        support: Support::Supported,
+        evidence: "events.rs PermissionRequest{request_id}",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "approval-response-input",
+        support: Support::Supported,
+        evidence: "requests.rs PermissionResponse{decision: allow|allow_always|deny}",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "cancellation-request",
+        support: Support::Supported,
+        evidence: "requests.rs Cancel{session_id}",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "cancellation-completion-event",
+        support: Support::Unknown,
+        evidence: "no dedicated cancelled/interrupted event in harness v1; `run --ndjson` emits {\"type\":\"interrupted\"} (commands.rs:3133)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "graceful-shutdown-cli",
+        support: Support::Supported,
+        evidence: "src/cli/args.rs `jcode server stop`",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "graceful-shutdown-protocol",
+        support: Support::Unknown,
+        evidence: "no shutdown frame in harness v1 (events.rs)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "forced-termination",
+        support: Support::Unknown,
+        evidence: "no protocol concept; upstream issue #1081 (Windows descendants can survive)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "exit-codes",
+        support: Support::Unknown,
+        evidence: "no documented table; nonzero on error paths (e.g. commands.rs:1992)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "stdout-contract",
+        support: Support::Supported,
+        evidence: "NDJSON/JSON only on stdout (commands.rs write_json_line)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "stderr-contract",
+        support: Support::Supported,
+        evidence: "bridge operator notices via eprintln (harness-api-server)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "configuration-discovery",
+        support: Support::Supported,
+        evidence: "sockets.rs runtime_dir(); sdk launch.rs user_jcode_home (JCODE_HOME); docs/WINDOWS.md install paths",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "provider-discovery",
+        support: Support::Supported,
+        evidence: "events.rs RuntimeInfo/ModelInfo/Models; `jcode provider` family",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "authentication-handoff",
+        support: Support::Supported,
+        evidence: "`jcode login`; set_api_key (owner-only store; OAuth excluded); jcode auth status/doctor",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "error-events",
+        support: Support::Supported,
+        evidence: "events.rs Error{code:5 variants,message}",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "protocol-version-negotiation",
+        support: Support::Supported,
+        evidence: "harness-api lib.rs API_VERSION_MAJOR=1/MINOR=0; api-server lib.rs hello range check",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "event-sequence-ids",
+        support: Support::Unsupported,
+        evidence: "ServerFrame{v,reply_to,event} carries no global sequence (lib.rs)",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "correlation-ids",
+        support: Support::Supported,
+        evidence: "id/reply_to + session_id + call_id + permission request_id",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "duplicate-event-behavior",
+        support: Support::Unknown,
+        evidence: "no dedup ids in protocol v1",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "malformed-frame-behavior",
+        support: Support::Supported,
+        evidence: "api-server lib.rs: invalid_request error + close; oversized frame closes stream",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "max-frame-limits",
+        support: Support::Supported,
+        evidence: "api-server lib.rs:42 MAX_FRAME_BYTES=16 MiB; CS bound 4 MiB",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "windows-x86-64",
+        support: Support::Supported,
+        evidence: "release.yml build-windows x86_64-pc-windows-msvc on windows-latest; docs/WINDOWS.md manually verified",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "windows-aarch64",
+        support: Support::Supported,
+        evidence: "release.yml aarch64-pc-windows-msvc on windows-11-arm + verify_windows_install.ps1",
+        product_facing: true,
+    },
+    CapabilityRow {
+        id: "local-embeddings-disabled-policy",
+        support: Support::Supported,
+        evidence: "config-types FeatureConfig.memory (default true) -> CS overrides false; jcode-embedding is in-process ONNX (no network)",
+        product_facing: false,
+    },
     // Permanently denied surfaces (ADR-005/ADR-007):
-    CapabilityRow { id: "local-model-runtime", support: Support::Unsupported, evidence: "none applicable — excluded by Coding Studio contract", product_facing: false },
-    CapabilityRow { id: "ollama", support: Support::Unsupported, evidence: "upstream mentions confined to jcode-provider-openrouter-runtime/ollama_context.rs; CS never restores/exposes/configures it", product_facing: false },
-    CapabilityRow { id: "tui-scraping", support: Support::Unsupported, evidence: "prohibited by mission; structurally impossible through FrameDecoder", product_facing: false },
+    CapabilityRow {
+        id: "local-model-runtime",
+        support: Support::Unsupported,
+        evidence: "none applicable — excluded by Coding Studio contract",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "ollama",
+        support: Support::Unsupported,
+        evidence: "upstream mentions confined to jcode-provider-openrouter-runtime/ollama_context.rs; CS never restores/exposes/configures it",
+        product_facing: false,
+    },
+    CapabilityRow {
+        id: "tui-scraping",
+        support: Support::Unsupported,
+        evidence: "prohibited by mission; structurally impossible through FrameDecoder",
+        product_facing: false,
+    },
 ];
 
 /// Permanently denied capability ids (ADR-005, ADR-007).
@@ -325,7 +510,14 @@ mod tests {
     #[test]
     fn negotiation_is_deny_by_default() {
         assert!(require("version-output").is_ok());
-        for denied in ["event-sequence-ids", "duplicate-event-behavior", "ollama", "local-model-runtime", "tui-scraping", "never-heard-of-this"] {
+        for denied in [
+            "event-sequence-ids",
+            "duplicate-event-behavior",
+            "ollama",
+            "local-model-runtime",
+            "tui-scraping",
+            "never-heard-of-this",
+        ] {
             assert!(require(denied).is_err(), "{denied} must fail closed");
         }
         assert_eq!(require("ollama").unwrap_err().code(), ErrorCode::LocalRuntimeDenied);
@@ -348,7 +540,15 @@ mod tests {
 
     #[test]
     fn local_runtime_labels_are_denied() {
-        for label in ["ollama", "Ollama", "local-ollama", "http://localhost:11434", "llama.cpp-7b", "LM Studio", "localai"] {
+        for label in [
+            "ollama",
+            "Ollama",
+            "local-ollama",
+            "http://localhost:11434",
+            "llama.cpp-7b",
+            "LM Studio",
+            "localai",
+        ] {
             assert_eq!(
                 classify_provider_label(Some(label)),
                 ProviderClass::DeniedLocalRuntime,
@@ -394,7 +594,10 @@ mod tests {
         assert_eq!(p.env_overlay(), vec![("JCODE_NO_TELEMETRY", "1"), ("DO_NOT_TRACK", "1")]);
         assert_eq!(p.config_overrides(), vec![("features.memory", "false")]);
         for (key, _) in p.env_overlay() {
-            assert!(!key.to_ascii_lowercase().contains("key"), "env overlay never carries credential keys");
+            assert!(
+                !key.to_ascii_lowercase().contains("key"),
+                "env overlay never carries credential keys",
+            );
         }
     }
 }

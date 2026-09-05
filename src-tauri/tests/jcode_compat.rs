@@ -232,7 +232,10 @@ fn missing_required_fields_fail_precisely() {
 fn unknown_kinds_are_tolerated_and_bounded() {
     let frames = decode_all(&fixture("protocol/unknown-event.ndjson"));
     assert!(matches!(frames[0].event, EventKind::Unknown { .. }));
-    assert!(matches!(frames[1].event, EventKind::TextDelta { .. }), "stream continues after unknown kinds");
+    assert!(
+        matches!(frames[1].event, EventKind::TextDelta { .. }),
+        "stream continues after unknown kinds",
+    );
 }
 
 #[test]
@@ -360,7 +363,11 @@ fn stdout_and_stderr_channels_never_mix() {
         "protocol/approval-turn.ndjson",
     ] {
         for line in fixture_string(rel).lines() {
-            assert_eq!(classify_stream_bytes(line.as_bytes()), StreamClass::Protocol, "{rel}: {line}");
+            assert_eq!(
+                classify_stream_bytes(line.as_bytes()),
+                StreamClass::Protocol,
+                "{rel}: {line}",
+            );
         }
     }
     // Every stderr fixture line classifies as diagnostics.
@@ -495,7 +502,10 @@ fn hello_handshake_matches_upstream_wire_shape() {
 fn exit_fixtures_drive_the_disposition_model() {
     let normal = fixture_string("exit/normal-exit.json");
     let v: serde_json::Value = serde_json::from_str(&normal).unwrap();
-    assert_eq!(classify_exit(v["exit_code"].as_i64().map(|c| c as i32)), lifecycle::ExitDisposition::Clean);
+    assert_eq!(
+        classify_exit(v["exit_code"].as_i64().map(|c| c as i32)),
+        lifecycle::ExitDisposition::Clean,
+    );
     let abnormal = fixture_string("exit/abnormal-exit.json");
     let v: serde_json::Value = serde_json::from_str(&abnormal).unwrap();
     assert!(matches!(

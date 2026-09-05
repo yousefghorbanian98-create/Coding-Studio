@@ -5,3 +5,8 @@
 *.md text eol=lf
 *.json text eol=lf
 *.jsonl text eol=lf
+
+# Milestone One: protocol/release fixture bytes are contractual (byte-exact
+# SHA-256 hashing and NDJSON semantics). Keep them LF-stable on Windows
+# checkouts regardless of core.autocrlf.
+src-tauri/tests/fixtures/jcode/** text eol=lf
