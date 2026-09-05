@@ -35,13 +35,13 @@
     "docs/backend-factory/evidence/stage-zero/taste-decision.md"
   ],
   "fileHashes": {
-    ".factory/requirements.json": "d394f2bdb2b4282d4b8c89aa681aa611b1e6dda6bc68ce7a06c87aea80feb760",
+    ".factory/requirements.json": "c2788b12ff935395c18ffd0c8aaae5222d757480a2806cde647f92d17cc72559",
     ".factory/schemas/manifest.schema.json": "ee879a2c7cab5bd605faf75ecda30b769bd858975b1595cc1a8e2f7b7a223906",
     ".factory/schemas/requirements.schema.json": "e70704bc0ff71eb66e427f0775c8613a267599cb8db2935573b179fca7bc6bb3",
     ".factory/schemas/stages.schema.json": "0f166eb941d281fe616bf4631ba26943ff1f095a2500c0eaf8226c55f1024936",
     ".factory/schemas/state.schema.json": "e1ae0df57457bfbf4cba30be0f7484926d74e9a109de921524e0e89954e07c42",
     ".factory/schemas/threats.schema.json": "4d41385db784c6786b34a9b0685e2fc3c24949168fbb2104ea478edac1d2af42",
-    ".factory/stages.json": "7ecf5190d128c28045bc53e33cacd635407a0e24ec4cc719410382d6047f8c9e",
+    ".factory/stages.json": "7a8b29c7a9b1bcceee66f11b5b5b9fc6ab381aa89c7c01cef47cea8f0c61599e",
     ".factory/threats.json": "32d621446c747b956090e13215215f30e33b44dd833400563260965a84d639ba",
     "docs/backend-factory/00-USER-DIRECTIVE.md": "68d6f05503483d55bab11cdc6d90c2387e47894cbd80bb7de142f6fd6b56e2b2",
     "docs/backend-factory/01-MASTER-MISSION.md": "b698031ab2c2c6fa769db94c56a4aafc455b1bbe610cc664c003ce7c78e7e182",
