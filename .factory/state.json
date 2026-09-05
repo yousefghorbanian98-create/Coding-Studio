@@ -10,7 +10,7 @@
   "status": "active",
   "attemptCounters": {
     "healingAttempts": 0,
-    "ciRemediationAttempts": 0,
+    "ciRemediationAttempts": 1,
     "reviewAndFixRounds": 0,
     "noProgressIterations": 0,
     "identicalFailureFingerprints": 0
@@ -57,5 +57,5 @@
       "createdAt": "2026-09-05T00:00:00.000Z"
     }
   ],
-  "lastProgressTime": "2026-09-05T13:40:00.000Z"
+  "lastProgressTime": "2026-09-05T17:35:00+03:30Z"
 }

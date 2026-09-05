@@ -108,7 +108,7 @@ fn validate_absolute_path(v: &str, label: &str) -> Result<String, JcodeError> {
 fn sanitize_user(raw: &str) -> String {
     let out: String = raw
         .chars()
-        .filter(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '-' | '_'))
+        .filter(|ch| ch.is_ascii_alphanumeric() || matches!(*ch, '-' | '_'))
         .take(64)
         .collect();
     if out.is_empty() { "user".to_string() } else { out }
@@ -189,7 +189,7 @@ pub fn windows_pipe_name(socket_path: &str) -> String {
     let stem_raw = stem_raw.strip_suffix(".sock").unwrap_or(stem_raw);
     let stem: String = stem_raw
         .chars()
-        .filter(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '-' | '_'))
+        .filter(|ch| ch.is_ascii_alphanumeric() || matches!(*ch, '-' | '_'))
         .take(32)
         .collect();
     let stem = if stem.is_empty() { "jcode" } else { stem.as_str() };

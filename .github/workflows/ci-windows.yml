@@ -171,18 +171,60 @@ jobs:
           workspaces: src-tauri -> target
 
       # Compiles the desktop crate and runs its unit tests. No external
-      # service is required.
+      # service is required. Output is teed to a log so the follow-on step can
+      # surface an excerpt as PR-visible annotations on failure (the authoring
+      # sandbox has no installable Rust toolchain; CI is the compiler, and
+      # annotations are the sandbox-readable failure channel).
       - name: Rust tests (cargo test)
         working-directory: src-tauri
-        run: cargo test --all-features
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo test --all-features 2>&1 | tee "${RUNNER_TEMP}/cargo-test.log"
+          exit ${PIPESTATUS[0]}
+
+      - name: Milestone One — surface Rust failure excerpt as annotations
+        if: failure()
+        shell: bash
+        run: |
+          log="${RUNNER_TEMP}/cargo-test.log"
+          test -f "$log" && {
+            { { grep -aE "error(\[E[0-9]+\])?:|failures:|assertion .*(left|==)|panicked at|not ok" "$log" || true; } | head -40
+              tail -25 "$log"
+            } | awk '!seen[$0]++' | head -50 | while IFS= read -r line; do
+              line="${line//'%'/'%25'}"; line="${line//$'\r'/'%0D'}"
+              printf '::error title=M1-cargo-test::%s\n' "$line"
+            done
+          } || echo "::error title=M1-cargo-test::cargo test failed before producing output"
+
+      # Same pattern as the existing vitest/E2E failure comments: the PR gets a
+      # readable excerpt the moment a Rust step fails (no log download needed).
+      - name: Comment Milestone One cargo failure excerpt on the pull request
+        if: failure() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo '### Milestone One — Rust CI failure excerpt (auto-posted)'
+            echo ''
+            echo '```text'
+            { cat "${RUNNER_TEMP}/cargo-test.log" "${RUNNER_TEMP}/cargo-fmt.log" "${RUNNER_TEMP}/cargo-clippy.log" 2>/dev/null || echo '(no log captured before failure)'; } | tail -n 160
+            echo '```'
+          } > m1-cargo-failures.md
+          gh pr comment "$PR_NUMBER" --body-file m1-cargo-failures.md
 
       # Milestone One: the Jcode compatibility layer is held to rustfmt +
       # clippy(-D warnings) so the contract surface stays reviewable.
       - name: Rust fmt + clippy
         working-directory: src-tauri
+        shell: bash
         run: |
-          cargo fmt --check
-          cargo clippy --all-targets --all-features -- -D warnings
+          set -o pipefail
+          cargo fmt --check 2>&1 | tee "${RUNNER_TEMP}/cargo-fmt.log"
+          cargo clippy --all-targets --all-features -- -D warnings 2>&1 | tee "${RUNNER_TEMP}/cargo-clippy.log"
+          exit ${PIPESTATUS[0]}
 
       - name: Tauri build
         # No signing keys are configured on purpose: this produces an unsigned
