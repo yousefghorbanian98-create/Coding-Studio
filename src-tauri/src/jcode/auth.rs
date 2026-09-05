@@ -111,8 +111,20 @@ pub fn bounded(input: &str, max: usize) -> String {
 /// providers are (token prefixes are case-significant); key=value matching is
 /// case-insensitive on the key.
 const TOKEN_MARKERS: &[&str] = &[
-    "sk-", "ghp_", "gho_", "ghu_", "ghs_", "ghr_", "xoxb-", "xoxp-", "xoxa-", "AIza", "AKIA",
-    "Bearer ", "eyJ", "-----BEGIN",
+    "sk-",
+    "ghp_",
+    "gho_",
+    "ghu_",
+    "ghs_",
+    "ghr_",
+    "xoxb-",
+    "xoxp-",
+    "xoxa-",
+    "AIza",
+    "AKIA",
+    "Bearer ",
+    "eyJ",
+    "-----BEGIN",
 ];
 
 const SECRET_KEYS: &[&str] = &[
@@ -353,8 +365,8 @@ mod tests {
             "token embargo lifted",
             "password\nstrength check",
             "token\n= not-an-actual-assignment",
-            "port = 11434",         // sensitive-looking but not a secret KEY
-            "api_version = 1",      // only api_key/api_secret/api_token match
+            "port = 11434",    // sensitive-looking but not a secret KEY
+            "api_version = 1", // only api_key/api_secret/api_token match
             "[redacted marker]",
             "client secrets expire regularly",
         ] {

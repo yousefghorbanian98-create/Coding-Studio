@@ -5,19 +5,15 @@
 
 use coding_studio_lib::jcode::error::ErrorCode;
 use coding_studio_lib::jcode::lifecycle::{
-    self, PERMANENTLY_DENIED, ProviderClass, Support, capability, classify_exit,
-    classify_provider_label, product_facing, require,
+    self, capability, classify_exit, classify_provider_label, product_facing, require,
+    ProviderClass, Support, PERMANENTLY_DENIED,
 };
 use coding_studio_lib::jcode::protocol::{
-    self, EventKind, EventSequencer, FrameDecoder, Ingress, OutgoingRequest, PermissionRequestId,
-    RequestEncoder, SessionId, StreamClass, classify_stream_bytes,
+    self, classify_stream_bytes, EventKind, EventSequencer, FrameDecoder, Ingress, OutgoingRequest,
+    PermissionRequestId, RequestEncoder, SessionId, StreamClass,
 };
-use coding_studio_lib::jcode::verification::{
-    self, ChecksumSet, WindowsArch, verify_against_pin,
-};
-use coding_studio_lib::jcode::version::{
-    self, PINNED_CHECKSUMS_FILE_SHA256, VersionCompatibility,
-};
+use coding_studio_lib::jcode::verification::{self, verify_against_pin, ChecksumSet, WindowsArch};
+use coding_studio_lib::jcode::version::{self, VersionCompatibility, PINNED_CHECKSUMS_FILE_SHA256};
 use std::io::Cursor;
 use std::path::PathBuf;
 
@@ -65,7 +61,10 @@ fn replays_full_turn_stream_with_monotonic_sequence() {
     // Turn shape: attaches before streaming, completes with turn_completed.
     assert_eq!(delivered[0].frame.event.name(), "hello_ok");
     assert_eq!(delivered[1].frame.event.name(), "attached");
-    assert_eq!(delivered.last().unwrap().frame.event.name(), "turn_completed");
+    assert_eq!(
+        delivered.last().unwrap().frame.event.name(),
+        "turn_completed"
+    );
     // Text deltas accumulate the assistant's message.
     let text: String = delivered
         .iter()
@@ -89,10 +88,17 @@ fn replays_tool_call_lifecycle() {
     let names: Vec<_> = frames.iter().map(|f| f.event.name()).collect();
     assert_eq!(
         names,
-        vec!["tool_call_start", "tool_call_input", "tool_call_start", "tool_call_done"]
+        vec![
+            "tool_call_start",
+            "tool_call_input",
+            "tool_call_start",
+            "tool_call_done"
+        ]
     );
     match &frames[0].event {
-        EventKind::ToolCallStart { executing, call_id, .. } => {
+        EventKind::ToolCallStart {
+            executing, call_id, ..
+        } => {
             assert!(!executing);
             assert_eq!(call_id.as_str(), "call-0001");
         }
@@ -120,7 +126,12 @@ fn approval_round_trip_registers_and_resolves_and_spoofs_fail() {
     // The decoded permission request self-registered.
     for line in raw.lines() {
         let frame = protocol::decode_frame_line(line).unwrap();
-        if let EventKind::PermissionRequested { request_id: rid, tool_name, .. } = frame.event {
+        if let EventKind::PermissionRequested {
+            request_id: rid,
+            tool_name,
+            ..
+        } = frame.event
+        {
             assert_eq!(tool_name.as_str(), "bash");
             request_id = Some(rid);
         }
@@ -154,7 +165,11 @@ fn approval_round_trip_registers_and_resolves_and_spoofs_fail() {
 fn hello_ok_capabilities_are_checked_deny_by_default() {
     let frames = decode_all(&fixture("protocol/handshake-hello-ok.ndjson"));
     let check = match &frames[0].event {
-        EventKind::HelloOk { capabilities, negotiated_major, server } => {
+        EventKind::HelloOk {
+            capabilities,
+            negotiated_major,
+            server,
+        } => {
             assert_eq!(*negotiated_major, 1);
             assert!(server.as_str().starts_with("jcode-harness-api-bridge/"));
             lifecycle::check_server_capabilities(capabilities)

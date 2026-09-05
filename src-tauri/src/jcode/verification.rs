@@ -10,7 +10,7 @@
 //! against two independent observations of the same immutable release.
 
 use crate::jcode::error::{ErrorCode, JcodeError};
-use crate::jcode::version::{PINNED_JCODE_VERSION, PINNED_JCODE_TAG};
+use crate::jcode::version::{PINNED_JCODE_TAG, PINNED_JCODE_VERSION};
 use std::fmt;
 
 /// Windows architectures Coding Studio recognizes. Anything else is
@@ -99,7 +99,9 @@ pub struct ChecksumSet {
 }
 
 fn is_valid_digest(s: &str) -> bool {
-    s.len() == 64 && s.bytes().all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
+    s.len() == 64
+        && s.bytes()
+            .all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
 }
 
 /// Asset names must be bare filenames: no separators, no parent traversals.
@@ -291,13 +293,34 @@ mod tests {
     #[test]
     fn windows_arch_mapping_is_exact() {
         assert_eq!(WindowsArch::X86_64.rust_target(), "x86_64-pc-windows-msvc");
-        assert_eq!(WindowsArch::AArch64.rust_target(), "aarch64-pc-windows-msvc");
-        assert_eq!(WindowsArch::X86_64.exe_asset_name(), "jcode-windows-x86_64.exe");
-        assert_eq!(WindowsArch::AArch64.exe_asset_name(), "jcode-windows-aarch64.exe");
-        assert_eq!(WindowsArch::X86_64.tarball_asset_name(), "jcode-windows-x86_64.tar.gz");
-        assert_eq!(WindowsArch::AArch64.tarball_asset_name(), "jcode-windows-aarch64.tar.gz");
-        assert_eq!(WindowsArch::from_rust_arch("x86_64"), Some(WindowsArch::X86_64));
-        assert_eq!(WindowsArch::from_rust_arch("aarch64"), Some(WindowsArch::AArch64));
+        assert_eq!(
+            WindowsArch::AArch64.rust_target(),
+            "aarch64-pc-windows-msvc"
+        );
+        assert_eq!(
+            WindowsArch::X86_64.exe_asset_name(),
+            "jcode-windows-x86_64.exe"
+        );
+        assert_eq!(
+            WindowsArch::AArch64.exe_asset_name(),
+            "jcode-windows-aarch64.exe"
+        );
+        assert_eq!(
+            WindowsArch::X86_64.tarball_asset_name(),
+            "jcode-windows-x86_64.tar.gz"
+        );
+        assert_eq!(
+            WindowsArch::AArch64.tarball_asset_name(),
+            "jcode-windows-aarch64.tar.gz"
+        );
+        assert_eq!(
+            WindowsArch::from_rust_arch("x86_64"),
+            Some(WindowsArch::X86_64)
+        );
+        assert_eq!(
+            WindowsArch::from_rust_arch("aarch64"),
+            Some(WindowsArch::AArch64)
+        );
         assert_eq!(WindowsArch::from_rust_arch("arm"), None);
         assert_eq!(WindowsArch::from_rust_arch("x86"), None);
     }
@@ -326,17 +349,20 @@ mod tests {
     #[test]
     fn checksum_rejects_malformed_confused_and_hostile_records() {
         for bad in [
-            "nothex  file",                                            // bad digest
-            "B5B09DBE0DD0B14796DFA75F63DECBDF98A75F3F9DE9B86D6D25522EF3EB105B  x", // uppercase
+            "nothex  file",                                                          // bad digest
+            "B5B09DBE0DD0B14796DFA75F63DECBDF98A75F3F9DE9B86D6D25522EF3EB105B  x",   // uppercase
             "b5b09dbe0dd0b14796dfa75f63decbdf98a75f3f9de9b86d6d25522ef3eb105b file", // single space
             "b5b09dbe0dd0b14796dfa75f63decbdf98a75f3f9de9b86d6d25522ef3eb105b  ../evil", // traversal
             "b5b09dbe0dd0b14796dfa75f63decbdf98a75f3f9de9b86d6d25522ef3eb105b  dir/evil", // separator
-            "",                                                        // empty
+            "",                                                                           // empty
         ] {
             assert!(ChecksumSet::parse(bad).is_err(), "accepted {bad:?}");
         }
         let dup = format!("{SAMPLE}{SAMPLE}");
-        assert!(ChecksumSet::parse(&dup).is_err(), "duplicate names must fail");
+        assert!(
+            ChecksumSet::parse(&dup).is_err(),
+            "duplicate names must fail"
+        );
     }
 
     #[test]
@@ -351,16 +377,12 @@ mod tests {
         // Nine assets were published for v0.81.7; both Windows arches present.
         assert_eq!(EXPECTED_ASSETS_V0_81_7.len(), 9);
         for arch in WindowsArch::all() {
-            assert!(
-                EXPECTED_ASSETS_V0_81_7
-                    .iter()
-                    .any(|(n, _, _)| *n == arch.exe_asset_name())
-            );
-            assert!(
-                EXPECTED_ASSETS_V0_81_7
-                    .iter()
-                    .any(|(n, _, _)| *n == arch.tarball_asset_name())
-            );
+            assert!(EXPECTED_ASSETS_V0_81_7
+                .iter()
+                .any(|(n, _, _)| *n == arch.exe_asset_name()));
+            assert!(EXPECTED_ASSETS_V0_81_7
+                .iter()
+                .any(|(n, _, _)| *n == arch.tarball_asset_name()));
         }
         for (name, size, digest) in EXPECTED_ASSETS_V0_81_7 {
             assert!(is_bare_filename(name));

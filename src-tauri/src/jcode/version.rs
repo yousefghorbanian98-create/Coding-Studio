@@ -56,7 +56,10 @@ impl SemVer {
                 ));
             }
             part.parse::<u32>().map_err(|_| {
-                JcodeError::new(ErrorCode::MalformedVersionReport, "version component overflow")
+                JcodeError::new(
+                    ErrorCode::MalformedVersionReport,
+                    "version component overflow",
+                )
             })
         };
         let major = next("major")?;
@@ -68,7 +71,11 @@ impl SemVer {
                 "version string has more than three components",
             ));
         }
-        Ok(Self { major, minor, patch })
+        Ok(Self {
+            major,
+            minor,
+            patch,
+        })
     }
 
     pub fn pinned() -> Self {
@@ -209,21 +216,48 @@ mod tests {
             .chars()
             .all(|c| c.is_ascii_hexdigit() && !c.is_ascii_uppercase()));
         assert!(PINNED_CHECKSUMS_URL.contains("/download/v0.81.7/"));
-        assert!(!PINNED_CHECKSUMS_URL.contains("latest"), "mutable URL forbidden");
-        assert_eq!(SemVer::pinned(), SemVer { major: 0, minor: 81, patch: 7 });
+        assert!(
+            !PINNED_CHECKSUMS_URL.contains("latest"),
+            "mutable URL forbidden"
+        );
+        assert_eq!(
+            SemVer::pinned(),
+            SemVer {
+                major: 0,
+                minor: 81,
+                patch: 7
+            }
+        );
     }
 
     #[test]
     fn semver_parsing_is_strict() {
         assert_eq!(
             SemVer::parse("1.2.3").unwrap(),
-            SemVer { major: 1, minor: 2, patch: 3 }
+            SemVer {
+                major: 1,
+                minor: 2,
+                patch: 3
+            }
         );
         assert_eq!(
             SemVer::parse("v0.81.7").unwrap(),
-            SemVer { major: 0, minor: 81, patch: 7 }
+            SemVer {
+                major: 0,
+                minor: 81,
+                patch: 7
+            }
         );
-        for bad in ["", "1", "1.2", "1.2.3.4", "1.2.x", "v", "9999999999.0.0", "0.81.7-rc1"] {
+        for bad in [
+            "",
+            "1",
+            "1.2",
+            "1.2.3.4",
+            "1.2.x",
+            "v",
+            "9999999999.0.0",
+            "0.81.7-rc1",
+        ] {
             assert!(SemVer::parse(bad).is_err(), "accepted {bad:?}");
         }
     }
@@ -244,7 +278,10 @@ mod tests {
 
     #[test]
     fn pinned_release_classifies_supported() {
-        assert_eq!(classify(&report("0.81.7", Some("v0.81.7"))), VersionCompatibility::Supported);
+        assert_eq!(
+            classify(&report("0.81.7", Some("v0.81.7"))),
+            VersionCompatibility::Supported
+        );
         assert!(require_supported(&report("0.81.7", Some("v0.81.7"))).is_ok());
     }
 
@@ -274,10 +311,19 @@ mod tests {
 
     #[test]
     fn malformed_and_contradictory_reports_fail_closed() {
-        assert_eq!(classify(&VersionReport::default()), VersionCompatibility::Malformed);
-        assert_eq!(classify(&report("not-a-version", None)), VersionCompatibility::Malformed);
+        assert_eq!(
+            classify(&VersionReport::default()),
+            VersionCompatibility::Malformed
+        );
+        assert_eq!(
+            classify(&report("not-a-version", None)),
+            VersionCompatibility::Malformed
+        );
         // semver says pinned but tag disagrees: contradiction, not evidence.
-        assert_eq!(classify(&report("0.81.7", Some("v0.81.6"))), VersionCompatibility::Malformed);
+        assert_eq!(
+            classify(&report("0.81.7", Some("v0.81.6"))),
+            VersionCompatibility::Malformed
+        );
         assert!(require_supported(&report("banana", None)).is_err());
     }
 

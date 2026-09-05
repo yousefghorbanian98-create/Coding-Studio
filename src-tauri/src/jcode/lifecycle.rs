@@ -394,7 +394,10 @@ pub fn check_server_capabilities(advertised: &[String]) -> ServerCapabilityCheck
         .filter(|a| !EXPECTED_SERVER_CAPABILITIES.contains(&a.as_str()))
         .cloned()
         .collect();
-    ServerCapabilityCheck { missing, unrecognized }
+    ServerCapabilityCheck {
+        missing,
+        unrecognized,
+    }
 }
 
 /// How a child process ended and what Coding Studio concludes.
@@ -506,7 +509,10 @@ mod tests {
             "windows-aarch64",
             "local-embeddings-disabled-policy",
         ];
-        assert_eq!(CAPABILITIES.len(), required.len() + PERMANENTLY_DENIED.len());
+        assert_eq!(
+            CAPABILITIES.len(),
+            required.len() + PERMANENTLY_DENIED.len()
+        );
         for id in required {
             let row = CAPABILITIES
                 .iter()
@@ -529,8 +535,14 @@ mod tests {
         ] {
             assert!(require(denied).is_err(), "{denied} must fail closed");
         }
-        assert_eq!(require("ollama").unwrap_err().code(), ErrorCode::LocalRuntimeDenied);
-        assert_eq!(require("never-heard-of-this").unwrap_err().code(), ErrorCode::CapabilityDenied);
+        assert_eq!(
+            require("ollama").unwrap_err().code(),
+            ErrorCode::LocalRuntimeDenied
+        );
+        assert_eq!(
+            require("never-heard-of-this").unwrap_err().code(),
+            ErrorCode::CapabilityDenied
+        );
         assert_eq!(capability("nope"), Support::Unknown);
     }
 
@@ -539,7 +551,10 @@ mod tests {
         let pf = product_facing();
         assert!(pf.contains(&"streaming-response"));
         for id in &pf {
-            assert!(!PERMANENTLY_DENIED.contains(id), "{id} leaked into product set");
+            assert!(
+                !PERMANENTLY_DENIED.contains(id),
+                "{id} leaked into product set"
+            );
             assert!(!id.contains("ollama"));
             assert!(!id.contains("local"));
         }
@@ -564,17 +579,28 @@ mod tests {
                 "{label} must classify denied"
             );
         }
-        assert_eq!(classify_provider_label(Some("anthropic")), ProviderClass::RemoteManaged);
-        assert_eq!(classify_provider_label(Some("openai")), ProviderClass::RemoteManaged);
-        assert_eq!(classify_provider_label(Some("zzz-unknown")), ProviderClass::RemoteManaged);
+        assert_eq!(
+            classify_provider_label(Some("anthropic")),
+            ProviderClass::RemoteManaged
+        );
+        assert_eq!(
+            classify_provider_label(Some("openai")),
+            ProviderClass::RemoteManaged
+        );
+        assert_eq!(
+            classify_provider_label(Some("zzz-unknown")),
+            ProviderClass::RemoteManaged
+        );
         assert_eq!(classify_provider_label(Some("")), ProviderClass::Unknown);
         assert_eq!(classify_provider_label(None), ProviderClass::Unknown);
     }
 
     #[test]
     fn server_capability_check_degrades_cleanly() {
-        let full: Vec<String> =
-            EXPECTED_SERVER_CAPABILITIES.iter().map(|s| s.to_string()).collect();
+        let full: Vec<String> = EXPECTED_SERVER_CAPABILITIES
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         let check = check_server_capabilities(&full);
         assert!(check.missing.is_empty());
         assert!(check.unrecognized.is_empty());
@@ -583,11 +609,9 @@ mod tests {
         let check = check_server_capabilities(&partial);
         assert!(check.missing.contains(&"streaming".to_string()));
         assert_eq!(check.unrecognized, vec!["future_additive".to_string()]);
-        assert!(
-            !check_server_capabilities(&partial)
-                .unrecognized
-                .contains(&"sessions".to_string())
-        );
+        assert!(!check_server_capabilities(&partial)
+            .unrecognized
+            .contains(&"sessions".to_string()));
     }
 
     #[test]
@@ -605,7 +629,10 @@ mod tests {
         assert!(!p.sets_embedding_backend_env);
         assert!(!p.uses_local_model_runtime);
         assert!(!p.injects_credentials);
-        assert_eq!(p.env_overlay(), vec![("JCODE_NO_TELEMETRY", "1"), ("DO_NOT_TRACK", "1")]);
+        assert_eq!(
+            p.env_overlay(),
+            vec![("JCODE_NO_TELEMETRY", "1"), ("DO_NOT_TRACK", "1")]
+        );
         assert_eq!(p.config_overrides(), vec![("features.memory", "false")]);
         for (key, _) in p.env_overlay() {
             assert!(

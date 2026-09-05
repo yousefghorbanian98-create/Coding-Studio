@@ -134,7 +134,13 @@ impl JcodeError {
 
 impl fmt::Display for JcodeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{} {}: {}", self.code.code(), self.code.summary(), self.message)
+        write!(
+            f,
+            "{} {}: {}",
+            self.code.code(),
+            self.code.summary(),
+            self.message
+        )
     }
 }
 
@@ -168,7 +174,10 @@ mod tests {
         let secret = format!("token=sk-{}", "A".repeat(400));
         let err = JcodeError::new(ErrorCode::Internal, secret);
         let shown = err.to_string();
-        assert!(!shown.contains("sk-"), "secret shape must be redacted: {shown}");
+        assert!(
+            !shown.contains("sk-"),
+            "secret shape must be redacted: {shown}"
+        );
         assert!(shown.len() < 400, "message must be capped");
         assert!(shown.contains("[REDACTED]"), "redaction marker expected");
     }
@@ -182,8 +191,10 @@ mod tests {
 
     #[test]
     fn io_errors_convert_without_detail_leak() {
-        let io =
-            std::io::Error::new(std::io::ErrorKind::BrokenPipe, "pipe to /tmp/secret-path-many-words");
+        let io = std::io::Error::new(
+            std::io::ErrorKind::BrokenPipe,
+            "pipe to /tmp/secret-path-many-words",
+        );
         let err: JcodeError = io.into();
         assert_eq!(err.code(), ErrorCode::ProtocolIo);
         assert!(err.to_string().len() < 400);

@@ -114,11 +114,19 @@ fn sanitize_user(raw: &str) -> String {
         .filter(|ch| ch.is_ascii_alphanumeric() || matches!(*ch, '-' | '_'))
         .take(64)
         .collect();
-    if out.is_empty() { "user".to_string() } else { out }
+    if out.is_empty() {
+        "user".to_string()
+    } else {
+        out
+    }
 }
 
 fn join_win(base: &str, leaf: &str) -> String {
-    let sep = if base.ends_with('\\') || base.ends_with('/') { "" } else { "\\" };
+    let sep = if base.ends_with('\\') || base.ends_with('/') {
+        ""
+    } else {
+        "\\"
+    };
     format!("{base}{sep}{leaf}")
 }
 
@@ -128,32 +136,25 @@ impl JcodePaths {
         let user_home = match env.get("JCODE_HOME") {
             Some(v) => validate_absolute_path(&v, "JCODE_HOME")?,
             None => {
-                let profile = env
-                    .get("USERPROFILE")
-                    .ok_or_else(|| {
-                        JcodeError::new(ErrorCode::ConfigPathInvalid, "USERPROFILE is not set")
-                    })?;
+                let profile = env.get("USERPROFILE").ok_or_else(|| {
+                    JcodeError::new(ErrorCode::ConfigPathInvalid, "USERPROFILE is not set")
+                })?;
                 let profile = validate_absolute_path(&profile, "USERPROFILE")?;
                 join_win(&profile, ".jcode")
             }
         };
         let install_root = {
-            let local = env
-                .get("LOCALAPPDATA")
-                .ok_or_else(|| {
-                    JcodeError::new(ErrorCode::ConfigPathInvalid, "LOCALAPPDATA is not set")
-                })?;
+            let local = env.get("LOCALAPPDATA").ok_or_else(|| {
+                JcodeError::new(ErrorCode::ConfigPathInvalid, "LOCALAPPDATA is not set")
+            })?;
             join_win(&validate_absolute_path(&local, "LOCALAPPDATA")?, "jcode")
         };
         let runtime_dir = match env.get("JCODE_RUNTIME_DIR") {
             Some(v) => validate_absolute_path(&v, "JCODE_RUNTIME_DIR")?,
             None => {
-                let temp = env
-                    .get("TEMP")
-                    .or_else(|| env.get("TMP"))
-                    .ok_or_else(|| {
-                        JcodeError::new(ErrorCode::ConfigPathInvalid, "TEMP is not set")
-                    })?;
+                let temp = env.get("TEMP").or_else(|| env.get("TMP")).ok_or_else(|| {
+                    JcodeError::new(ErrorCode::ConfigPathInvalid, "TEMP is not set")
+                })?;
                 let temp = validate_absolute_path(&temp, "TEMP")?;
                 let user =
                     sanitize_user(&env.get("USERNAME").unwrap_or_else(|| "user".to_string()));
@@ -202,7 +203,11 @@ pub fn windows_pipe_name(socket_path: &str) -> String {
         .filter(|ch| ch.is_ascii_alphanumeric() || matches!(*ch, '-' | '_'))
         .take(32)
         .collect();
-    let stem = if stem.is_empty() { "jcode" } else { stem.as_str() };
+    let stem = if stem.is_empty() {
+        "jcode"
+    } else {
+        stem.as_str()
+    };
     let digest = sha2::Sha256::digest(normalized.as_bytes());
     let hex: String = digest.iter().map(|b| format!("{b:02x}")).collect();
     format!(r"\\.\pipe\{stem}-{}", &hex[..16])
@@ -239,9 +244,18 @@ mod tests {
             p.pinned_version_dir,
             r"C:\Users\Amina\AppData\Local\jcode\builds\versions\0.81.7"
         );
-        assert_eq!(p.runtime_dir, r"C:\Users\Amina\AppData\Local\Temp\jcode-Amina");
-        assert_eq!(p.api_socket, r"C:\Users\Amina\AppData\Local\Temp\jcode-Amina\jcode-api.sock");
-        assert_eq!(p.legacy_socket, r"C:\Users\Amina\AppData\Local\Temp\jcode-Amina\jcode.sock");
+        assert_eq!(
+            p.runtime_dir,
+            r"C:\Users\Amina\AppData\Local\Temp\jcode-Amina"
+        );
+        assert_eq!(
+            p.api_socket,
+            r"C:\Users\Amina\AppData\Local\Temp\jcode-Amina\jcode-api.sock"
+        );
+        assert_eq!(
+            p.legacy_socket,
+            r"C:\Users\Amina\AppData\Local\Temp\jcode-Amina\jcode.sock"
+        );
     }
 
     #[test]

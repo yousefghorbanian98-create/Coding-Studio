@@ -29,7 +29,6 @@ macro_rules! impl_debug_via_display {
     };
 }
 
-
 pub mod auth;
 pub mod config;
 pub mod error;
@@ -41,6 +40,6 @@ pub mod version;
 pub use error::{ErrorCode, JcodeError};
 pub use lifecycle::{capability, product_facing, require, ProviderClass, Support};
 pub use version::{
-    PINNED_JCODE_COMMIT, PINNED_JCODE_TAG, PINNED_JCODE_REPO, PINNED_JCODE_VERSION,
-    VersionCompatibility, VersionReport,
+    VersionCompatibility, VersionReport, PINNED_JCODE_COMMIT, PINNED_JCODE_REPO, PINNED_JCODE_TAG,
+    PINNED_JCODE_VERSION,
 };

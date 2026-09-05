@@ -98,18 +98,21 @@ macro_rules! id_newtype {
                 if raw.is_empty() || raw.len() > MAX_ID_LEN {
                     return Err(JcodeError::new(
                         ErrorCode::InvalidIdentifier,
-                        format!(concat!(stringify!($name), " length outside 1..={}"), MAX_ID_LEN),
+                        format!(
+                            concat!(stringify!($name), " length outside 1..={}"),
+                            MAX_ID_LEN
+                        ),
                     ));
                 }
-                if !raw
-                    .bytes()
-                    .all(|b| {
-                        b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b':' | b'@')
-                    })
-                {
+                if !raw.bytes().all(|b| {
+                    b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b':' | b'@')
+                }) {
                     return Err(JcodeError::new(
                         ErrorCode::InvalidIdentifier,
-                        concat!(stringify!($name), " contains characters outside [A-Za-z0-9._:@-]"),
+                        concat!(
+                            stringify!($name),
+                            " contains characters outside [A-Za-z0-9._:@-]"
+                        ),
                     ));
                 }
                 Ok(Self(raw))
@@ -135,7 +138,10 @@ macro_rules! id_newtype {
 
 id_newtype!(SessionId, "Validated jcode session identifier.");
 id_newtype!(ToolCallId, "Validated tool-call correlation identifier.");
-id_newtype!(PermissionRequestId, "Validated approval-request identifier.");
+id_newtype!(
+    PermissionRequestId,
+    "Validated approval-request identifier."
+);
 id_newtype!(TaskId, "Validated background-task identifier.");
 
 // ---------------------------------------------------------------------------
@@ -206,25 +212,49 @@ pub enum EventKind {
     /// `ok` — generic acknowledgment.
     Ok,
     /// `error` — structured failure (message is untrusted text).
-    RemoteError { code: RemoteErrorCode, message: Content },
+    RemoteError {
+        code: RemoteErrorCode,
+        message: Content,
+    },
     /// `sessions` — bounded list reply.
-    Sessions { sessions: Vec<SessionBrief>, truncated: bool },
+    Sessions {
+        sessions: Vec<SessionBrief>,
+        truncated: bool,
+    },
     /// `attached` / `session_forked` — session handle (re)issued.
     Attached { session: SessionBrief, forked: bool },
     /// `history` — transcript reply; only the count crosses the boundary.
-    History { session_id: SessionId, message_count: u64 },
+    History {
+        session_id: SessionId,
+        message_count: u64,
+    },
     /// `pong`.
     Pong,
     /// `text_delta` — assistant text stream.
-    TextDelta { session_id: SessionId, text: Content },
+    TextDelta {
+        session_id: SessionId,
+        text: Content,
+    },
     /// `reasoning_delta` — reasoning stream (display-dim; safe to ignore).
-    ReasoningDelta { session_id: SessionId, text: Content },
+    ReasoningDelta {
+        session_id: SessionId,
+        text: Content,
+    },
     /// `reasoning_done`.
     ReasoningDone { session_id: SessionId },
     /// `tool_start` / `tool_exec`.
-    ToolCallStart { session_id: SessionId, call_id: ToolCallId, name: Content, executing: bool },
+    ToolCallStart {
+        session_id: SessionId,
+        call_id: ToolCallId,
+        name: Content,
+        executing: bool,
+    },
     /// `tool_input_delta`.
-    ToolCallInput { session_id: SessionId, call_id: ToolCallId, delta: Content },
+    ToolCallInput {
+        session_id: SessionId,
+        call_id: ToolCallId,
+        delta: Content,
+    },
     /// `tool_done`.
     ToolCallDone {
         session_id: SessionId,
@@ -237,7 +267,12 @@ pub enum EventKind {
     /// boundary (bounded memory policy).
     MediaAvailable { session_id: SessionId, count: u64 },
     /// `token_usage`.
-    TokenUsage { session_id: SessionId, input: u64, output: u64, cache_read_input: Option<u64> },
+    TokenUsage {
+        session_id: SessionId,
+        input: u64,
+        output: u64,
+        cache_read_input: Option<u64>,
+    },
     /// `turn_done` — the agent is idle (also how a completed `cancel` shows).
     TurnCompleted { session_id: SessionId },
     /// `message_accepted` — the agent queued our message.
@@ -250,9 +285,15 @@ pub enum EventKind {
         description: Option<Content>,
     },
     /// `session_status` / `connection_phase`.
-    StatusChanged { session_id: SessionId, status: Content },
+    StatusChanged {
+        session_id: SessionId,
+        status: Content,
+    },
     /// `connection_phase`.
-    ConnectionPhase { session_id: SessionId, phase: Content },
+    ConnectionPhase {
+        session_id: SessionId,
+        phase: Content,
+    },
     /// `model_info` — provider route serving the session.
     ModelInfo {
         session_id: SessionId,
@@ -278,11 +319,20 @@ pub enum EventKind {
     /// `credential_updated` — the only auth signal: a boolean flag.
     CredentialUpdated { provider: Content, configured: bool },
     /// `compacted`.
-    Compacted { session_id: SessionId, message: Option<Content> },
+    Compacted {
+        session_id: SessionId,
+        message: Option<Content>,
+    },
     /// `session_renamed`.
-    SessionRenamed { session_id: SessionId, display_title: Content },
+    SessionRenamed {
+        session_id: SessionId,
+        display_title: Content,
+    },
     /// `wake_requested`.
-    WakeRequested { session_id: SessionId, reason: Content },
+    WakeRequested {
+        session_id: SessionId,
+        reason: Content,
+    },
     /// `background_progress`.
     BackgroundProgress {
         session_id: SessionId,
@@ -409,7 +459,10 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
     macro_rules! payload {
         ($ty:ty, $value:expr, $what:literal) => {
             serde_json::from_value::<$ty>(parse($value, $what)).map_err(|e| {
-                JcodeError::new(ErrorCode::MissingRequiredField, format!("{} payload: {e}", $what))
+                JcodeError::new(
+                    ErrorCode::MissingRequiredField,
+                    format!("{} payload: {e}", $what),
+                )
             })?
         };
     }
@@ -614,15 +667,24 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
             for s in w.sessions.into_iter().take(MAX_LIST_ITEMS) {
                 out.push(session(s)?);
             }
-            EventKind::Sessions { sessions: out, truncated }
+            EventKind::Sessions {
+                sessions: out,
+                truncated,
+            }
         }
         "attached" => {
             let w: AttachedWire = payload!(AttachedWire, &value, "attached payload");
-            EventKind::Attached { session: session(w.session)?, forked: false }
+            EventKind::Attached {
+                session: session(w.session)?,
+                forked: false,
+            }
         }
         "session_forked" => {
             let w: AttachedWire = payload!(AttachedWire, &value, "session_forked payload");
-            EventKind::Attached { session: session(w.session)?, forked: true }
+            EventKind::Attached {
+                session: session(w.session)?,
+                forked: true,
+            }
         }
         "history" => {
             let w: HistoryWire = payload!(HistoryWire, &value, "history payload");
@@ -648,7 +710,9 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
         }
         "reasoning_done" => {
             let w: SessionRef = payload!(SessionRef, &value, "reasoning_done payload");
-            EventKind::ReasoningDone { session_id: sid(w)? }
+            EventKind::ReasoningDone {
+                session_id: sid(w)?,
+            }
         }
         "tool_start" => {
             let w: ToolStartWire = payload!(ToolStartWire, &value, "tool_start payload");
@@ -704,11 +768,15 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
         }
         "turn_done" => {
             let w: SessionRef = payload!(SessionRef, &value, "turn_done payload");
-            EventKind::TurnCompleted { session_id: sid(w)? }
+            EventKind::TurnCompleted {
+                session_id: sid(w)?,
+            }
         }
         "message_accepted" => {
             let w: SessionRef = payload!(SessionRef, &value, "message_accepted payload");
-            EventKind::MessageAccepted { session_id: sid(w)? }
+            EventKind::MessageAccepted {
+                session_id: sid(w)?,
+            }
         }
         "permission_request" => {
             let w: PermissionWire = payload!(PermissionWire, &value, "permission_request payload");
@@ -838,10 +906,16 @@ pub fn decode_frame_line(line: &str) -> Result<ServerFrameView, JcodeError> {
         ));
     }
     let value: serde_json::Value = serde_json::from_str(trimmed).map_err(|e| {
-        JcodeError::new(ErrorCode::MalformedFrame, format!("frame is not valid JSON ({e})"))
+        JcodeError::new(
+            ErrorCode::MalformedFrame,
+            format!("frame is not valid JSON ({e})"),
+        )
     })?;
     if !value.is_object() {
-        return Err(JcodeError::new(ErrorCode::MalformedFrame, "frame is not a JSON object"));
+        return Err(JcodeError::new(
+            ErrorCode::MalformedFrame,
+            "frame is not a JSON object",
+        ));
     }
     match value.get("v") {
         None => {
@@ -867,11 +941,18 @@ pub fn decode_frame_line(line: &str) -> Result<ServerFrameView, JcodeError> {
     let reply_to = match value.get("reply_to") {
         None => None,
         Some(v) => Some(v.as_u64().ok_or_else(|| {
-            JcodeError::new(ErrorCode::MalformedFrame, "`reply_to` is not an unsigned integer")
+            JcodeError::new(
+                ErrorCode::MalformedFrame,
+                "`reply_to` is not an unsigned integer",
+            )
         })?),
     };
     let event = json_value_to_event(value)?;
-    Ok(ServerFrameView { major: PROTOCOL_MAJOR, reply_to, event })
+    Ok(ServerFrameView {
+        major: PROTOCOL_MAJOR,
+        reply_to,
+        event,
+    })
 }
 
 /// Bounded NDJSON reader over any `BufRead` (socket, pipe, or in-memory
@@ -885,12 +966,20 @@ pub struct FrameDecoder<R> {
 
 impl<R: BufRead> FrameDecoder<R> {
     pub fn new(reader: R) -> Self {
-        Self { reader, max_frame_bytes: MAX_FRAME_BYTES, frames_read: 0 }
+        Self {
+            reader,
+            max_frame_bytes: MAX_FRAME_BYTES,
+            frames_read: 0,
+        }
     }
 
     #[cfg(test)]
     pub fn with_limit(reader: R, max_frame_bytes: usize) -> Self {
-        Self { reader, max_frame_bytes, frames_read: 0 }
+        Self {
+            reader,
+            max_frame_bytes,
+            frames_read: 0,
+        }
     }
 
     pub fn frames_read(&self) -> u64 {
@@ -1022,7 +1111,8 @@ impl EventSequencer {
                 "too many outstanding approvals; fail closed",
             ));
         }
-        self.outstanding_approvals.insert(request_id.as_str().to_string());
+        self.outstanding_approvals
+            .insert(request_id.as_str().to_string());
         Ok(())
     }
 
@@ -1070,8 +1160,20 @@ impl EventSequencer {
         }
         let seq = self.next_seq;
         self.next_seq += 1;
-        let ingress = if duplicate_suspect { Ingress::DuplicateSuspect } else { Ingress::Fresh };
-        (ingress, SequencedEvent { seq, frame, stray_reply, duplicate_suspect })
+        let ingress = if duplicate_suspect {
+            Ingress::DuplicateSuspect
+        } else {
+            Ingress::Fresh
+        };
+        (
+            ingress,
+            SequencedEvent {
+                seq,
+                frame,
+                stray_reply,
+                duplicate_suspect,
+            },
+        )
     }
 }
 
@@ -1102,13 +1204,29 @@ impl PermissionDecision {
 /// anything outside the verified surface.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OutgoingRequest {
-    Hello { client: String },
-    ListSessions { include_archived: bool, limit: Option<u32> },
-    CreateSession { working_dir: Option<String> },
-    AttachSession { session_id: SessionId },
-    DetachSession { session_id: SessionId },
-    SendMessage { session_id: SessionId, content: String },
-    Cancel { session_id: SessionId },
+    Hello {
+        client: String,
+    },
+    ListSessions {
+        include_archived: bool,
+        limit: Option<u32>,
+    },
+    CreateSession {
+        working_dir: Option<String>,
+    },
+    AttachSession {
+        session_id: SessionId,
+    },
+    DetachSession {
+        session_id: SessionId,
+    },
+    SendMessage {
+        session_id: SessionId,
+        content: String,
+    },
+    Cancel {
+        session_id: SessionId,
+    },
     PermissionResponse {
         session_id: SessionId,
         request_id: PermissionRequestId,
@@ -1149,11 +1267,9 @@ impl RequestEncoder {
             OutgoingRequest::Hello { client } => {
                 if client.is_empty()
                     || client.len() > 64
-                    || !client
-                        .bytes()
-                        .all(|b| {
-                            b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b'/')
-                        })
+                    || !client.bytes().all(|b| {
+                        b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b'/')
+                    })
                 {
                     return Err(JcodeError::new(
                         ErrorCode::InvalidIdentifier,
@@ -1165,7 +1281,10 @@ impl RequestEncoder {
                 frame.insert("max_version".to_string(), serde_json::json!(PROTOCOL_MAJOR));
                 frame.insert("client".to_string(), serde_json::json!(client));
             }
-            OutgoingRequest::ListSessions { include_archived, limit } => {
+            OutgoingRequest::ListSessions {
+                include_archived,
+                limit,
+            } => {
                 frame.insert("req".to_string(), serde_json::json!("list_sessions"));
                 if *include_archived {
                     frame.insert("include_archived".to_string(), serde_json::json!(true));
@@ -1182,13 +1301,22 @@ impl RequestEncoder {
             }
             OutgoingRequest::AttachSession { session_id } => {
                 frame.insert("req".to_string(), serde_json::json!("attach_session"));
-                frame.insert("session_id".to_string(), serde_json::json!(session_id.as_str()));
+                frame.insert(
+                    "session_id".to_string(),
+                    serde_json::json!(session_id.as_str()),
+                );
             }
             OutgoingRequest::DetachSession { session_id } => {
                 frame.insert("req".to_string(), serde_json::json!("detach_session"));
-                frame.insert("session_id".to_string(), serde_json::json!(session_id.as_str()));
+                frame.insert(
+                    "session_id".to_string(),
+                    serde_json::json!(session_id.as_str()),
+                );
             }
-            OutgoingRequest::SendMessage { session_id, content } => {
+            OutgoingRequest::SendMessage {
+                session_id,
+                content,
+            } => {
                 if content.len() > MAX_OUTBOUND_MESSAGE {
                     return Err(JcodeError::new(
                         ErrorCode::PayloadTooLarge,
@@ -1196,25 +1324,47 @@ impl RequestEncoder {
                     ));
                 }
                 frame.insert("req".to_string(), serde_json::json!("send_message"));
-                frame.insert("session_id".to_string(), serde_json::json!(session_id.as_str()));
+                frame.insert(
+                    "session_id".to_string(),
+                    serde_json::json!(session_id.as_str()),
+                );
                 frame.insert("content".to_string(), serde_json::json!(content));
             }
             OutgoingRequest::Cancel { session_id } => {
                 frame.insert("req".to_string(), serde_json::json!("cancel"));
-                frame.insert("session_id".to_string(), serde_json::json!(session_id.as_str()));
+                frame.insert(
+                    "session_id".to_string(),
+                    serde_json::json!(session_id.as_str()),
+                );
             }
-            OutgoingRequest::PermissionResponse { session_id, request_id, decision } => {
+            OutgoingRequest::PermissionResponse {
+                session_id,
+                request_id,
+                decision,
+            } => {
                 frame.insert("req".to_string(), serde_json::json!("permission_response"));
-                frame.insert("session_id".to_string(), serde_json::json!(session_id.as_str()));
-                frame.insert("request_id".to_string(), serde_json::json!(request_id.as_str()));
-                frame.insert("decision".to_string(), serde_json::json!(decision.as_wire()));
+                frame.insert(
+                    "session_id".to_string(),
+                    serde_json::json!(session_id.as_str()),
+                );
+                frame.insert(
+                    "request_id".to_string(),
+                    serde_json::json!(request_id.as_str()),
+                );
+                frame.insert(
+                    "decision".to_string(),
+                    serde_json::json!(decision.as_wire()),
+                );
             }
             OutgoingRequest::Ping => {
                 frame.insert("req".to_string(), serde_json::json!("ping"));
             }
         }
         let mut line = serde_json::to_string(&serde_json::Value::Object(frame)).map_err(|e| {
-            JcodeError::new(ErrorCode::Internal, format!("request serialization failed ({e})"))
+            JcodeError::new(
+                ErrorCode::Internal,
+                format!("request serialization failed ({e})"),
+            )
         })?;
         line.push('\n');
         Ok((id, line))
@@ -1273,7 +1423,11 @@ mod tests {
         let v = decode(r#"{"v":1,"reply_to":1,"ev":"hello_ok","version":1,"server":"jcode-harness-api-bridge/0.1.0","capabilities":["sessions","streaming"]}"#).unwrap();
         assert_eq!(v.reply_to, Some(1));
         match v.event {
-            EventKind::HelloOk { negotiated_major, capabilities, .. } => {
+            EventKind::HelloOk {
+                negotiated_major,
+                capabilities,
+                ..
+            } => {
                 assert_eq!(negotiated_major, 1);
                 assert_eq!(capabilities, vec!["sessions", "streaming"]);
             }
@@ -1306,7 +1460,10 @@ mod tests {
                 "history",
             ),
             (r#"{"v":1,"reply_to":2,"ev":"pong"}"#, "pong"),
-            (r#"{"v":1,"ev":"text_delta","session_id":"s-1","text":"Hello"}"#, "text_delta"),
+            (
+                r#"{"v":1,"ev":"text_delta","session_id":"s-1","text":"Hello"}"#,
+                "text_delta",
+            ),
             (
                 r#"{"v":1,"ev":"reasoning_delta","session_id":"s-1","text":"thinking"}"#,
                 "reasoning_delta",
@@ -1339,8 +1496,14 @@ mod tests {
                 r#"{"v":1,"ev":"token_usage","session_id":"s-1","input":10,"output":20,"cache_read_input":5}"#,
                 "token_usage",
             ),
-            (r#"{"v":1,"ev":"turn_done","session_id":"s-1"}"#, "turn_completed"),
-            (r#"{"v":1,"ev":"message_accepted","session_id":"s-1"}"#, "message_accepted"),
+            (
+                r#"{"v":1,"ev":"turn_done","session_id":"s-1"}"#,
+                "turn_completed",
+            ),
+            (
+                r#"{"v":1,"ev":"message_accepted","session_id":"s-1"}"#,
+                "message_accepted",
+            ),
             (
                 r#"{"v":1,"ev":"permission_request","session_id":"s-1","request_id":"pr-1","tool_name":"bash","description":"run ls"}"#,
                 "permission_requested",
@@ -1369,7 +1532,10 @@ mod tests {
                 r#"{"v":1,"ev":"credential_updated","provider":"anthropic","configured":true}"#,
                 "credential_updated",
             ),
-            (r#"{"v":1,"ev":"compacted","session_id":"s-1","message":"scheduled"}"#, "compacted"),
+            (
+                r#"{"v":1,"ev":"compacted","session_id":"s-1","message":"scheduled"}"#,
+                "compacted",
+            ),
             (
                 r#"{"v":1,"ev":"session_renamed","session_id":"s-1","display_title":"Fix the bug"}"#,
                 "session_renamed",
@@ -1421,7 +1587,8 @@ mod tests {
     #[test]
     fn additive_future_fields_are_tolerated() {
         // A newer minor adds fields; known kinds must still decode.
-        let v = decode(r#"{"v":1,"reply_to":2,"ev":"ok","brand_new_field":{"nested":true}}"#).unwrap();
+        let v =
+            decode(r#"{"v":1,"reply_to":2,"ev":"ok","brand_new_field":{"nested":true}}"#).unwrap();
         assert_eq!(v.event, EventKind::Ok);
     }
 
@@ -1431,15 +1598,15 @@ mod tests {
             "not json",
             "[1,2,3]",
             "\"string\"",
-            r#"{"ev":"ok"}"#,                          // missing v
-            r#"{"v":"1","ev":"ok"}"#,                 // v wrong type
-            r#"{"v":1.5,"ev":"ok"}"#,                 // v not unsigned
-            r#"{"v":2,"ev":"ok"}"#,                   // future major: fail closed
-            r#"{"v":0,"ev":"ok"}"#,                   // ancient major
-            r#"{"v":1}"#,                             // missing ev
+            r#"{"ev":"ok"}"#,                                // missing v
+            r#"{"v":"1","ev":"ok"}"#,                        // v wrong type
+            r#"{"v":1.5,"ev":"ok"}"#,                        // v not unsigned
+            r#"{"v":2,"ev":"ok"}"#,                          // future major: fail closed
+            r#"{"v":0,"ev":"ok"}"#,                          // ancient major
+            r#"{"v":1}"#,                                    // missing ev
             r#"{"v":1,"ev":"text_delta","session_id":"s"}"#, // missing text
             r#"{"v":1,"ev":"text_delta","text":"x"}"#,       // missing session_id
-            r#"{"v":1,"reply_to":"x","ev":"ok"}"#,    // reply_to wrong type
+            r#"{"v":1,"reply_to":"x","ev":"ok"}"#,           // reply_to wrong type
         ]
         .iter()
         .enumerate()
@@ -1472,7 +1639,10 @@ mod tests {
     #[test]
     fn decoder_bounds_reads_and_rejects_oversize() {
         // 5 MiB single-line frame => too large, no 5MiB retained by reader.
-        let big = format!("{{\"v\":1,\"ev\":\"text_delta\",\"session_id\":\"s\",\"text\":\"{}\"}}\n", "x".repeat(5 * 1024 * 1024));
+        let big = format!(
+            "{{\"v\":1,\"ev\":\"text_delta\",\"session_id\":\"s\",\"text\":\"{}\"}}\n",
+            "x".repeat(5 * 1024 * 1024)
+        );
         let mut dec = FrameDecoder::with_limit(Cursor::new(big.into_bytes()), 64);
         let err = dec.next_frame().unwrap_err();
         assert_eq!(err.code(), ErrorCode::FrameTooLarge);
@@ -1569,7 +1739,9 @@ mod tests {
     fn encoder_emits_documented_wire_shapes() {
         let mut enc = RequestEncoder::new();
         let (id, line) = enc
-            .encode(&OutgoingRequest::Hello { client: "coding-studio/0.1.0".into() })
+            .encode(&OutgoingRequest::Hello {
+                client: "coding-studio/0.1.0".into(),
+            })
             .unwrap();
         assert_eq!(id, 1);
         assert!(line.ends_with('\n'));
@@ -1602,28 +1774,45 @@ mod tests {
         assert_eq!(v["req"], "permission_response");
         assert_eq!(v["decision"], "allow_always");
 
-        let (_, line) = enc.encode(&OutgoingRequest::Cancel { session_id: sid.clone() }).unwrap();
+        let (_, line) = enc
+            .encode(&OutgoingRequest::Cancel {
+                session_id: sid.clone(),
+            })
+            .unwrap();
         assert!(line.contains(r#""req":"cancel""#));
         let (_, line) = enc.encode(&OutgoingRequest::Ping).unwrap();
         assert!(line.contains(r#""req":"ping""#));
-        assert!(line.contains(r#""id":5"#), "fifth frame carries id 5: {line}");
+        assert!(
+            line.contains(r#""id":5"#),
+            "fifth frame carries id 5: {line}"
+        );
     }
 
     #[test]
     fn encoder_bounds_and_validates() {
         let mut enc = RequestEncoder::new();
-        assert!(enc.encode(&OutgoingRequest::Hello { client: "bad name!".into() }).is_err());
+        assert!(enc
+            .encode(&OutgoingRequest::Hello {
+                client: "bad name!".into()
+            })
+            .is_err());
         let big = "x".repeat(MAX_OUTBOUND_MESSAGE + 1);
         let sid = SessionId::new("s").unwrap();
         let err = enc
-            .encode(&OutgoingRequest::SendMessage { session_id: sid, content: big })
+            .encode(&OutgoingRequest::SendMessage {
+                session_id: sid,
+                content: big,
+            })
             .unwrap_err();
         assert_eq!(err.code(), ErrorCode::PayloadTooLarge);
     }
 
     #[test]
     fn stream_classification_never_promotes_tui() {
-        assert_eq!(classify_stream_bytes(b"{\"v\":1,\"ev\":\"ok\"}"), StreamClass::Protocol);
+        assert_eq!(
+            classify_stream_bytes(b"{\"v\":1,\"ev\":\"ok\"}"),
+            StreamClass::Protocol
+        );
         assert_eq!(
             classify_stream_bytes(b"[windows] Named pipe busy, retrying"),
             StreamClass::Diagnostics,
@@ -1632,7 +1821,10 @@ mod tests {
         let tui = b"\x1b[38;5;99m\xe2\x95\xad\xe2\x94\x80 jcode \xe2\x94\x80\xe2\x95\xae\x1b[0m\n\x1b[2mdim status\x1b[0m";
         assert_eq!(classify_stream_bytes(tui), StreamClass::TerminalControl);
         // Truncated multi-byte UTF-8: not protocol, not terminal control.
-        assert_eq!(classify_stream_bytes(b"\xef\xbf not utf8"), StreamClass::Diagnostics);
+        assert_eq!(
+            classify_stream_bytes(b"\xef\xbf not utf8"),
+            StreamClass::Diagnostics
+        );
         assert_eq!(classify_stream_bytes(b""), StreamClass::Diagnostics);
     }
 
