@@ -232,6 +232,61 @@ jobs:
           } > m1-cargo-failures.md
           gh pr comment "$PR_NUMBER" --body-file m1-cargo-failures.md
 
+      # Milestone One formatter recovery (human-approved): the authoring
+      # sandbox cannot reproduce the CI Rust toolchain (all toolchain channels
+      # network-blocked), so the runner produces the official formatting patch
+      # and publishes it, hash-pinned, for verified local application.
+      # Diagnostic only: this step NEVER commits, never pushes, never prints
+      # secrets or environment values.
+      - name: Milestone One — publish rustfmt patch (runner-generated, sha256-pinned)
+        if: failure() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          cd src-tauri
+          cargo fmt --all
+          cd ..
+          patch="${RUNNER_TEMP}/rustfmt.patch"
+          # Binary-safe diff of exactly the formatter's working-tree changes.
+          git diff --binary -- src-tauri > "$patch"
+          if [ ! -s "$patch" ]; then
+            gh pr comment "$PR_NUMBER" --body "### M1 rustfmt patch (runner-generated)$'"'"'\n\nFormatter produced no changes — nothing to publish.'
+            exit 0
+          fi
+          # Publish only if every changed path is a Rust source file.
+          if git diff --name-only -- src-tauri | grep -vE '\.rs$' | grep -q .; then
+            gh pr comment "$PR_NUMBER" --body "### M1 rustfmt patch REFUSED$'"'"'\n\n'"'"'Formatter diff touched a non-Rust path; refusing to publish.'
+            echo "::error title=M1-fmt-patch::non-.rs path in formatter diff — patch withheld"
+            exit 1
+          fi
+          sum="$(sha256sum "$patch" | awk '{print $1}')"
+          b64="$(base64 < "$patch" | tr -d '\n')"
+          total="${#b64}"
+          chunk=60000
+          parts=$(( (total + chunk - 1) / chunk ))
+          if [ "$parts" -gt 24 ]; then
+            echo "::error title=M1-fmt-patch::patch unexpectedly large ($total b64 chars); withheld"
+            gh pr comment "$PR_NUMBER" --body "### M1 rustfmt patch REFUSED (oversize: ${total} base64 chars)"
+            exit 1
+          fi
+          {
+            echo '### M1 rustfmt patch (official, runner-generated, UTF-8 text)'
+            echo ''
+            echo "- sha256(raw patch): \`${sum}\`"
+            echo "- base64 length: ${total}"
+            echo "- chunks: ${parts}"
+            echo '- scope: src-tauri Rust files only (verified pre-publish)'
+            echo '- reconstruction: concatenate chunks 1..N in order, base64 -d, sha256sum must match, then git apply --check && git apply'
+          } > "${RUNNER_TEMP}/fmt-manifest.md"
+          gh pr comment "$PR_NUMBER" --body-file "${RUNNER_TEMP}/fmt-manifest.md"
+          for ((i=0; i<parts; i++)); do
+            printf '### M1 rustfmt patch chunk %d/%d\n\n```text\n%s\n```\n' "$((i+1))" "$parts" "${b64:$((i*chunk)):$chunk}" > "${RUNNER_TEMP}/fmt-chunk.md"
+            gh pr comment "$PR_NUMBER" --body-file "${RUNNER_TEMP}/fmt-chunk.md"
+          done
+
       - name: Tauri build
         # No signing keys are configured on purpose: this produces an unsigned
         # bundle. Code-signing and auto-update keys must live in repository
