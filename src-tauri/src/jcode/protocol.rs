@@ -22,7 +22,6 @@
 
 use crate::jcode::auth::{bounded, redact};
 use crate::jcode::error::{ErrorCode, JcodeError};
-use crate::jcode::impl_debug_via_display;
 use serde::Deserialize;
 use std::collections::{HashSet, VecDeque};
 use std::fmt;
@@ -878,10 +877,11 @@ impl<R: BufRead> FrameDecoder<R> {
         loop {
             let mut line = String::new();
             let limit = self.max_frame_bytes as u64 + 1;
-            let read = (&mut self.reader)
-                .take(limit)
-                .read_line(&mut line)
-                .map_err(JcodeError::from)?;
+            // UFCS pins Self = &mut R: Read::take is by-value, so spelling it
+            // as a free call moves only the short-lived reference, never R.
+            use std::io::Read as _;
+            let mut limited = std::io::Read::take(&mut self.reader, limit);
+            let read = limited.read_line(&mut line).map_err(JcodeError::from)?;
             if read == 0 {
                 return Ok(None);
             }

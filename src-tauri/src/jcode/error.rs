@@ -6,7 +6,6 @@
 //! length-capped before it is stored, so an `Err` can never carry a secret.
 
 use crate::jcode::auth::{bounded, redact};
-use crate::jcode::impl_debug_via_display;
 use std::fmt;
 
 /// Stable machine-readable codes. Numeric ranges:
