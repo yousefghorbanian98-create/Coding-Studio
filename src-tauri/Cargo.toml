@@ -18,6 +18,11 @@ tauri = { version = "2", features = ["devtools"] }
 tauri-plugin-os = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# Pure-Rust SHA-256 (RustCrypto). Needed to (a) reproduce Jcode's Windows
+# named-pipe derivation `\\.\pipe\<stem>-<sha256(path)[..16]>` and
+# (b) verify release assets against the official SHA256SUMS record.
+# Adoption review: docs/backend-factory/evidence/milestone-one/oss-register.md
+sha2 = "0.10"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

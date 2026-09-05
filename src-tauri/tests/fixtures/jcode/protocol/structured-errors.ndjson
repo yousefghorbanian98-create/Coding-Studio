@@ -1,0 +1,5 @@
+{"v":1,"reply_to":10,"ev":"error","code":"unsupported_version","message":"bridge speaks API v1; this client asked for v2..=v2"}
+{"v":1,"reply_to":11,"ev":"error","code":"unknown_request","message":"unrecognized request tag"}
+{"v":1,"reply_to":12,"ev":"error","code":"unknown_session","message":"no such session"}
+{"v":1,"reply_to":13,"ev":"error","code":"invalid_request","message":"first frame must be a JSON `hello`"}
+{"v":1,"reply_to":14,"ev":"error","code":"internal","message":"daemon relay fault"}
