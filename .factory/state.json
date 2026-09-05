@@ -7,7 +7,7 @@
   "activeMilestone": 1,
   "activeStage": "m1-jcode-compat",
   "activeGate": "research-completed-protocol-selected",
-  "status": "active",
+  "status": "blocked",
   "attemptCounters": {
     "healingAttempts": 0,
     "ciRemediationAttempts": 5,
@@ -39,23 +39,11 @@
   ],
   "blockers": [
     {
-      "id": "external-review-round-1",
-      "title": "External Review Round 1 findings remediated on arena/01a06b4c-coding-studio; re-review then produced Round 2.",
-      "status": "closed",
-      "createdAt": "2026-09-04T00:00:00.000Z"
-    },
-    {
-      "id": "external-review-round-2",
-      "title": "External Review Round 2 passed at reviewed head 5115fefc9b2ae50bd2e6517b94ed094bacc2b639; Stage Zero approved for human-controlled integration.",
-      "status": "closed",
-      "createdAt": "2026-09-05T07:36:00.000Z"
-    },
-    {
-      "id": "m1-external-review-pending",
-      "title": "Milestone One Jcode compatibility layer delivered as a Draft PR on arena/01a07182-coding-studio; JCODE requirements stay in-progress until external review passes.",
-      "status": "open",
-      "createdAt": "2026-09-05T00:00:00.000Z"
+      "id": "m1-fmt-clippy-budget-exhausted",
+      "title": "Rust fmt+clippy gate pending: CI remediation budget exhausted (5/5); diagnostics reorder + mechanical formatting application needs human-approved exception",
+      "status": "exception-approved-diagnostics-phase",
+      "createdAt": "2026-09-05T19:55:00+03:30Z"
     }
   ],
-  "lastProgressTime": "2026-09-05T19:25:00+03:30Z"
+  "lastProgressTime": "2026-09-05T20:15:00+03:30Z"
 }

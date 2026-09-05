@@ -183,19 +183,32 @@ jobs:
           cargo test --all-features 2>&1 | tee "${RUNNER_TEMP}/cargo-test.log"
           exit ${PIPESTATUS[0]}
 
+      # Milestone One: the Jcode compatibility layer is held to rustfmt +
+      # clippy(-D warnings) so the contract surface stays reviewable.
+      - name: Rust fmt + clippy
+        working-directory: src-tauri
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo fmt --check 2>&1 | tee "${RUNNER_TEMP}/cargo-fmt.log" || fmt_rc=$?
+          cargo clippy --all-targets --all-features -- -D warnings 2>&1 | tee "${RUNNER_TEMP}/cargo-clippy.log" || clippy_rc=$?
+          exit $(( ${fmt_rc:-0} + ${clippy_rc:-0} > 0 ? 1 : 0 ))
+      # Failure-diagnostic bridge (approved single exception): sits AFTER all
+      # Rust gates so it captures test, fmt, and clippy output alike. It only
+      # publishes excerpts; it changes nothing about the gates themselves.
       - name: Milestone One — surface Rust failure excerpt as annotations
         if: failure()
         shell: bash
         run: |
-          log="${RUNNER_TEMP}/cargo-test.log"
-          test -f "$log" && {
-            { { grep -aE "error(\[E[0-9]+\])?:|failures:|assertion .*(left|==)|panicked at|not ok" "$log" || true; } | head -40
-              tail -25 "$log"
+          log=""; for f in "${RUNNER_TEMP}/cargo-test.log" "${RUNNER_TEMP}/cargo-fmt.log" "${RUNNER_TEMP}/cargo-clippy.log"; do test -f "$f" && log="$log $f"; done
+          test -n "$log" && {
+            { { grep -aE "^Diff in |error(\[E[0-9]+\])?:|warning:|failures:|assertion .*(left|==)|panicked at|not ok" $log || true; } | head -40
+              tail -60 "${RUNNER_TEMP}/cargo-fmt.log" "${RUNNER_TEMP}/cargo-clippy.log" 2>/dev/null
             } | awk '!seen[$0]++' | head -50 | while IFS= read -r line; do
               line="${line//'%'/'%25'}"; line="${line//$'\r'/'%0D'}"
-              printf '::error title=M1-cargo-test::%s\n' "$line"
+              printf '::error title=M1-cargo-ci::%s\n' "$line"
             done
-          } || echo "::error title=M1-cargo-test::cargo test failed before producing output"
+          } || echo "::error title=M1-cargo-ci::rust gate failed before producing output"
 
       # Same pattern as the existing vitest/E2E failure comments: the PR gets a
       # readable excerpt the moment a Rust step fails (no log download needed).
@@ -209,22 +222,15 @@ jobs:
           {
             echo '### Milestone One — Rust CI failure excerpt (auto-posted)'
             echo ''
-            echo '```text'
-            { cat "${RUNNER_TEMP}/cargo-test.log" "${RUNNER_TEMP}/cargo-fmt.log" "${RUNNER_TEMP}/cargo-clippy.log" 2>/dev/null || echo '(no log captured before failure)'; } | tail -n 160
-            echo '```'
+            for f in "${RUNNER_TEMP}/cargo-fmt.log" "${RUNNER_TEMP}/cargo-clippy.log" "${RUNNER_TEMP}/cargo-test.log"; do
+              if test -f "$f"; then
+                echo "#### $(basename "$f")"
+                echo '```diff' && tail -n 220 "$f" && echo '```'
+              fi
+            done
+            ls "${RUNNER_TEMP}/cargo-"*.log >/dev/null 2>&1 || { echo '```text'; echo '(no log captured before failure)'; echo '```'; }
           } > m1-cargo-failures.md
           gh pr comment "$PR_NUMBER" --body-file m1-cargo-failures.md
-
-      # Milestone One: the Jcode compatibility layer is held to rustfmt +
-      # clippy(-D warnings) so the contract surface stays reviewable.
-      - name: Rust fmt + clippy
-        working-directory: src-tauri
-        shell: bash
-        run: |
-          set -o pipefail
-          cargo fmt --check 2>&1 | tee "${RUNNER_TEMP}/cargo-fmt.log"
-          cargo clippy --all-targets --all-features -- -D warnings 2>&1 | tee "${RUNNER_TEMP}/cargo-clippy.log"
-          exit ${PIPESTATUS[0]}
 
       - name: Tauri build
         # No signing keys are configured on purpose: this produces an unsigned
