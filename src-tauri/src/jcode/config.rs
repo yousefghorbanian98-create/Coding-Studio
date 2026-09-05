@@ -73,7 +73,10 @@ impl EnvGet for ProcessEnv {
 fn validate_absolute_path(v: &str, label: &str) -> Result<String, JcodeError> {
     let trimmed = v.trim();
     if trimmed.is_empty() || trimmed.len() > 512 {
-        return Err(JcodeError::new(ErrorCode::ConfigPathInvalid, format!("{label} is empty or oversized")));
+        return Err(JcodeError::new(
+            ErrorCode::ConfigPathInvalid,
+            format!("{label} is empty or oversized"),
+        ));
     }
     let bytes = trimmed.as_bytes();
     let rooted_drive = bytes.len() >= 3
@@ -127,7 +130,9 @@ impl JcodePaths {
             None => {
                 let profile = env
                     .get("USERPROFILE")
-                    .ok_or_else(|| JcodeError::new(ErrorCode::ConfigPathInvalid, "USERPROFILE is not set"))?;
+                    .ok_or_else(|| {
+                        JcodeError::new(ErrorCode::ConfigPathInvalid, "USERPROFILE is not set")
+                    })?;
                 let profile = validate_absolute_path(&profile, "USERPROFILE")?;
                 join_win(&profile, ".jcode")
             }
@@ -135,7 +140,9 @@ impl JcodePaths {
         let install_root = {
             let local = env
                 .get("LOCALAPPDATA")
-                .ok_or_else(|| JcodeError::new(ErrorCode::ConfigPathInvalid, "LOCALAPPDATA is not set"))?;
+                .ok_or_else(|| {
+                    JcodeError::new(ErrorCode::ConfigPathInvalid, "LOCALAPPDATA is not set")
+                })?;
             join_win(&validate_absolute_path(&local, "LOCALAPPDATA")?, "jcode")
         };
         let runtime_dir = match env.get("JCODE_RUNTIME_DIR") {
@@ -144,9 +151,12 @@ impl JcodePaths {
                 let temp = env
                     .get("TEMP")
                     .or_else(|| env.get("TMP"))
-                    .ok_or_else(|| JcodeError::new(ErrorCode::ConfigPathInvalid, "TEMP is not set"))?;
+                    .ok_or_else(|| {
+                        JcodeError::new(ErrorCode::ConfigPathInvalid, "TEMP is not set")
+                    })?;
                 let temp = validate_absolute_path(&temp, "TEMP")?;
-                let user = sanitize_user(&env.get("USERNAME").unwrap_or_else(|| "user".to_string()));
+                let user =
+                    sanitize_user(&env.get("USERNAME").unwrap_or_else(|| "user".to_string()));
                 join_win(&temp, &format!("jcode-{user}"))
             }
         };

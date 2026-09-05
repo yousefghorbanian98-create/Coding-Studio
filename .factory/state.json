@@ -41,9 +41,9 @@
     {
       "id": "m1-fmt-clippy-budget-exhausted",
       "title": "Rust fmt+clippy gate pending: CI remediation budget exhausted (5/5); diagnostics reorder + mechanical formatting application needs human-approved exception",
-      "status": "exception-approved-diagnostics-phase",
+      "status": "exception-final-remediation-applied",
       "createdAt": "2026-09-05T19:55:00+03:30Z"
     }
   ],
-  "lastProgressTime": "2026-09-05T20:15:00+03:30Z"
+  "lastProgressTime": "2026-09-05T20:55:00+03:30Z"
 }

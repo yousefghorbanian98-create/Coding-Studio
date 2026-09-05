@@ -291,7 +291,11 @@ pub fn require(id: &str) -> Result<(), JcodeError> {
     match capability(id) {
         Support::Supported => Ok(()),
         Support::Unsupported => Err(JcodeError::new(
-            if PERMANENTLY_DENIED.contains(&id) { ErrorCode::LocalRuntimeDenied } else { ErrorCode::CapabilityDenied },
+            if PERMANENTLY_DENIED.contains(&id) {
+                ErrorCode::LocalRuntimeDenied
+            } else {
+                ErrorCode::CapabilityDenied
+            },
             format!("capability `{id}` is permanently denied or unsupported on the pinned release"),
         )),
         Support::Unknown => Err(JcodeError::new(
@@ -307,7 +311,9 @@ pub fn require(id: &str) -> Result<(), JcodeError> {
 pub fn product_facing() -> Vec<&'static str> {
     CAPABILITIES
         .iter()
-        .filter(|r| r.product_facing && r.support.is_supported() && !PERMANENTLY_DENIED.contains(&r.id))
+        .filter(|r| {
+            r.product_facing && r.support.is_supported() && !PERMANENTLY_DENIED.contains(&r.id)
+        })
         .map(|r| r.id)
         .collect()
 }
@@ -502,7 +508,10 @@ mod tests {
         ];
         assert_eq!(CAPABILITIES.len(), required.len() + PERMANENTLY_DENIED.len());
         for id in required {
-            let row = CAPABILITIES.iter().find(|r| r.id == id).unwrap_or_else(|| panic!("missing row {id}"));
+            let row = CAPABILITIES
+                .iter()
+                .find(|r| r.id == id)
+                .unwrap_or_else(|| panic!("missing row {id}"));
             assert!(!row.evidence.is_empty(), "row {id} must carry evidence");
         }
     }
@@ -564,7 +573,8 @@ mod tests {
 
     #[test]
     fn server_capability_check_degrades_cleanly() {
-        let full: Vec<String> = EXPECTED_SERVER_CAPABILITIES.iter().map(|s| s.to_string()).collect();
+        let full: Vec<String> =
+            EXPECTED_SERVER_CAPABILITIES.iter().map(|s| s.to_string()).collect();
         let check = check_server_capabilities(&full);
         assert!(check.missing.is_empty());
         assert!(check.unrecognized.is_empty());
@@ -573,7 +583,11 @@ mod tests {
         let check = check_server_capabilities(&partial);
         assert!(check.missing.contains(&"streaming".to_string()));
         assert_eq!(check.unrecognized, vec!["future_additive".to_string()]);
-        assert!(!check_server_capabilities(&partial).unrecognized.contains(&"sessions".to_string()));
+        assert!(
+            !check_server_capabilities(&partial)
+                .unrecognized
+                .contains(&"sessions".to_string())
+        );
     }
 
     #[test]

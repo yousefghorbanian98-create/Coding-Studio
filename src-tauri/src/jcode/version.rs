@@ -205,7 +205,9 @@ mod tests {
         assert_eq!(PINNED_JCODE_VERSION, "0.81.7");
         assert_eq!(PINNED_JCODE_TAG, "v0.81.7");
         assert_eq!(PINNED_JCODE_COMMIT.len(), 40);
-        assert!(PINNED_JCODE_COMMIT.chars().all(|c| c.is_ascii_hexdigit() && !c.is_ascii_uppercase()));
+        assert!(PINNED_JCODE_COMMIT
+            .chars()
+            .all(|c| c.is_ascii_hexdigit() && !c.is_ascii_uppercase()));
         assert!(PINNED_CHECKSUMS_URL.contains("/download/v0.81.7/"));
         assert!(!PINNED_CHECKSUMS_URL.contains("latest"), "mutable URL forbidden");
         assert_eq!(SemVer::pinned(), SemVer { major: 0, minor: 81, patch: 7 });

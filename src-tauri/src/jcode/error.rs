@@ -182,7 +182,8 @@ mod tests {
 
     #[test]
     fn io_errors_convert_without_detail_leak() {
-        let io = std::io::Error::new(std::io::ErrorKind::BrokenPipe, "pipe to /tmp/secret-path-many-words");
+        let io =
+            std::io::Error::new(std::io::ErrorKind::BrokenPipe, "pipe to /tmp/secret-path-many-words");
         let err: JcodeError = io.into();
         assert_eq!(err.code(), ErrorCode::ProtocolIo);
         assert!(err.to_string().len() < 400);

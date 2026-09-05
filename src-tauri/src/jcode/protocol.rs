@@ -103,7 +103,9 @@ macro_rules! id_newtype {
                 }
                 if !raw
                     .bytes()
-                    .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b':' | b'@'))
+                    .all(|b| {
+                        b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b':' | b'@')
+                    })
                 {
                     return Err(JcodeError::new(
                         ErrorCode::InvalidIdentifier,
@@ -259,7 +261,12 @@ pub enum EventKind {
         effort: Option<Content>,
     },
     /// `models` — bounded model list reply.
-    ModelsListed { session_id: SessionId, models: Vec<String>, current: Option<String>, truncated: bool },
+    ModelsListed {
+        session_id: SessionId,
+        models: Vec<String>,
+        current: Option<String>,
+        truncated: bool,
+    },
     /// `runtime_info` — provider identity + bounded route list.
     RuntimeInfo {
         session_id: SessionId,
@@ -627,11 +634,17 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
         "pong" => EventKind::Pong,
         "text_delta" => {
             let w: TextWire = payload!(TextWire, &value, "text_delta payload");
-            EventKind::TextDelta { session_id: SessionId::new(w.session_id)?, text: Content::new(w.text) }
+            EventKind::TextDelta {
+                session_id: SessionId::new(w.session_id)?,
+                text: Content::new(w.text),
+            }
         }
         "reasoning_delta" => {
             let w: TextWire = payload!(TextWire, &value, "reasoning_delta payload");
-            EventKind::ReasoningDelta { session_id: SessionId::new(w.session_id)?, text: Content::new(w.text) }
+            EventKind::ReasoningDelta {
+                session_id: SessionId::new(w.session_id)?,
+                text: Content::new(w.text),
+            }
         }
         "reasoning_done" => {
             let w: SessionRef = payload!(SessionRef, &value, "reasoning_done payload");
@@ -708,11 +721,17 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
         }
         "session_status" => {
             let w: StatusWire = payload!(StatusWire, &value, "session_status payload");
-            EventKind::StatusChanged { session_id: SessionId::new(w.session_id)?, status: Content::new(w.status) }
+            EventKind::StatusChanged {
+                session_id: SessionId::new(w.session_id)?,
+                status: Content::new(w.status),
+            }
         }
         "connection_phase" => {
             let w: PhaseWire = payload!(PhaseWire, &value, "connection_phase payload");
-            EventKind::ConnectionPhase { session_id: SessionId::new(w.session_id)?, phase: Content::new(w.phase) }
+            EventKind::ConnectionPhase {
+                session_id: SessionId::new(w.session_id)?,
+                phase: Content::new(w.phase),
+            }
         }
         "model_info" => {
             let w: ModelInfoWire = payload!(ModelInfoWire, &value, "model_info payload");
@@ -755,7 +774,10 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
         }
         "credential_updated" => {
             let w: CredentialWire = payload!(CredentialWire, &value, "credential_updated payload");
-            EventKind::CredentialUpdated { provider: Content::new(w.provider), configured: w.configured }
+            EventKind::CredentialUpdated {
+                provider: Content::new(w.provider),
+                configured: w.configured,
+            }
         }
         "compacted" => {
             let w: CompactedWire = payload!(CompactedWire, &value, "compacted payload");
@@ -823,7 +845,10 @@ pub fn decode_frame_line(line: &str) -> Result<ServerFrameView, JcodeError> {
     }
     match value.get("v") {
         None => {
-            return Err(JcodeError::new(ErrorCode::MissingRequiredField, "frame has no `v` version"));
+            return Err(JcodeError::new(
+                ErrorCode::MissingRequiredField,
+                "frame has no `v` version",
+            ));
         }
         Some(v) => {
             let major = v.as_u64().ok_or_else(|| {
@@ -987,7 +1012,10 @@ impl EventSequencer {
     }
 
     /// Track an approval request the server issued.
-    pub fn register_approval(&mut self, request_id: &PermissionRequestId) -> Result<(), JcodeError> {
+    pub fn register_approval(
+        &mut self,
+        request_id: &PermissionRequestId,
+    ) -> Result<(), JcodeError> {
         if self.outstanding_approvals.len() >= MAX_OUTSTANDING {
             return Err(JcodeError::new(
                 ErrorCode::CapabilityDenied,
@@ -1000,7 +1028,10 @@ impl EventSequencer {
 
     /// Consume an approval id when the user answers. Fails closed on any id
     /// the server never asked about (approval spoofing cannot fabricate one).
-    pub fn take_approval_for_response(&mut self, request_id: &PermissionRequestId) -> Result<(), JcodeError> {
+    pub fn take_approval_for_response(
+        &mut self,
+        request_id: &PermissionRequestId,
+    ) -> Result<(), JcodeError> {
         if self.outstanding_approvals.remove(request_id.as_str()) {
             Ok(())
         } else {
@@ -1078,7 +1109,11 @@ pub enum OutgoingRequest {
     DetachSession { session_id: SessionId },
     SendMessage { session_id: SessionId, content: String },
     Cancel { session_id: SessionId },
-    PermissionResponse { session_id: SessionId, request_id: PermissionRequestId, decision: PermissionDecision },
+    PermissionResponse {
+        session_id: SessionId,
+        request_id: PermissionRequestId,
+        decision: PermissionDecision,
+    },
     Ping,
 }
 
@@ -1116,7 +1151,9 @@ impl RequestEncoder {
                     || client.len() > 64
                     || !client
                         .bytes()
-                        .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b'/'))
+                        .all(|b| {
+                            b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_' | b'.' | b'/')
+                        })
                 {
                     return Err(JcodeError::new(
                         ErrorCode::InvalidIdentifier,
@@ -1531,7 +1568,9 @@ mod tests {
     #[test]
     fn encoder_emits_documented_wire_shapes() {
         let mut enc = RequestEncoder::new();
-        let (id, line) = enc.encode(&OutgoingRequest::Hello { client: "coding-studio/0.1.0".into() }).unwrap();
+        let (id, line) = enc
+            .encode(&OutgoingRequest::Hello { client: "coding-studio/0.1.0".into() })
+            .unwrap();
         assert_eq!(id, 1);
         assert!(line.ends_with('\n'));
         let v: serde_json::Value = serde_json::from_str(line.trim()).unwrap();
@@ -1541,7 +1580,12 @@ mod tests {
         assert_eq!(v["max_version"], 1);
 
         let sid = SessionId::new("s-1").unwrap();
-        let (_, line) = enc.encode(&OutgoingRequest::SendMessage { session_id: sid.clone(), content: "hi".into() }).unwrap();
+        let (_, line) = enc
+            .encode(&OutgoingRequest::SendMessage {
+                session_id: sid.clone(),
+                content: "hi".into(),
+            })
+            .unwrap();
         let v: serde_json::Value = serde_json::from_str(line.trim()).unwrap();
         assert_eq!(v["req"], "send_message");
         assert_eq!(v["session_id"], "s-1");
@@ -1571,7 +1615,9 @@ mod tests {
         assert!(enc.encode(&OutgoingRequest::Hello { client: "bad name!".into() }).is_err());
         let big = "x".repeat(MAX_OUTBOUND_MESSAGE + 1);
         let sid = SessionId::new("s").unwrap();
-        let err = enc.encode(&OutgoingRequest::SendMessage { session_id: sid, content: big }).unwrap_err();
+        let err = enc
+            .encode(&OutgoingRequest::SendMessage { session_id: sid, content: big })
+            .unwrap_err();
         assert_eq!(err.code(), ErrorCode::PayloadTooLarge);
     }
 

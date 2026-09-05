@@ -314,7 +314,10 @@ mod tests {
             "password='hunter2'",
         ] {
             let r = redact(sample);
-            assert!(r.contains(REDACTED), "quoted case not redacted: {sample} -> {r}");
+            assert!(
+                r.contains(REDACTED),
+                "quoted case not redacted: {sample} -> {r}"
+            );
             assert!(!r.contains("zz"), "quoted body survived in {r}");
             assert!(!r.contains("xG9aa"), "quoted body survived in {r}");
         }
@@ -329,7 +332,10 @@ mod tests {
             "authorization: Bearer aaa.bbb.ccc",
         ] {
             let r = redact(sample);
-            assert!(r.contains(REDACTED), "ws case not redacted: {sample} -> {r}");
+            assert!(
+                r.contains(REDACTED),
+                "ws case not redacted: {sample} -> {r}"
+            );
             assert!(!r.contains("abc123"), "body survived in {r}");
             assert!(!r.contains("somevalue123"), "body survived in {r}");
             assert!(!r.contains("aaa.bbb.ccc"), "bearer body survived in {r}");

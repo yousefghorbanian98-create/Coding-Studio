@@ -161,7 +161,10 @@ fn hello_ok_capabilities_are_checked_deny_by_default() {
         }
         other => panic!("unexpected {other:?}"),
     };
-    assert!(check.missing.is_empty(), "pinned bridge advertises all expected capabilities");
+    assert!(
+        check.missing.is_empty(),
+        "pinned bridge advertises all expected capabilities"
+    );
     assert!(check.unrecognized.is_empty());
 }
 
@@ -278,16 +281,18 @@ fn out_of_order_and_replayed_replies_are_flagged_never_mutated() {
     }
     assert!(saw_stray, "a reply to a never-sent request must be flagged");
     assert_eq!(delivered, 3, "out-of-order frames always survive delivery");
-    assert_eq!(seq.duplicates_flagged(), 1, "the replayed line is flagged once");
+    assert_eq!(
+        seq.duplicates_flagged(),
+        1,
+        "the replayed line is flagged once"
+    );
 }
 
 #[test]
 fn oversized_frame_is_rejected_bounded() {
     // Constructed in code (see PROVENANCE.md): a 4 MiB+ single-line frame.
     let fat = "x".repeat(protocol::MAX_FRAME_BYTES);
-    let blob = format!(
-        "{{\"v\":1,\"ev\":\"text_delta\",\"session_id\":\"s\",\"text\":\"{fat}\"}}"
-    );
+    let blob = format!("{{\"v\":1,\"ev\":\"text_delta\",\"session_id\":\"s\",\"text\":\"{fat}\"}}");
     assert!(blob.len() > protocol::MAX_FRAME_BYTES);
     let mut dec = FrameDecoder::new(Cursor::new(blob.into_bytes()));
     let err = dec.next_frame().unwrap_err();
@@ -300,7 +305,9 @@ fn truncated_stream_stops_cleanly_without_fabricating_completion() {
     assert_eq!(frames.len(), 4);
     assert_eq!(frames.last().unwrap().event.name(), "text_delta");
     assert!(
-        !frames.iter().any(|f| matches!(f.event, EventKind::TurnCompleted { .. })),
+        !frames
+            .iter()
+            .any(|f| matches!(f.event, EventKind::TurnCompleted { .. })),
         "a truncated stream must not invent a completion (honest lifecycle state)"
     );
 }
@@ -341,14 +348,19 @@ fn secret_bearing_stream_never_leaks_through_display() {
     assert_eq!(frames.len(), 3);
     for f in &frames {
         let dbg = format!("{:?}", f.event);
-        assert!(!dbg.contains("sk-test0123456789abcdef"), "api key leaked: {dbg}");
+        assert!(
+            !dbg.contains("sk-test0123456789abcdef"),
+            "api key leaked: {dbg}"
+        );
         assert!(!dbg.contains("aaa.bbb.ccc"), "bearer token leaked: {dbg}");
         assert!(!dbg.contains("eyJhbGciOiJIUzI1NiJ9"), "jwt leaked: {dbg}");
         assert!(dbg.contains("[REDACTED]"));
     }
     // Raw content remains available in-process for transcript assembly only.
     match &frames[0].event {
-        EventKind::TextDelta { text, .. } => assert!(text.as_str().contains("sk-test0123456789abcdef")),
+        EventKind::TextDelta { text, .. } => {
+            assert!(text.as_str().contains("sk-test0123456789abcdef"))
+        }
         other => panic!("unexpected {other:?}"),
     }
 }
@@ -372,7 +384,11 @@ fn stdout_and_stderr_channels_never_mix() {
     }
     // Every stderr fixture line classifies as diagnostics.
     for line in fixture_string("protocol/diagnostics-stderr.txt").lines() {
-        assert_eq!(classify_stream_bytes(line.as_bytes()), StreamClass::Diagnostics, "{line}");
+        assert_eq!(
+            classify_stream_bytes(line.as_bytes()),
+            StreamClass::Diagnostics,
+            "{line}"
+        );
     }
 }
 
@@ -387,23 +403,36 @@ fn pinned_version_report_is_supported_others_fail_closed() {
     assert!(version::require_supported(&pinned).is_ok());
     assert_eq!(pinned.git_tag.as_deref(), Some("v0.81.7"));
 
-    let older = version::parse_version_report(&fixture_string("version/unsupported-older-v0.80.1.json")).unwrap();
-    assert_eq!(version::classify(&older), VersionCompatibility::UnsupportedOlder);
+    let older =
+        version::parse_version_report(&fixture_string("version/unsupported-older-v0.80.1.json"))
+            .unwrap();
+    assert_eq!(
+        version::classify(&older),
+        VersionCompatibility::UnsupportedOlder
+    );
     assert_eq!(
         version::require_supported(&older).unwrap_err().code(),
         ErrorCode::UnsupportedJcodeVersion
     );
 
-    let newer = version::parse_version_report(&fixture_string("version/unknown-newer.json")).unwrap();
-    assert_eq!(version::classify(&newer), VersionCompatibility::UnknownNewer);
+    let newer =
+        version::parse_version_report(&fixture_string("version/unknown-newer.json")).unwrap();
+    assert_eq!(
+        version::classify(&newer),
+        VersionCompatibility::UnknownNewer
+    );
     assert_eq!(
         version::require_supported(&newer).unwrap_err().code(),
         ErrorCode::UnknownNewerJcodeVersion
     );
 
     let malformed =
-        version::parse_version_report(&fixture_string("version/malformed-missing-semver.json")).unwrap();
-    assert_eq!(version::classify(&malformed), VersionCompatibility::Malformed);
+        version::parse_version_report(&fixture_string("version/malformed-missing-semver.json"))
+            .unwrap();
+    assert_eq!(
+        version::classify(&malformed),
+        VersionCompatibility::Malformed
+    );
     assert!(version::require_supported(&malformed).is_err());
 }
 
@@ -442,8 +471,14 @@ fn official_sha256sums_fixture_is_byte_exact_and_verifies_all_assets() {
     assert!(verify_against_pin(&set).is_err());
 
     // Windows asset naming needed by the future installer and the CI probe.
-    assert_eq!(WindowsArch::X86_64.exe_asset_name(), "jcode-windows-x86_64.exe");
-    assert_eq!(WindowsArch::AArch64.exe_asset_name(), "jcode-windows-aarch64.exe");
+    assert_eq!(
+        WindowsArch::X86_64.exe_asset_name(),
+        "jcode-windows-x86_64.exe"
+    );
+    assert_eq!(
+        WindowsArch::AArch64.exe_asset_name(),
+        "jcode-windows-aarch64.exe"
+    );
     let url = verification::asset_download_url(WindowsArch::X86_64);
     assert!(url.ends_with("/v0.81.7/jcode-windows-x86_64.exe"));
 }
@@ -459,10 +494,15 @@ fn no_ollama_or_local_runtime_enters_the_contract() {
         assert!(require(id).is_err());
     }
     let pf = product_facing();
-    assert!(!pf.iter().any(|id| id.contains("ollama") || id.contains("local")));
+    assert!(!pf
+        .iter()
+        .any(|id| id.contains("ollama") || id.contains("local")));
     // Even if a runtime info event ever names a local runtime, it classifies
     // as denied — it cannot become a selectable capability.
-    assert_eq!(classify_provider_label(Some("ollama")), ProviderClass::DeniedLocalRuntime);
+    assert_eq!(
+        classify_provider_label(Some("ollama")),
+        ProviderClass::DeniedLocalRuntime
+    );
     assert_eq!(
         classify_provider_label(Some("http://127.0.0.1:11434")),
         ProviderClass::DeniedLocalRuntime
@@ -473,7 +513,10 @@ fn no_ollama_or_local_runtime_enters_the_contract() {
 fn unsupported_versions_and_versions_mismatch_fail_closed_end_to_end() {
     // Compose the classification and capability gates like the future M2
     // install supervisor will: unverified build -> nothing protocol-side runs.
-    for rel in ["version/unsupported-older-v0.80.1.json", "version/unknown-newer.json"] {
+    for rel in [
+        "version/unsupported-older-v0.80.1.json",
+        "version/unknown-newer.json",
+    ] {
         let report = version::parse_version_report(&fixture_string(rel)).unwrap();
         assert!(version::require_supported(&report).is_err());
     }
@@ -483,7 +526,9 @@ fn unsupported_versions_and_versions_mismatch_fail_closed_end_to_end() {
 fn hello_handshake_matches_upstream_wire_shape() {
     let mut enc = RequestEncoder::new();
     let (id, line) = enc
-        .encode(&OutgoingRequest::Hello { client: "coding-studio/0.1.0".into() })
+        .encode(&OutgoingRequest::Hello {
+            client: "coding-studio/0.1.0".into(),
+        })
         .unwrap();
     assert_eq!(id, 1);
     // Exact string, mirroring upstream's schema snapshot test style.
@@ -492,10 +537,15 @@ fn hello_handshake_matches_upstream_wire_shape() {
         "{\"v\":1,\"id\":1,\"req\":\"hello\",\"min_version\":1,\"max_version\":1,\"client\":\"coding-studio/0.1.0\"}\n"
     );
     let (id, line) = enc
-        .encode(&OutgoingRequest::Cancel { session_id: SessionId::new("s-1").unwrap() })
+        .encode(&OutgoingRequest::Cancel {
+            session_id: SessionId::new("s-1").unwrap(),
+        })
         .unwrap();
     assert_eq!(id, 2);
-    assert_eq!(line, "{\"v\":1,\"id\":2,\"req\":\"cancel\",\"session_id\":\"s-1\"}\n");
+    assert_eq!(
+        line,
+        "{\"v\":1,\"id\":2,\"req\":\"cancel\",\"session_id\":\"s-1\"}\n"
+    );
 }
 
 #[test]
@@ -512,5 +562,8 @@ fn exit_fixtures_drive_the_disposition_model() {
         classify_exit(v["exit_code"].as_i64().map(|c| c as i32)),
         lifecycle::ExitDisposition::Failed(1)
     ));
-    assert_eq!(classify_exit(None), lifecycle::ExitDisposition::ForcedTermination);
+    assert_eq!(
+        classify_exit(None),
+        lifecycle::ExitDisposition::ForcedTermination
+    );
 }

@@ -184,15 +184,51 @@ impl ChecksumSet {
 /// `(asset name, size in bytes, sha256 hex)` recorded from the official
 /// v0.81.7 release (provenance: `fixtures/jcode/PROVENANCE.md`).
 pub const EXPECTED_ASSETS_V0_81_7: &[(&str, u64, &str)] = &[
-    ("jcode-freebsd-x86_64.tar.gz", 46_175_590, "6cdba698208f45ce2052f37b45fac2a5b901bd6c7b13969b2af3db1ec8fe6f2a"),
-    ("jcode-linux-aarch64.tar.gz", 49_358_319, "499b0a877f6d46d1b315a0d11e7ce9f6d8deea36f2f0b0d11d32296dbf9af017"),
-    ("jcode-linux-x86_64.tar.gz", 48_303_747, "e75d50fcbf729ed7a96d78e1970c2b10bacf7626e844a3eb7ca2c5f4ccf9590b"),
-    ("jcode-macos-aarch64.tar.gz", 50_528_535, "3256d24831ca1c0b3820a03a99d4c782fbc40f740260633dbc6e6a711d47fd7c"),
-    ("jcode-macos-x86_64.tar.gz", 53_344_180, "5761f53c2c15aa810f38ed6dfe00597ed75dda808243272e8c963ea5a4ad1d46"),
-    ("jcode-windows-aarch64.exe", 80_173_056, "e38ed16c3fb3bae43989c4fe043da7e3240c24bcad95129fad059cf56636c05c"),
-    ("jcode-windows-aarch64.tar.gz", 29_475_252, "bda9b2c78569a8c327c204b8735eb62615f208576616964fddcc014ee32fc5a7"),
-    ("jcode-windows-x86_64.exe", 128_476_672, "b5b09dbe0dd0b14796dfa75f63decbdf98a75f3f9de9b86d6d25522ef3eb105b"),
-    ("jcode-windows-x86_64.tar.gz", 41_569_887, "5c4ef586311e4cc131f7e311b74a7b7bc9dae8ee5cfd8cf1ab056fa8d19fcb8b"),
+    (
+        "jcode-freebsd-x86_64.tar.gz",
+        46_175_590,
+        "6cdba698208f45ce2052f37b45fac2a5b901bd6c7b13969b2af3db1ec8fe6f2a",
+    ),
+    (
+        "jcode-linux-aarch64.tar.gz",
+        49_358_319,
+        "499b0a877f6d46d1b315a0d11e7ce9f6d8deea36f2f0b0d11d32296dbf9af017",
+    ),
+    (
+        "jcode-linux-x86_64.tar.gz",
+        48_303_747,
+        "e75d50fcbf729ed7a96d78e1970c2b10bacf7626e844a3eb7ca2c5f4ccf9590b",
+    ),
+    (
+        "jcode-macos-aarch64.tar.gz",
+        50_528_535,
+        "3256d24831ca1c0b3820a03a99d4c782fbc40f740260633dbc6e6a711d47fd7c",
+    ),
+    (
+        "jcode-macos-x86_64.tar.gz",
+        53_344_180,
+        "5761f53c2c15aa810f38ed6dfe00597ed75dda808243272e8c963ea5a4ad1d46",
+    ),
+    (
+        "jcode-windows-aarch64.exe",
+        80_173_056,
+        "e38ed16c3fb3bae43989c4fe043da7e3240c24bcad95129fad059cf56636c05c",
+    ),
+    (
+        "jcode-windows-aarch64.tar.gz",
+        29_475_252,
+        "bda9b2c78569a8c327c204b8735eb62615f208576616964fddcc014ee32fc5a7",
+    ),
+    (
+        "jcode-windows-x86_64.exe",
+        128_476_672,
+        "b5b09dbe0dd0b14796dfa75f63decbdf98a75f3f9de9b86d6d25522ef3eb105b",
+    ),
+    (
+        "jcode-windows-x86_64.tar.gz",
+        41_569_887,
+        "5c4ef586311e4cc131f7e311b74a7b7bc9dae8ee5cfd8cf1ab056fa8d19fcb8b",
+    ),
 ];
 
 /// Outcome of validating a fetched checksum record against the pin table.
@@ -315,8 +351,16 @@ mod tests {
         // Nine assets were published for v0.81.7; both Windows arches present.
         assert_eq!(EXPECTED_ASSETS_V0_81_7.len(), 9);
         for arch in WindowsArch::all() {
-            assert!(EXPECTED_ASSETS_V0_81_7.iter().any(|(n, _, _)| *n == arch.exe_asset_name()));
-            assert!(EXPECTED_ASSETS_V0_81_7.iter().any(|(n, _, _)| *n == arch.tarball_asset_name()));
+            assert!(
+                EXPECTED_ASSETS_V0_81_7
+                    .iter()
+                    .any(|(n, _, _)| *n == arch.exe_asset_name())
+            );
+            assert!(
+                EXPECTED_ASSETS_V0_81_7
+                    .iter()
+                    .any(|(n, _, _)| *n == arch.tarball_asset_name())
+            );
         }
         for (name, size, digest) in EXPECTED_ASSETS_V0_81_7 {
             assert!(is_bare_filename(name));
