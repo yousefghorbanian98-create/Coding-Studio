@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-studio.dev/schemas/factory/manifest.schema.json",
+  "title": "Coding Studio Backend Factory manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "repository",
+    "branch",
+    "baseCommit",
+    "frozenFiles",
+    "fileHashes",
+    "generationTime",
+    "reviewStatus",
+    "validatorVersion"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string", "minLength": 1 },
+    "repository": { "type": "string", "minLength": 1 },
+    "branch": { "type": "string", "minLength": 1 },
+    "baseCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "frozenFiles": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "fileHashes": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    },
+    "generationTime": { "type": "string", "minLength": 1 },
+    "reviewStatus": { "enum": ["pending", "remediation-required", "passed", "failed"] },
+    "validatorVersion": { "type": "string", "minLength": 1 }
+  }
+}

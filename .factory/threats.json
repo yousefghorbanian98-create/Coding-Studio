@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "threats": [
+    {
+      "id": "THR-APPROVAL-BYPASS",
+      "title": "Approval bypass",
+      "description": "An action proceeds without backend-approved permission or reuses a stale approval.",
+      "controls": "Backend-enforced approvals, safe defaults, stale and duplicate approval rejection."
+    },
+    {
+      "id": "THR-AUTH-HANDOFF",
+      "title": "Authentication handoff abuse",
+      "description": "Handoff leaks credentials or allows unauthorized provider access.",
+      "controls": "Backend auth handoff, logout clearing state, credential hygiene assertions."
+    },
+    {
+      "id": "THR-CI-DRIFT",
+      "title": "CI gate drift",
+      "description": "CI stops validating the mission or weakens existing security hardening.",
+      "controls": "Validator in existing Windows CI, pinned actions, no weakened assertions."
+    },
+    {
+      "id": "THR-DATA-LOSS",
+      "title": "Loss of user work",
+      "description": "Crash, restart or recovery discards uncommitted user changes.",
+      "controls": "Recovery state machine, resume preserving partial responses, no destructive reset."
+    },
+    {
+      "id": "THR-DOC-DRIFT",
+      "title": "Document and machine state drift",
+      "description": "Requirements, acceptance criteria or evidence diverge from the frozen mission.",
+      "controls": "Deterministic validator, frozen manifest, ADR on change."
+    },
+    {
+      "id": "THR-EVENT-DRIFT",
+      "title": "Event corruption",
+      "description": "Malformed, partial, duplicate or stale events corrupt session state.",
+      "controls": "Normalization, schema version, sequence, dedup, correlation, isolation."
+    },
+    {
+      "id": "THR-INJECTION",
+      "title": "Command or script injection",
+      "description": "User or Jcode input reaches a shell, script or dynamic eval.",
+      "controls": "Shell-free spawn, argument separation, environment allowlist, no remote script piping."
+    },
+    {
+      "id": "THR-LICENSE",
+      "title": "Incompatible license",
+      "description": "License forbids use or requires obligations no one has approved.",
+      "controls": "License verification, explicit approval for AGPL, BUSL and source-available licenses."
+    },
+    {
+      "id": "THR-LOOP-DRIFT",
+      "title": "Autonomous loop drift",
+      "description": "The loop performs unapproved work without gates or limits.",
+      "controls": "Finite retry limits, circuit breakers, role separation, human-controlled gates."
+    },
+    {
+      "id": "THR-ORPHAN",
+      "title": "Orphaned child process",
+      "description": "Cancellation or crash leaves a child process running.",
+      "controls": "Graceful cancellation, forced termination, Windows process-tree termination, orphan cleanup."
+    },
+    {
+      "id": "THR-OSS-PROVENANCE",
+      "title": "Unreviewed open source",
+      "description": "Mutable releases, unattributed code, forced dependency, unknown license.",
+      "controls": "OSS adoption policy with provenance fields and forbidden practices."
+    },
+    {
+      "id": "THR-OUTPUT-LEAK",
+      "title": "Output leak into unexpected channel",
+      "description": "Jcode stdout/stderr or diagnostics leak into the UI or logs without redaction.",
+      "controls": "stdout/stderr contracts, bounded separators, diagnostic redaction."
+    },
+    {
+      "id": "THR-PATH-TRAVERSAL",
+      "title": "Path traversal",
+      "description": "Symlink or junction escape reads or writes outside the workspace.",
+      "controls": "Canonical path resolution, junction escape protection."
+    },
+    {
+      "id": "THR-PROCESS-ESCAPE",
+      "title": "Child process escape",
+      "description": "Spawned process escapes the intended working directory or tree.",
+      "controls": "Canonical paths, working directory validation, process-tree termination, orphan cleanup."
+    },
+    {
+      "id": "THR-PROTOCOL-DRIFT",
+      "title": "Protocol instability",
+      "description": "Jcode protocol or event schema changes without a versioned contract.",
+      "controls": "Frozen schema, sequence numbers, deduplication, protocol stability tests."
+    },
+    {
+      "id": "THR-RESOURCE-EXHAUSTION",
+      "title": "Resource exhaustion",
+      "description": "Unbounded buffers, concurrency, queues, cost or memory starve the host.",
+      "controls": "Bounded buffers, backpressure, timeouts, concurrency and resource limits, cost controls."
+    },
+    {
+      "id": "THR-SECRET",
+      "title": "Secret exposure",
+      "description": "Credentials reach logs, events, Git, CI, localStorage or React state.",
+      "controls": "Secret redaction, credential hygiene, no credentials in Git, CI and events."
+    },
+    {
+      "id": "THR-SUPPLY-CHAIN",
+      "title": "Supply chain compromise",
+      "description": "Downloaded runtime or dependency is not the verified official artifact.",
+      "controls": "Official repo verification, pinned versions, checksum verification, atomic install."
+    },
+    {
+      "id": "THR-UNTRUSTED-WORKFLOW",
+      "title": "Untrusted n8n workflow",
+      "description": "Workflow contents include credentials, code, URLs, MCP servers or prompt injection.",
+      "controls": "Treat as untrusted input; never execute, import, connect or copy blindly; n8n research gate."
+    }
+  ]
+}

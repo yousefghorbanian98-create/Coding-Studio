@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-studio.dev/schemas/factory/threats.schema.json",
+  "title": "Coding Studio Backend Factory threat catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "threats"],
+  "properties": {
+    "schemaVersion": { "type": "string", "minLength": 1 },
+    "threats": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/threat" }
+    }
+  },
+  "$defs": {
+    "threat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "description", "controls"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^THR-[A-Z0-9-]+$" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "controls": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

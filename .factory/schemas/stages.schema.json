@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-studio.dev/schemas/factory/stages.schema.json",
+  "title": "Coding Studio Backend Factory stages",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "milestones"],
+  "properties": {
+    "schemaVersion": { "type": "string", "minLength": 1 },
+    "milestones": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/milestone" }
+    }
+  },
+  "$defs": {
+    "milestone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "number",
+        "title",
+        "name",
+        "status",
+        "stage",
+        "requires",
+        "stages"
+      ],
+      "properties": {
+        "number": { "type": "integer", "minimum": 0, "maximum": 8 },
+        "title": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["planned", "active", "complete", "future", "blocked"] },
+        "stage": { "type": "string", "minLength": 1 },
+        "requires": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 8 }
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/stage" }
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "milestone",
+        "status",
+        "dependsOn",
+        "n8nResearchGate",
+        "changesUserFacingUi",
+        "tasteDecision",
+        "gates",
+        "acceptanceCriteriaRefs",
+        "evidencePaths"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "milestone": { "type": "integer", "minimum": 0, "maximum": 8 },
+        "status": { "enum": ["planned", "active", "complete", "future", "blocked"] },
+        "dependsOn": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "n8nResearchGate": { "type": "boolean" },
+        "changesUserFacingUi": { "type": "boolean" },
+        "tasteDecision": { "type": "string" },
+        "gates": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "acceptanceCriteriaRefs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "evidencePaths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

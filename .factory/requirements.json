@@ -1,0 +1,2855 @@
+{
+  "schemaVersion": "1.0.0",
+  "requirements": [
+    {
+      "identifier": "FACTORY-001",
+      "title": "Materialize the verbatim original user directive",
+      "description": "Preserve the original user directive verbatim at docs/backend-factory/00-USER-DIRECTIVE.md without paraphrase or omission.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "00-USER-DIRECTIVE.md exists and contains the verbatim directive text unchanged."
+      ],
+      "nonGoals": [
+        "No paraphrasing or summarization of the directive."
+      ],
+      "dependencies": [],
+      "threats": [
+        "THR-DOC-DRIFT"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/00-USER-DIRECTIVE.md"
+      ],
+      "plannedUnitTests": [
+        "Validator DOC_MISSING check covers the required document."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/00-USER-DIRECTIVE.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-002",
+      "title": "Materialize the complete master mission",
+      "description": "Produce docs/backend-factory/01-MASTER-MISSION.md containing all six backend milestones plus future milestones seven and eight.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Master mission contains Milestone One through Six and Future Milestone Seven/Eight."
+      ],
+      "nonGoals": [
+        "No implementation of any backend milestone in Stage Zero."
+      ],
+      "dependencies": [
+        "FACTORY-001"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/01-MASTER-MISSION.md"
+      ],
+      "plannedUnitTests": [
+        "MILESTONE_MISSING and FUTURE_STARTED_TOO_EARLY checks cover the mission."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/01-MASTER-MISSION.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-003",
+      "title": "Materialize roadmap and architecture documents",
+      "description": "Produce 02-BACKEND-ROADMAP.md and 03-ARCHITECTURE.md with milestones, stages, gates and the provider-neutral architecture.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Roadmap and architecture docs exist and agree with the machine stages and architecture."
+      ],
+      "nonGoals": [
+        "No production runtime behavior change."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/02-BACKEND-ROADMAP.md",
+        "docs/backend-factory/03-ARCHITECTURE.md"
+      ],
+      "plannedUnitTests": [
+        "MARKDOWN_JSON_MILESTONE_MISMATCH check covers roadmap agreement."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/02-BACKEND-ROADMAP.md",
+        "docs/backend-factory/03-ARCHITECTURE.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-004",
+      "title": "Materialize requirements, acceptance and traceability documents",
+      "description": "Produce 04-REQUIREMENTS.md, 05-ACCEPTANCE-MATRIX.md and 06-TRACEABILITY-MATRIX.md that agree with .factory/requirements.json.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Requirement, acceptance and traceability tables exist and agree with machine readable requirements."
+      ],
+      "nonGoals": [
+        "No orphan requirement may be hidden because implementation is difficult."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [
+        "THR-DOC-DRIFT"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/04-REQUIREMENTS.md",
+        "docs/backend-factory/05-ACCEPTANCE-MATRIX.md",
+        "docs/backend-factory/06-TRACEABILITY-MATRIX.md"
+      ],
+      "plannedUnitTests": [
+        "REQ_ID_DUPLICATED, REQ_NO_ACCEPTANCE and REQ_NO_PLANNED_TEST checks cover requirement structure."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/04-REQUIREMENTS.md",
+        "docs/backend-factory/05-ACCEPTANCE-MATRIX.md",
+        "docs/backend-factory/06-TRACEABILITY-MATRIX.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-005",
+      "title": "Materialize state machine, self-heal and recovery documents",
+      "description": "Produce 07-STATE-MACHINE.md, 12-SELF-HEAL-RUNBOOK.md and 13-RECOVERY-RUNBOOK.md describing the autonomous Finn-derived loop, limits, circuit breakers and recovery state.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "State machine documents exist and define the full loop, finite retry limits and recovery state."
+      ],
+      "nonGoals": [
+        "No production backend code."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [
+        "THR-LOOP-DRIFT",
+        "THR-DATA-LOSS"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/07-STATE-MACHINE.md",
+        "docs/backend-factory/12-SELF-HEAL-RUNBOOK.md",
+        "docs/backend-factory/13-RECOVERY-RUNBOOK.md"
+      ],
+      "plannedUnitTests": [
+        "STATE_SCHEMA_INVALID check covers state schema."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/07-STATE-MACHINE.md",
+        "docs/backend-factory/12-SELF-HEAL-RUNBOOK.md",
+        "docs/backend-factory/13-RECOVERY-RUNBOOK.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-006",
+      "title": "Materialize provider and Ruflo plans",
+      "description": "Produce 14-PROVIDER-PLAN.md and 15-RUFLO-PLAN.md including provider order, selection gates and optional Ruflo integration boundary.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Provider plan and Ruflo plan exist with selection criteria and optional feature flag."
+      ],
+      "nonGoals": [
+        "No provider or Ruflo integration."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/14-PROVIDER-PLAN.md",
+        "docs/backend-factory/15-RUFLO-PLAN.md"
+      ],
+      "plannedUnitTests": [
+        "REQ_NO_MILESTONE and REQ_NO_STAGE checks cover plan requirements."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/14-PROVIDER-PLAN.md",
+        "docs/backend-factory/15-RUFLO-PLAN.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-007",
+      "title": "Materialize threat model and test strategy",
+      "description": "Produce 08-THREAT-MODEL.md and 09-TEST-STRATEGY.md with mapped threats and a test strategy that forbids weakened assertions and deleted tests.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Threat model maps threats to requirements; test strategy requires red-proof regression tests and no skipped tests."
+      ],
+      "nonGoals": [
+        "No tests may be skipped or weakened."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [
+        "THR-DOC-DRIFT"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/08-THREAT-MODEL.md",
+        "docs/backend-factory/09-TEST-STRATEGY.md"
+      ],
+      "plannedUnitTests": [
+        "SECURITY_REQ_NO_THREAT check covers threat mapping."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/08-THREAT-MODEL.md",
+        "docs/backend-factory/09-TEST-STRATEGY.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-008",
+      "title": "Materialize research and adoption policies",
+      "description": "Produce 10-N8N-RESEARCH-POLICY.md and 11-OSS-ADOPTION-POLICY.md with untrusted-input handling and mandatory provenance fields.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "N8N and OSS policies exist with forbidden practices and required evidence fields."
+      ],
+      "nonGoals": [
+        "No workflow may be executed; no remote script may be piped to a shell."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [
+        "THR-UNTRUSTED-WORKFLOW",
+        "THR-OSS-PROVENANCE"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/10-N8N-RESEARCH-POLICY.md",
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md"
+      ],
+      "plannedUnitTests": [
+        "STAGE_NO_N8N_GATE check covers n8n research gates."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/10-N8N-RESEARCH-POLICY.md",
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-009",
+      "title": "Produce Finn-loop research evidence",
+      "description": "Inspect finna/Finn-loop, record inspected SHA, license, files, adopted and rejected patterns, deviations and the safe autonomous derived model.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "evidence/stage-zero/finn-loop-research.md contains all required Finn-loop research fields."
+      ],
+      "nonGoals": [
+        "Finn-loop must not become a production runtime dependency."
+      ],
+      "dependencies": [
+        "FACTORY-001"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/stage-zero/finn-loop-research.md"
+      ],
+      "plannedUnitTests": [
+        "Frozen evidence document is covered by MANIFEST_STALE."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/evidence/stage-zero/finn-loop-research.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-010",
+      "title": "Inspect relevant n8n workflows safely",
+      "description": "Inspect up to three genuinely relevant workflows from Zie619/n8n-workflows without executing them and record candidate details and rejected patterns.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "evidence/stage-zero/n8n-research.md records the inspected SHA, candidates and the explicit rejection or adoption decision."
+      ],
+      "nonGoals": [
+        "No raw workflows executed; no external URLs or credentials contacted; no MCP connections; no import into n8n."
+      ],
+      "dependencies": [
+        "FACTORY-008"
+      ],
+      "threats": [
+        "THR-UNTRUSTED-WORKFLOW"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/stage-zero/n8n-research.md"
+      ],
+      "plannedUnitTests": [
+        "No relevant safe pattern must be forced into the factory design."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/evidence/stage-zero/n8n-research.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-011",
+      "title": "Record Taste Skill decision",
+      "description": "Inspect Leonxlnx/taste-skill and record SHA, license, selected skill, applicable and rejected rules and backend limitations.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "evidence/stage-zero/taste-decision.md records the Expected conclusion Taste gate not applicable to product UI in Stage Zero."
+      ],
+      "nonGoals": [
+        "Taste must not control backend architecture or security; it must not be added as a production dependency."
+      ],
+      "dependencies": [
+        "FACTORY-001"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/stage-zero/taste-decision.md"
+      ],
+      "plannedUnitTests": [
+        "STAGE_NO_TASTE_DECISION check covers UI-changing stages."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Taste gate not applicable to product UI in Stage Zero.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/evidence/stage-zero/taste-decision.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-012",
+      "title": "Record external source register",
+      "description": "Create an OSS register covering the external sources inspected in Stage Zero and the OSS research policy evidence fields.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "evidence/stage-zero/oss-register.md lists external sources with repository, SHA, license and decision."
+      ],
+      "nonGoals": [
+        "No downloaded binaries committed; no credentials committed."
+      ],
+      "dependencies": [
+        "FACTORY-008"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/stage-zero/oss-register.md"
+      ],
+      "plannedUnitTests": [
+        "Frozen evidence document is covered by MANIFEST_STALE."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/evidence/stage-zero/oss-register.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-013",
+      "title": "Create machine state files",
+      "description": "Create .factory/state.json, journal.jsonl, requirements.json and stages.json with a schema version and no secrets.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-validate",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Machine files exist, are schema-valid and journal is append-only."
+      ],
+      "nonGoals": [
+        "No secrets in state or journal."
+      ],
+      "dependencies": [
+        "FACTORY-004"
+      ],
+      "threats": [
+        "THR-SECRET"
+      ],
+      "implementationFiles": [
+        ".factory/state.json",
+        ".factory/journal.jsonl",
+        ".factory/requirements.json",
+        ".factory/stages.json"
+      ],
+      "plannedUnitTests": [
+        "STATE_SCHEMA_INVALID check covers state schema."
+      ],
+      "plannedIntegrationTests": [
+        "Schema validation tests prove each schema rule."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        ".factory/state.json",
+        ".factory/journal.jsonl",
+        ".factory/requirements.json",
+        ".factory/stages.json"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-014",
+      "title": "Create machine schemas",
+      "description": "Create JSON schemas for requirements, stages, state and manifest under .factory/schemas/.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-validate",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "All four schema files exist and are used by the validator."
+      ],
+      "nonGoals": [
+        "No external network dependency in validation."
+      ],
+      "dependencies": [
+        "FACTORY-013"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        ".factory/schemas/requirements.schema.json",
+        ".factory/schemas/stages.schema.json",
+        ".factory/schemas/state.schema.json",
+        ".factory/schemas/manifest.schema.json"
+      ],
+      "plannedUnitTests": [
+        "Schema files are part of the frozen manifest."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        ".factory/schemas/requirements.schema.json",
+        ".factory/schemas/stages.schema.json",
+        ".factory/schemas/state.schema.json",
+        ".factory/schemas/manifest.schema.json"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-015",
+      "title": "Create deterministic mission validator",
+      "description": "Create scripts/factory/validate-mission.mjs with no network dependency that validates every required rule and emits coded errors.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-validate",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Validator detects all enumerated rule failures with meaningful error codes; CLI exits nonzero on failure."
+      ],
+      "nonGoals": [
+        "No network access; no production code changes."
+      ],
+      "dependencies": [
+        "FACTORY-013",
+        "FACTORY-014"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "scripts/factory/validate-mission.mjs",
+        "scripts/factory/validator.mjs"
+      ],
+      "plannedUnitTests": [
+        "Validator rule coverage is proven by the mutation test file."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "scripts/factory/validate-mission.mjs",
+        "scripts/factory/validator.mjs"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-016",
+      "title": "Create validator mutation tests",
+      "description": "Create tests proving every validation rule by starting with a valid fixture, mutating a field, proving failure, restoring and proving pass.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-validate",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Each validation rule has a mutation test that asserts the expected error code and message."
+      ],
+      "nonGoals": [
+        "No snapshot-only reliance; no skipped test."
+      ],
+      "dependencies": [
+        "FACTORY-015"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "scripts/factory/validator.test.ts"
+      ],
+      "plannedUnitTests": [
+        "Mutation tests prove every rule."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "scripts/factory/validator.test.ts"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-017",
+      "title": "Add validate:mission package command",
+      "description": "Add the validate:mission npm script that runs the mission validator against the repository.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-validate",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "npm run validate:mission exits zero on a valid mission and nonzero on invalid mission."
+      ],
+      "nonGoals": [
+        "No dependency added for the command."
+      ],
+      "dependencies": [
+        "FACTORY-015"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "package.json"
+      ],
+      "plannedUnitTests": [
+        "The command is covered by Stage Zero verification."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "package.json"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-018",
+      "title": "Add validator to Windows CI",
+      "description": "Run npm run validate:mission in the existing Windows CI workflow without unpinning or weakening existing actions.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-validate",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "ci-windows.yml runs the mission validator before static analysis."
+      ],
+      "nonGoals": [
+        "Existing security hardening remains unchanged; actions stay pinned."
+      ],
+      "dependencies": [
+        "FACTORY-017"
+      ],
+      "threats": [
+        "THR-CI-DRIFT"
+      ],
+      "implementationFiles": [
+        ".github/workflows/ci-windows.yml"
+      ],
+      "plannedUnitTests": [
+        "CI step presence is verified by the repo workflow."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows CI is authoritative for validator execution."
+      ],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        ".github/workflows/ci-windows.yml"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-019",
+      "title": "Freeze the mission manifest",
+      "description": "Hash frozen mission documents, machine requirements, stages and schemas into .factory/manifest.json with SHA-256 values.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-freeze",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "manifest.json authenticates every frozen file and fails when a frozen document is altered without a manifest update."
+      ],
+      "nonGoals": [
+        "Manifest must not hash itself; dynamic state and append-only journal are not hashed."
+      ],
+      "dependencies": [
+        "FACTORY-014",
+        "FACTORY-015"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        ".factory/manifest.json"
+      ],
+      "plannedUnitTests": [
+        "MANIFEST_STALE mutation test proves manifest tampering is detected."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        ".factory/manifest.json"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-020",
+      "title": "Run independent mission review",
+      "description": "Run fresh Completeness, Architecture, Security, Test Strategy, Windows and Autonomous Loop review passes and record the consolidated report.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-freeze",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "mission-review.md records reviewer passes, mutation checks, finding counts and zero Critical/High findings."
+      ],
+      "nonGoals": [
+        "Reviewer must not trust a summary as evidence."
+      ],
+      "dependencies": [
+        "FACTORY-019"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/stage-zero/mission-review.md"
+      ],
+      "plannedUnitTests": [
+        "Review mutations prove every validation rule."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Stage Zero changes no product UI.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/evidence/stage-zero/mission-review.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-021",
+      "title": "Document Soup as a future milestone",
+      "description": "Document Future Milestone Seven (Soup skill routing) but do not start it until all six backend milestones pass.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Soup is documented in the master mission and blocked in the machine state."
+      ],
+      "nonGoals": [
+        "No Soup implementation, no early start."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/01-MASTER-MISSION.md",
+        "docs/backend-factory/02-BACKEND-ROADMAP.md"
+      ],
+      "plannedUnitTests": [
+        "FUTURE_STARTED_TOO_EARLY check covers future milestones."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Documented only; any future UI change is taste-gated.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/01-MASTER-MISSION.md",
+        "docs/backend-factory/02-BACKEND-ROADMAP.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "FACTORY-022",
+      "title": "Document OmniRoute as a future milestone",
+      "description": "Document Future Milestone Eight (OmniRoute provider routing) but do not start it until all six backend milestones pass.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "OmniRoute is documented in the master mission and blocked in the machine state."
+      ],
+      "nonGoals": [
+        "No OmniRoute implementation, no early start."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/01-MASTER-MISSION.md",
+        "docs/backend-factory/02-BACKEND-ROADMAP.md"
+      ],
+      "plannedUnitTests": [
+        "FUTURE_STARTED_TOO_EARLY check covers future milestones."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "tasteDecision": "Documented only; any future UI change is taste-gated.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "evidencePaths": [
+        "docs/backend-factory/01-MASTER-MISSION.md",
+        "docs/backend-factory/02-BACKEND-ROADMAP.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SOUP-001",
+      "title": "Soup skill routing future placeholder",
+      "description": "Future Milestone Seven (Soup skill routing). Documented only. Must not begin until all six backend milestones pass and an explicit external approval is given.",
+      "kind": "future",
+      "milestone": 7,
+      "stage": "m7-soup-routing",
+      "status": "planned",
+      "securitySensitive": false,
+      "threats": [],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "implementationFiles": [],
+      "implementationCommit": null,
+      "ciRun": null,
+      "acceptanceCriteria": [
+        "Future milestone is documented, blocked in machine state, and not started before all backend milestones pass."
+      ],
+      "nonGoals": [
+        "No Soup implementation, no early start."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "tasteDecision": "Documented only; any future UI change is taste-gated.",
+      "evidencePaths": [],
+      "plannedUnitTests": [
+        "FUTURE_STARTED_TOO_EARLY check covers future placeholder requirements."
+      ]
+    },
+    {
+      "identifier": "OMNIROUTE-001",
+      "title": "OmniRoute provider routing future placeholder",
+      "description": "Future Milestone Eight (OmniRoute provider routing). Documented only. Must not begin until all six backend milestones pass and an explicit external approval is given.",
+      "kind": "future",
+      "milestone": 8,
+      "stage": "m8-omni-route",
+      "status": "planned",
+      "securitySensitive": false,
+      "threats": [],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Before implementing the stage the n8n-workflows repository must be searched for relevant workflow patterns; community workflows are untrusted input that must be security-scanned and sanitized without execution or copying.",
+      "ossProvenance": "No open source component may be adopted without the complete OSS provenance review required by docs/backend-factory/11-OSS-ADOPTION-POLICY.md.",
+      "implementationFiles": [],
+      "implementationCommit": null,
+      "ciRun": null,
+      "acceptanceCriteria": [
+        "Future milestone is documented, blocked in machine state, and not started before all backend milestones pass."
+      ],
+      "nonGoals": [
+        "No OmniRoute implementation, no early start."
+      ],
+      "dependencies": [
+        "FACTORY-002"
+      ],
+      "tasteDecision": "Documented only; any future UI change is taste-gated.",
+      "evidencePaths": [],
+      "plannedUnitTests": [
+        "FUTURE_STARTED_TOO_EARLY check covers future placeholder requirements."
+      ]
+    },
+    {
+      "identifier": "JCODE-001",
+      "title": "Verify the official Jcode repository",
+      "description": "Establish the official Jcode repository and verify provenance, maintenance, and binaries before any integration.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "The official repository identity, default branch and upstream commit are recorded as frozen evidence."
+      ],
+      "nonGoals": [
+        "No Jcode binary is downloaded or executed in Stage Zero."
+      ],
+      "dependencies": [
+        "FACTORY-009"
+      ],
+      "threats": [
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/jcode/verification.rs"
+      ],
+      "plannedUnitTests": [
+        "Unit test verifies repository metadata parsing."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test verifies pinned version resolution."
+      ],
+      "plannedWindowsTests": [
+        "Windows test collects official binary metadata."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-002",
+      "title": "Verify the Jcode license",
+      "description": "Verify the Jcode license is compatible with Coding Studio and forbidden licenses require explicit approval.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "License is recorded and an ADR is created when a forbidden license is encountered."
+      ],
+      "nonGoals": [
+        "No incompatible license may be silently accepted."
+      ],
+      "dependencies": [
+        "JCODE-001"
+      ],
+      "threats": [
+        "THR-LICENSE"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/adr/"
+      ],
+      "plannedUnitTests": [
+        "Unit test covers license classification."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-003",
+      "title": "Select a stable Jcode version and supported architectures",
+      "description": "Select a pinned stable Jcode version with documented Windows support and supported architectures.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "A pinned version and architecture matrix are documented in an ADR that includes Windows support."
+      ],
+      "nonGoals": [
+        "No mutable latest or rolling source may be used."
+      ],
+      "dependencies": [
+        "JCODE-001"
+      ],
+      "threats": [
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/adr/"
+      ],
+      "plannedUnitTests": [
+        "Unit test validates version selection constraints."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows architecture test validates supported target."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-004",
+      "title": "Machine-readable execution and structured event output",
+      "description": "Define the Jcode machine protocol: structured output, JSON-or-equivalent event protocol, headless mode, session create/resume, streaming and cancellation.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "A stable machine-readable event schema is frozen with sequence numbers and deduplication identifiers."
+      ],
+      "nonGoals": [
+        "No scraping of a visual terminal interface may be used."
+      ],
+      "dependencies": [
+        "JCODE-002"
+      ],
+      "threats": [
+        "THR-PROTOCOL-DRIFT"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/jcode/protocol.rs"
+      ],
+      "plannedUnitTests": [
+        "Event parser unit tests cover valid and malformed frames."
+      ],
+      "plannedIntegrationTests": [
+        "Protocol integration test covers session resume and streaming."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-005",
+      "title": "Jcode headless lifecycle capabilities",
+      "description": "Prove that Jcode run headless exposes session creation, resume, streaming, cancellation and approval prompts without a visual terminal.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Every lifecycle capability is represented by a fixture test and a protocol ADR."
+      ],
+      "nonGoals": [
+        "No terminal driver or screen scraping."
+      ],
+      "dependencies": [
+        "JCODE-004"
+      ],
+      "threats": [
+        "THR-PROTOCOL-DRIFT"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/jcode/lifecycle.rs"
+      ],
+      "plannedUnitTests": [
+        "Lifecycle fixture tests cover create, resume, stream and cancel."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test drives the headless run end to end."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-006",
+      "title": "Provider authentication handoff and diagnostics commands",
+      "description": "Define provider authentication handoff in the protocol and the health/doctor/version commands.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Authentication handoff and diagnostics command behaviors are documented with exit code and stream guarantees."
+      ],
+      "nonGoals": [
+        "No credentials are stored by the protocol layer."
+      ],
+      "dependencies": [
+        "JCODE-005"
+      ],
+      "threats": [
+        "THR-AUTH-HANDOFF"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/jcode/auth.rs"
+      ],
+      "plannedUnitTests": [
+        "Unit tests cover auth handoff state transitions."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test verifies health and version output."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-007",
+      "title": "Configuration locations and output guarantees",
+      "description": "Document and validate configuration locations and guarantee exit codes, stdout and stderr contracts.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Configuration locations are documented and stdout/stderr/exit-code guarantees are enforced by tests."
+      ],
+      "nonGoals": [
+        "No shell interpolation of Jcode output."
+      ],
+      "dependencies": [
+        "JCODE-004"
+      ],
+      "threats": [
+        "THR-PROTOCOL-DRIFT",
+        "THR-OUTPUT-LEAK"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/jcode/config.rs"
+      ],
+      "plannedUnitTests": [
+        "Config resolution unit tests cover platform locations."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows config path tests."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-008",
+      "title": "Version policy and no terminal scraping",
+      "description": "Define supported and unsupported version behavior and explicitly prohibit scraping a visual terminal interface.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Supported-version policy and non-scraping rule are documented and validator-enforced."
+      ],
+      "nonGoals": [
+        "No attempt to parse a visual terminal matrix."
+      ],
+      "dependencies": [
+        "JCODE-003"
+      ],
+      "threats": [
+        "THR-PROTOCOL-DRIFT"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/adr/"
+      ],
+      "plannedUnitTests": [
+        "Unit test classifies supported and unsupported versions."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "JCODE-009",
+      "title": "Compatibility fixtures and Windows evidence",
+      "description": "Create compatibility test fixtures, a compatibility ADR and Windows evidence that the machine protocol runs on Windows.",
+      "kind": "implementation",
+      "milestone": 1,
+      "stage": "m1-jcode-compat",
+      "status": "planned",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Compatibility fixtures, ADR and Windows evidence exist and are referenced from the acceptance matrix."
+      ],
+      "nonGoals": [
+        "No real Windows hardware evidence may be fabricated."
+      ],
+      "dependencies": [
+        "JCODE-008"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "src-tauri/tests/jcode_compat.rs",
+        "docs/backend-factory/adr/"
+      ],
+      "plannedUnitTests": [
+        "Fixture parser unit tests pass."
+      ],
+      "plannedIntegrationTests": [
+        "Compatibility test runs against fixture streams."
+      ],
+      "plannedWindowsTests": [
+        "Windows evidence recorded as a manual or CI gate."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "INSTALL-001",
+      "title": "Managed Jcode binary discovery",
+      "description": "Discover a Jcode binary from explicit paths and pinned versions without uncontrolled PATH mutation.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Discovery prefers an explicit configured executable path and records the resolved pinned version."
+      ],
+      "nonGoals": [
+        "No administrator elevation and no uncontrolled PATH mutation."
+      ],
+      "dependencies": [
+        "JCODE-009"
+      ],
+      "threats": [
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/install/discovery.rs"
+      ],
+      "plannedUnitTests": [
+        "Discovery unit tests cover precedence and absence."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows PATH and per-user install discovery tests."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "INSTALL-002",
+      "title": "Trusted download and atomic installation",
+      "description": "Install Jcode from a trusted origin with checksum verification, atomic installation, temporary downloads, interrupted-download recovery and rollback.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Checksum mismatch aborts; interrupted downloads are recoverable; failed installs roll back to the previous version."
+      ],
+      "nonGoals": [
+        "No mutable binary URLs; no piping remote scripts into a shell."
+      ],
+      "dependencies": [
+        "INSTALL-001"
+      ],
+      "threats": [
+        "THR-SUPPLY-CHAIN",
+        "THR-SECRET"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/install/installer.rs"
+      ],
+      "plannedUnitTests": [
+        "Installer unit tests cover checksum, atomicity and rollback."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test simulates interrupted download recovery."
+      ],
+      "plannedWindowsTests": [
+        "Windows install/uninstall recovery test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "INSTALL-003",
+      "title": "Architecture detection and version compatibility",
+      "description": "Detect the target architecture and verify version compatibility before install or execution.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Unsupported architectures and incompatible versions fail with actionable diagnostics."
+      ],
+      "nonGoals": [
+        "No silent fallback to an untrusted source."
+      ],
+      "dependencies": [
+        "INSTALL-002"
+      ],
+      "threats": [
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/install/compat.rs"
+      ],
+      "plannedUnitTests": [
+        "Architecture detection unit tests cover supported targets."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows x64 and arm64 detection tests."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SUPERVISOR-001",
+      "title": "Safe process spawning",
+      "description": "Spawn Jcode without shell interpolation, with separated arguments and an environment allowlist.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "The supervisor never invokes a shell for user input and passes arguments as separate strings; the child environment is allowlisted."
+      ],
+      "nonGoals": [
+        "No shell interpolation."
+      ],
+      "dependencies": [
+        "INSTALL-003"
+      ],
+      "threats": [
+        "THR-INJECTION",
+        "THR-PROCESS-ESCAPE"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/supervisor/spawn.rs"
+      ],
+      "plannedUnitTests": [
+        "Spawn unit tests assert argument separation and env allowlist."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SUPERVISOR-002",
+      "title": "Working directory and path validation",
+      "description": "Validate working directories and canonical workspace paths and protect against symbolic-link or junction escape.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "The supervisor resolves canonical paths and rejects escapes; Windows junctions are denied by default."
+      ],
+      "nonGoals": [
+        "No follower of untrusted symlinks into arbitrary directories."
+      ],
+      "dependencies": [
+        "SUPERVISOR-001"
+      ],
+      "threats": [
+        "THR-PATH-TRAVERSAL",
+        "THR-PROCESS-ESCAPE"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/supervisor/paths.rs"
+      ],
+      "plannedUnitTests": [
+        "Path validation unit tests cover canonicalization and junction escape."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows junction escape test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SUPERVISOR-003",
+      "title": "Streaming with bounded buffers and timeout",
+      "description": "Stream stdout and stderr with bounded buffers, backpressure and a hard timeout.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Output buffers are bounded, backpressure is applied and runs time out rather than hanging."
+      ],
+      "nonGoals": [
+        "No unbounded accumulation."
+      ],
+      "dependencies": [
+        "SUPERVISOR-001"
+      ],
+      "threats": [
+        "THR-RESOURCE-EXHAUSTION"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/supervisor/stream.rs"
+      ],
+      "plannedUnitTests": [
+        "Stream unit tests cover bounded buffers and backpressure."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test covers timeout."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SUPERVISOR-004",
+      "title": "Graceful cancellation and forced termination",
+      "description": "Cancel runs gracefully and fall back to forced termination including Windows process-tree termination.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Cancellation first asks for graceful exit, then terminates the whole process tree; Windows tree termination is covered."
+      ],
+      "nonGoals": [
+        "No orphaned children."
+      ],
+      "dependencies": [
+        "SUPERVISOR-003"
+      ],
+      "threats": [
+        "THR-PROCESS-ESCAPE",
+        "THR-RESOURCE-EXHAUSTION"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/supervisor/cancel.rs"
+      ],
+      "plannedUnitTests": [
+        "Cancellation unit tests cover graceful and forced paths."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test verifies no orphan remains."
+      ],
+      "plannedWindowsTests": [
+        "Windows process-tree termination test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SUPERVISOR-005",
+      "title": "Crash detection, orphan cleanup, restart and diagnostics",
+      "description": "Detect crashes, clean orphans, apply a restart policy and emit structured diagnostics with secret redaction.",
+      "kind": "implementation",
+      "milestone": 2,
+      "stage": "m2-install-supervisor",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Crashes are detected, orphans are cleaned, restart policy is bounded and diagnostics redact secrets."
+      ],
+      "nonGoals": [
+        "No credential may appear in diagnostics."
+      ],
+      "dependencies": [
+        "SUPERVISOR-004"
+      ],
+      "threats": [
+        "THR-SECRET",
+        "THR-ORPHAN"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/supervisor/diagnostics.rs"
+      ],
+      "plannedUnitTests": [
+        "Diagnostics redaction unit tests cover secret patterns."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows crash and orphan cleanup test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "IPC-001",
+      "title": "Provider-neutral typed Tauri commands",
+      "description": "Expose provider-neutral Tauri commands with typed Rust request and response payloads and typed TypeScript payloads.",
+      "kind": "implementation",
+      "milestone": 3,
+      "stage": "m3-tauri-ipc",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Every Tauri command has typed Rust and TypeScript payloads and provider-neutral names."
+      ],
+      "nonGoals": [
+        "No provider-specific command may enter IPC."
+      ],
+      "dependencies": [
+        "SUPERVISOR-005"
+      ],
+      "threats": [
+        "THR-PROTOCOL-DRIFT"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/ipc/commands.rs",
+        "src/services/runtime/bridge.ts"
+      ],
+      "plannedUnitTests": [
+        "Payload validation unit tests exercise typed contracts."
+      ],
+      "plannedIntegrationTests": [
+        "IPC integration test exercises commands through the bridge."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "IPC-002",
+      "title": "Stable error codes and validation across IPC",
+      "description": "Use stable error codes, validate on both Rust and TypeScript sides and never panic across IPC.",
+      "kind": "implementation",
+      "milestone": 3,
+      "stage": "m3-tauri-ipc",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Error codes are stable and documented; invalid payloads return coded errors; no panic reaches JavaScript."
+      ],
+      "nonGoals": [
+        "No silent fallback for an unknown error."
+      ],
+      "dependencies": [
+        "IPC-001"
+      ],
+      "threats": [
+        "THR-PROTOCOL-DRIFT"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/ipc/error.rs",
+        "src/services/runtime/schemas.ts"
+      ],
+      "plannedUnitTests": [
+        "Error code unit tests cover every defined code."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test sends malformed payloads."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "IPC-003",
+      "title": "Bounded queues and listener lifecycle",
+      "description": "Bound event queues, clean up listeners and remain StrictMode safe.",
+      "kind": "implementation",
+      "milestone": 3,
+      "stage": "m3-tauri-ipc",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Event queues are bounded, listeners are removed on teardown and repeated mounting does not leak."
+      ],
+      "nonGoals": [
+        "No unbounded event accumulation."
+      ],
+      "dependencies": [
+        "IPC-002"
+      ],
+      "threats": [
+        "THR-RESOURCE-EXHAUSTION"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/ipc/queue.rs",
+        "src/stores/runtime.ts"
+      ],
+      "plannedUnitTests": [
+        "Queue and listener unit tests cover bounds and cleanup."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "IPC-004",
+      "title": "Runtime health and capability discovery",
+      "description": "Detect runtime health, capabilities, version and installation state via IPC.",
+      "kind": "implementation",
+      "milestone": 3,
+      "stage": "m3-tauri-ipc",
+      "status": "planned",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "The UI receives typed runtime health, capability and version state without provider assumptions."
+      ],
+      "nonGoals": [
+        "No runtime-specific UI logic."
+      ],
+      "dependencies": [
+        "IPC-003"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "src-tauri/src/ipc/runtime_info.rs",
+        "src/services/runtime/types.ts"
+      ],
+      "plannedUnitTests": [
+        "Runtime info mapper unit tests cover states."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test verifies detection through the bridge."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "IPC-005",
+      "title": "Runtime operations over IPC",
+      "description": "Expose runtime start/shutdown, session create/resume, send message, cancel run, resolve approval and diagnostics.",
+      "kind": "implementation",
+      "milestone": 3,
+      "stage": "m3-tauri-ipc",
+      "status": "planned",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "All runtime operations are available as typed commands and backed by tests."
+      ],
+      "nonGoals": [
+        "No direct UI access to the process supervisor."
+      ],
+      "dependencies": [
+        "IPC-002"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "src-tauri/src/ipc/operations.rs"
+      ],
+      "plannedUnitTests": [
+        "Operation request/response unit tests cover every command."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test covers the operation sequence."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "IPC-006",
+      "title": "Retain mock runtime and independent CI",
+      "description": "Keep MockStudioRuntime for browser preview and choose RealJcodeRuntime only where real Jcode is installed; CI must not require a real Jcode.",
+      "kind": "implementation",
+      "milestone": 3,
+      "stage": "m3-tauri-ipc",
+      "status": "planned",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Mock runtime remains the browser preview default; CI tests pass without a real Jcode installation."
+      ],
+      "nonGoals": [
+        "No CI dependency on a real Jcode binary."
+      ],
+      "dependencies": [
+        "IPC-004"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "src/services/runtime/index.ts",
+        "src/services/runtime/mockRuntime.ts"
+      ],
+      "plannedUnitTests": [
+        "Selection unit tests cover mock default and real selection."
+      ],
+      "plannedIntegrationTests": [
+        "Mock transport integration tests remain green."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "EVENT-001",
+      "title": "Normalize Jcode events with a versioned schema",
+      "description": "Normalize into a versioned event schema with ordering and sequence numbers and deduplication.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Every event has a schema version, sequence number and deduplication key; malformed events are rejected."
+      ],
+      "nonGoals": [
+        "No raw Jcode event reaches the UI."
+      ],
+      "dependencies": [
+        "IPC-005"
+      ],
+      "threats": [
+        "THR-EVENT-DRIFT"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/events/normalize.rs",
+        "src/services/runtime/schemas.ts"
+      ],
+      "plannedUnitTests": [
+        "Normalization unit tests cover ordering, sequence and dedupe."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "EVENT-002",
+      "title": "Event and tool correlation",
+      "description": "Correlate events by session, run, task and tool call and handle malformed, unknown, partial frame and partial message events.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Correlation fields are required and partial or unknown events are classified safely."
+      ],
+      "nonGoals": [
+        "No unvalidated event data may be emitted."
+      ],
+      "dependencies": [
+        "EVENT-001"
+      ],
+      "threats": [
+        "THR-EVENT-DRIFT"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/events/correlation.rs"
+      ],
+      "plannedUnitTests": [
+        "Correlation unit tests cover malformed and unknown events."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows partial frame test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "EVENT-003",
+      "title": "Duplicate completion, stale events and isolation",
+      "description": "Prevent duplicate completion and stale event effects and guarantee cross-session and cross-run isolation.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Duplicate completion is idempotent; stale events are dropped; no event leaks across sessions or runs."
+      ],
+      "nonGoals": [
+        "No cross-run correlation leakage."
+      ],
+      "dependencies": [
+        "EVENT-002"
+      ],
+      "threats": [
+        "THR-EVENT-DRIFT"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/events/isolation.rs"
+      ],
+      "plannedUnitTests": [
+        "Isolation unit tests cover duplicate and stale events."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SESSION-001",
+      "title": "Session resume and interrupted session handling",
+      "description": "Resume sessions and preserve partial responses across application shutdown, runtime restart and Jcode crash.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Interrupted sessions resume without duplicate messages and partial responses are preserved or clearly marked."
+      ],
+      "nonGoals": [
+        "Recovery must never discard uncommitted user changes."
+      ],
+      "dependencies": [
+        "EVENT-003"
+      ],
+      "threats": [
+        "THR-DATA-LOSS"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/sessions/resume.rs",
+        "src/services/sessionStorage.ts"
+      ],
+      "plannedUnitTests": [
+        "Session resume unit tests cover partial state."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test simulates crash and restart."
+      ],
+      "plannedWindowsTests": [
+        "Windows restart and shutdown test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "CANCEL-001",
+      "title": "Cancellation across run phases",
+      "description": "Cancel before the first delta, during streaming, during a tool call and while an approval is pending.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Every cancellation phase is covered by a deterministic test and cancels the underlying Jcode run."
+      ],
+      "nonGoals": [
+        "No cancellation that leaves a run running."
+      ],
+      "dependencies": [
+        "SUPERVISOR-004"
+      ],
+      "threats": [
+        "THR-ORPHAN"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/cancel/cancel.rs"
+      ],
+      "plannedUnitTests": [
+        "Cancellation phase unit tests cover all four phases."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test covers cancellation during streaming."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "APPROVAL-001",
+      "title": "Backend-enforced approvals and permissions",
+      "description": "Enforce approvals and permissions in the backend with safe defaults.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Approval requests are backend-enforced; default permissions are least privilege."
+      ],
+      "nonGoals": [
+        "No frontend-only approval gate."
+      ],
+      "dependencies": [
+        "EVENT-002"
+      ],
+      "threats": [
+        "THR-APPROVAL-BYPASS"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/approval/policy.rs",
+        "src/store/permissions.ts"
+      ],
+      "plannedUnitTests": [
+        "Approval policy unit tests cover safe defaults."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "APPROVAL-002",
+      "title": "Stale and duplicate approval rejection",
+      "description": "Reject stale and duplicate approval resolutions deterministically.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "A stale or duplicate approval resolution is rejected with a coded error and no action runs twice."
+      ],
+      "nonGoals": [
+        "No out-of-order approval may apply."
+      ],
+      "dependencies": [
+        "APPROVAL-001"
+      ],
+      "threats": [
+        "THR-APPROVAL-BYPASS"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/approval/stale.rs"
+      ],
+      "plannedUnitTests": [
+        "Stale approval unit tests cover duplicate and expired resolutions."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "RECOVERY-001",
+      "title": "Recovery state machine and deterministic tests",
+      "description": "Define a recovery state machine for application shutdown, Jcode crash, Coding Studio restart and runtime restart.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Recovery state machine is deterministic and covered by deterministic recovery tests."
+      ],
+      "nonGoals": [
+        "No nondeterministic recovery ordering."
+      ],
+      "dependencies": [
+        "SESSION-001",
+        "CANCEL-001"
+      ],
+      "threats": [
+        "THR-DATA-LOSS"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/recovery/state.rs"
+      ],
+      "plannedUnitTests": [
+        "Recovery state machine unit tests cover every transition."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test drives recovery scenarios."
+      ],
+      "plannedWindowsTests": [
+        "Windows lifecycle recovery test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "RECOVERY-002",
+      "title": "Runtime and application lifecycle recovery",
+      "description": "Handle runtime restart, Jcode crash and application shutdown without losing approved or user-visible work.",
+      "kind": "implementation",
+      "milestone": 4,
+      "stage": "m4-events-lifecycle",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Recovery evidence shows no loss of uncommitted user changes and a safe resume path."
+      ],
+      "nonGoals": [
+        "Recovery must never discard uncommitted user changes."
+      ],
+      "dependencies": [
+        "RECOVERY-001"
+      ],
+      "threats": [
+        "THR-DATA-LOSS"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/recovery/lifecycle.rs"
+      ],
+      "plannedUnitTests": [
+        "Lifecycle recovery unit tests cover crash and restart."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test covers shutdown persistence."
+      ],
+      "plannedWindowsTests": [
+        "Windows lifecycle test."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "PROVIDER-001",
+      "title": "Provider capability and model discovery",
+      "description": "Perform provider capability discovery, availability checks, model discovery and provider diagnostics through Jcode.",
+      "kind": "implementation",
+      "milestone": 5,
+      "stage": "m5-provider-onboarding",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Provider and model capabilities are discovered through Jcode and surfaced as typed descriptors."
+      ],
+      "nonGoals": [
+        "No second provider client where Jcode already supports it."
+      ],
+      "dependencies": [
+        "IPC-005"
+      ],
+      "threats": [
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/providers/discovery.rs"
+      ],
+      "plannedUnitTests": [
+        "Discovery unit tests cover capabilities and diagnostics."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "PROVIDER-002",
+      "title": "Fake provider testing and no duplicate clients",
+      "description": "Use a fake-provider test harness and avoid an independent duplicate provider client when Jcode already supports it.",
+      "kind": "implementation",
+      "milestone": 5,
+      "stage": "m5-provider-onboarding",
+      "status": "planned",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Fake provider testing covers provider behaviors; no duplicate client exists in the runtime."
+      ],
+      "nonGoals": [
+        "No bypass of the Jcode provider boundary."
+      ],
+      "dependencies": [
+        "PROVIDER-001"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "src-tauri/tests/fake_provider.rs",
+        "src/services/runtime/fixtures.ts"
+      ],
+      "plannedUnitTests": [
+        "Fake provider unit tests cover success and failure."
+      ],
+      "plannedIntegrationTests": [
+        "Fake provider integration test covers the full flow."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "PROVIDER-003",
+      "title": "Research and select first provider order",
+      "description": "Research provider order based on Jcode protocol stability, testability and authentication support instead of assuming it.",
+      "kind": "implementation",
+      "milestone": 5,
+      "stage": "m5-provider-onboarding",
+      "status": "planned",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Provider choice is backed by an accepted research note that records the first provider selection criterion."
+      ],
+      "nonGoals": [
+        "No provider is enabled before the selection evidence is reviewed."
+      ],
+      "dependencies": [
+        "JCODE-009"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/adr/"
+      ],
+      "plannedUnitTests": [
+        "Selection test validates the decision gate."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "AUTH-001",
+      "title": "Officially supported authentication modes",
+      "description": "Support browser authentication handoff, device-code handoff and headless authentication with success, cancellation, expiry and failure paths.",
+      "kind": "implementation",
+      "milestone": 5,
+      "stage": "m5-provider-onboarding",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Each supported authentication mode has a deterministic test and a documented error result."
+      ],
+      "nonGoals": [
+        "No storage of raw tokens outside the backend handoff."
+      ],
+      "dependencies": [
+        "PROVIDER-001"
+      ],
+      "threats": [
+        "THR-AUTH-HANDOFF",
+        "THR-SECRET"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/auth/handoff.rs"
+      ],
+      "plannedUnitTests": [
+        "Authentication state machine unit tests cover all outcomes."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test verifies device-code handoff."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "AUTH-002",
+      "title": "Logout handoff and unavailable provider handling",
+      "description": "Handle logout handoff and unavailable provider states without leaving stale credentials.",
+      "kind": "implementation",
+      "milestone": 5,
+      "stage": "m5-provider-onboarding",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Logout clears backend-held auth state; unavailable providers are reported with no partial UI state."
+      ],
+      "nonGoals": [
+        "No credentials in browser events."
+      ],
+      "dependencies": [
+        "AUTH-001"
+      ],
+      "threats": [
+        "THR-AUTH-HANDOFF"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/auth/logout.rs"
+      ],
+      "plannedUnitTests": [
+        "Logout unit tests cover clearing and unavailable states."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "AUTH-003",
+      "title": "Credential hygiene across the runtime",
+      "description": "Keep credentials out of React state, localStorage, Tauri events, diagnostics and CI logs.",
+      "kind": "implementation",
+      "milestone": 5,
+      "stage": "m5-provider-onboarding",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Credential leak assertions pass across all transport layers and diagnostics."
+      ],
+      "nonGoals": [
+        "No raw token in React, localStorage, events, diagnostics or CI."
+      ],
+      "dependencies": [
+        "AUTH-001"
+      ],
+      "threats": [
+        "THR-SECRET"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/auth/redact.rs",
+        "src/services/runtime/schemas.ts"
+      ],
+      "plannedUnitTests": [
+        "Redaction unit tests cover every transport sink."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test asserts no credential in event payloads."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "AUTH-004",
+      "title": "Real Windows validation as a manual release gate",
+      "description": "Document real Windows validation as a manual release gate for provider onboarding.",
+      "kind": "implementation",
+      "milestone": 5,
+      "stage": "m5-provider-onboarding",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "A manual release checklist records real Windows validation before providers ship."
+      ],
+      "nonGoals": [
+        "No claim of real Windows validation without evidence."
+      ],
+      "dependencies": [
+        "AUTH-003"
+      ],
+      "threats": [
+        "THR-CI-DRIFT"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/windows/"
+      ],
+      "plannedUnitTests": [],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows manual validation gate documented in the acceptance matrix."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "RUFLO-001",
+      "title": "Verify Ruflo repository and license",
+      "description": "Verify the official Ruflo repository, license and stable version and define the supported Jcode integration boundary.",
+      "kind": "implementation",
+      "milestone": 6,
+      "stage": "m6-ruflo-orchestration",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Ruflo provenance, license and supported Jcode integration boundary are recorded in frozen evidence."
+      ],
+      "nonGoals": [
+        "Ruflo remains optional; ordinary Jcode mode must not be blocked."
+      ],
+      "dependencies": [
+        "FACTORY-006"
+      ],
+      "threats": [
+        "THR-LICENSE",
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/ruflo/"
+      ],
+      "plannedUnitTests": [
+        "Ruflo metadata parser unit tests."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "RUFLO-002",
+      "title": "Ruflo protocol and managed install",
+      "description": "Define supported MCP-or-equivalent protocol, prohibition on terminal scraping, managed installation, pinned version and compatibility policy.",
+      "kind": "implementation",
+      "milestone": 6,
+      "stage": "m6-ruflo-orchestration",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Ruflo protocol boundary and install policy are documented; no terminal scraping is permitted."
+      ],
+      "nonGoals": [
+        "No mutable Ruflo releases or remote scripts."
+      ],
+      "dependencies": [
+        "RUFLO-001"
+      ],
+      "threats": [
+        "THR-PROTOCOL-DRIFT",
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/ruflo/protocol.rs"
+      ],
+      "plannedUnitTests": [
+        "Ruflo protocol schema unit tests."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "RUFLO-003",
+      "title": "Ruflo agent roles, task graph and swarm lifecycle",
+      "description": "Support agent roles, task graph, shared memory and swarm lifecycle with concurrency limits and cancellation.",
+      "kind": "implementation",
+      "milestone": 6,
+      "stage": "m6-ruflo-orchestration",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Agent roles and task graph execute within discrete concurrency limits and cancellable swarm runs."
+      ],
+      "nonGoals": [
+        "No unbounded agent swarm."
+      ],
+      "dependencies": [
+        "RUFLO-002"
+      ],
+      "threats": [
+        "THR-RESOURCE-EXHAUSTION"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/ruflo/orchestrator.rs"
+      ],
+      "plannedUnitTests": [
+        "Orchestrator unit tests cover roles, graph and cancellation."
+      ],
+      "plannedIntegrationTests": [
+        "Swarm lifecycle integration test."
+      ],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "RUFLO-004",
+      "title": "Ruflo failure, cost and audit controls",
+      "description": "Handle worker crash and partial failure with orchestration recovery, provider cost controls, resource controls, audit trail and approval boundary.",
+      "kind": "implementation",
+      "milestone": 6,
+      "stage": "m6-ruflo-orchestration",
+      "status": "planned",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Partial failure recovers, cost and resource controls are bounded and an audit trail records orchestration decisions."
+      ],
+      "nonGoals": [
+        "No uncontrolled cost or resource use."
+      ],
+      "dependencies": [
+        "RUFLO-003"
+      ],
+      "threats": [
+        "THR-DATA-LOSS",
+        "THR-RESOURCE-EXHAUSTION"
+      ],
+      "implementationFiles": [
+        "src-tauri/src/ruflo/recovery.rs",
+        "src-tauri/src/ruflo/audit.rs"
+      ],
+      "plannedUnitTests": [
+        "Recovery and audit unit tests cover partial failure."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "RUFLO-005",
+      "title": "Optional Ruflo feature flag and safe fallback",
+      "description": "Keep Ruflo behind an optional feature flag with normal Jcode fallback and default limits suitable for sixteen gigabytes of system memory.",
+      "kind": "implementation",
+      "milestone": 6,
+      "stage": "m6-ruflo-orchestration",
+      "status": "planned",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Ruflo is disabled by default, falls back to normal Jcode mode and uses default limits safe for 16 GiB systems."
+      ],
+      "nonGoals": [
+        "Ruflo failure must never block ordinary Jcode mode."
+      ],
+      "dependencies": [
+        "RUFLO-004"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "src-tauri/src/ruflo/feature.rs"
+      ],
+      "plannedUnitTests": [
+        "Feature flag unit tests cover enabled, disabled and fallback."
+      ],
+      "plannedIntegrationTests": [
+        "Integration test proves Jcode mode works without Ruflo."
+      ],
+      "plannedWindowsTests": [
+        "Windows validation test with 16 GiB defaults."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SECURITY-001",
+      "title": "Cross-cutting secret redaction and hygiene policy",
+      "description": "Require redaction of secrets across logs, events, Git and CI and forbid committing credentials.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Secret-redaction assertions exist across diagnostics, IPC, CI and docs."
+      ],
+      "nonGoals": [
+        "No credentials committed or logged."
+      ],
+      "dependencies": [
+        "FACTORY-015"
+      ],
+      "threats": [
+        "THR-SECRET"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/08-THREAT-MODEL.md"
+      ],
+      "plannedUnitTests": [
+        "Redaction policy tests."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [
+        "docs/backend-factory/08-THREAT-MODEL.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "SECURITY-002",
+      "title": "Cross-cutting open source dependency controls",
+      "description": "Forbid remote script piping, unknown installers, mutable latest references, unpinned actions, unattributed code and incompatible licenses.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "The OSS policy forbids each listed practice and requires the review fields."
+      ],
+      "nonGoals": [
+        "No AGPL, BUSL or source-available license without explicit approval."
+      ],
+      "dependencies": [
+        "FACTORY-008"
+      ],
+      "threats": [
+        "THR-OSS-PROVENANCE",
+        "THR-SUPPLY-CHAIN"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md"
+      ],
+      "plannedUnitTests": [
+        "Policy tests."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "TEST-001",
+      "title": "Regression-red proof test discipline",
+      "description": "Require a regression test proven red against each defect and forbid weakened or deleted tests.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Every real defect has a regression test proven red before fix."
+      ],
+      "nonGoals": [
+        "No timeouts increased without evidence; no weakened assertions; no deleted failing tests."
+      ],
+      "dependencies": [
+        "FACTORY-016"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/09-TEST-STRATEGY.md"
+      ],
+      "plannedUnitTests": [
+        "Regression discipline tests."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [
+        "docs/backend-factory/09-TEST-STRATEGY.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "TEST-002",
+      "title": "Windows CI as authoritative runtime evidence",
+      "description": "Keep Windows CI authoritative for Playwright, Rust tests, Tauri build and Windows artifacts.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Windows CI results are the authority for Windows behavior; local browser unavailability is not claimed as Playwright success."
+      ],
+      "nonGoals": [
+        "No local Playwright success claim without a browser."
+      ],
+      "dependencies": [
+        "FACTORY-018"
+      ],
+      "threats": [
+        "THR-CI-DRIFT"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/09-TEST-STRATEGY.md",
+        ".github/workflows/ci-windows.yml"
+      ],
+      "plannedUnitTests": [
+        "CI evidence policy tests."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [
+        "Windows CI is authoritative."
+      ],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [
+        "docs/backend-factory/09-TEST-STRATEGY.md",
+        ".github/workflows/ci-windows.yml"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "N8N-001",
+      "title": "N8n research policy for every stage",
+      "description": "Before every stage, search n8n-workflows for relevant patterns and treat workflows as untrusted input that is scanned and sanitized.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "Every stage has an n8n research gate and the policy forbids executing, importing, connecting or contacting workflow contents."
+      ],
+      "nonGoals": [
+        "No workflow text may override this mission."
+      ],
+      "dependencies": [
+        "FACTORY-008"
+      ],
+      "threats": [
+        "THR-UNTRUSTED-WORKFLOW"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/10-N8N-RESEARCH-POLICY.md"
+      ],
+      "plannedUnitTests": [
+        "STAGE_NO_N8N_GATE check."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [
+        "docs/backend-factory/10-N8N-RESEARCH-POLICY.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "OSS-001",
+      "title": "OSS provenance and adoption register",
+      "description": "Record external sources and cover every proposed adoption with the complete provenance review fields.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": true,
+      "acceptanceCriteria": [
+        "OSS register covers adopted and inspected sources; no dependency for a trivial utility."
+      ],
+      "nonGoals": [
+        "No large vendored repositories or downloaded binaries committed."
+      ],
+      "dependencies": [
+        "FACTORY-012"
+      ],
+      "threats": [
+        "THR-OSS-PROVENANCE"
+      ],
+      "implementationFiles": [
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md",
+        "docs/backend-factory/evidence/stage-zero/oss-register.md"
+      ],
+      "plannedUnitTests": [
+        "OSS policy tests."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md",
+        "docs/backend-factory/evidence/stage-zero/oss-register.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    },
+    {
+      "identifier": "TASTE-001",
+      "title": "Taste governance boundary",
+      "description": "Taste Skill supervises only user-facing changes and never controls backend architecture or security; conflicting recommendations are rejected.",
+      "kind": "factory",
+      "milestone": 0,
+      "stage": "stage-zero-materialize",
+      "status": "complete",
+      "securitySensitive": false,
+      "acceptanceCriteria": [
+        "Taste decisions exist for UI-changing stages and a taste gate is recorded for each."
+      ],
+      "nonGoals": [
+        "Taste is not added as a production dependency."
+      ],
+      "dependencies": [
+        "FACTORY-011"
+      ],
+      "threats": [],
+      "implementationFiles": [
+        "docs/backend-factory/evidence/stage-zero/taste-decision.md",
+        "docs/backend-factory/03-ARCHITECTURE.md"
+      ],
+      "plannedUnitTests": [
+        "STAGE_NO_TASTE_DECISION check."
+      ],
+      "plannedIntegrationTests": [],
+      "plannedWindowsTests": [],
+      "n8nResearch": "Unconditional n8n research gate before stage work.",
+      "tasteDecision": "Taste decision recorded in stage metadata.",
+      "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
+      "evidencePaths": [
+        "docs/backend-factory/evidence/stage-zero/taste-decision.md",
+        "docs/backend-factory/03-ARCHITECTURE.md"
+      ],
+      "implementationCommit": null,
+      "ciRun": null
+    }
+  ]
+}
