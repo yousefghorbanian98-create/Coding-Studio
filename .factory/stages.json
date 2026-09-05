@@ -13,7 +13,7 @@
           "id": "stage-zero-materialize",
           "name": "Materialize mission and evidence",
           "milestone": 0,
-          "status": "active",
+          "status": "complete",
           "dependsOn": [],
           "n8nResearchGate": true,
           "changesUserFacingUi": false,
@@ -59,7 +59,7 @@
           "id": "stage-zero-validate",
           "name": "Validate mission deterministically",
           "milestone": 0,
-          "status": "active",
+          "status": "complete",
           "dependsOn": [
             "stage-zero-materialize"
           ],

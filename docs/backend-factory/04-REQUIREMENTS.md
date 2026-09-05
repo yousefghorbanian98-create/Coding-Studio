@@ -12,35 +12,35 @@ Total: 75 requirements.
 
 | ID | Title | Milestone | Stage | Status | Kind |
 | --- | --- | --- | --- | --- | --- |
-| FACTORY-001 | Materialize the verbatim original user directive | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-002 | Materialize the complete master mission | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-003 | Materialize roadmap and architecture documents | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-004 | Materialize requirements, acceptance and traceability documents | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-005 | Materialize state machine, self-heal and recovery documents | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-006 | Materialize provider and Ruflo plans | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-007 | Materialize threat model and test strategy | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-008 | Materialize research and adoption policies | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-009 | Produce Finn-loop research evidence | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-010 | Inspect relevant n8n workflows safely | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-011 | Record Taste Skill decision | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-012 | Record external source register | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-013 | Create machine state files | M0 | stage-zero-validate | planned | factory |
-| FACTORY-014 | Create machine schemas | M0 | stage-zero-validate | planned | factory |
-| FACTORY-015 | Create deterministic mission validator | M0 | stage-zero-validate | planned | factory |
-| FACTORY-016 | Create validator mutation tests | M0 | stage-zero-validate | planned | factory |
-| FACTORY-017 | Add validate:mission package command | M0 | stage-zero-validate | planned | factory |
-| FACTORY-018 | Add validator to Windows CI | M0 | stage-zero-validate | planned | factory |
-| FACTORY-019 | Freeze the mission manifest | M0 | stage-zero-freeze | planned | factory |
-| FACTORY-020 | Run independent mission review | M0 | stage-zero-freeze | planned | factory |
-| FACTORY-021 | Document Soup as a future milestone | M0 | stage-zero-materialize | planned | factory |
-| FACTORY-022 | Document OmniRoute as a future milestone | M0 | stage-zero-materialize | planned | factory |
-| N8N-001 | N8n research policy for every stage | M0 | stage-zero-materialize | planned | factory |
-| OSS-001 | OSS provenance and adoption register | M0 | stage-zero-materialize | planned | factory |
-| SECURITY-001 | Cross-cutting secret redaction and hygiene policy | M0 | stage-zero-materialize | planned | factory |
-| SECURITY-002 | Cross-cutting open source dependency controls | M0 | stage-zero-materialize | planned | factory |
-| TASTE-001 | Taste governance boundary | M0 | stage-zero-materialize | planned | factory |
-| TEST-001 | Regression-red proof test discipline | M0 | stage-zero-materialize | planned | factory |
-| TEST-002 | Windows CI as authoritative runtime evidence | M0 | stage-zero-materialize | planned | factory |
+| FACTORY-001 | Materialize the verbatim original user directive | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-002 | Materialize the complete master mission | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-003 | Materialize roadmap and architecture documents | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-004 | Materialize requirements, acceptance and traceability documents | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-005 | Materialize state machine, self-heal and recovery documents | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-006 | Materialize provider and Ruflo plans | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-007 | Materialize threat model and test strategy | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-008 | Materialize research and adoption policies | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-009 | Produce Finn-loop research evidence | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-010 | Inspect relevant n8n workflows safely | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-011 | Record Taste Skill decision | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-012 | Record external source register | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-013 | Create machine state files | M0 | stage-zero-validate | complete | factory |
+| FACTORY-014 | Create machine schemas | M0 | stage-zero-validate | complete | factory |
+| FACTORY-015 | Create deterministic mission validator | M0 | stage-zero-validate | complete | factory |
+| FACTORY-016 | Create validator mutation tests | M0 | stage-zero-validate | complete | factory |
+| FACTORY-017 | Add validate:mission package command | M0 | stage-zero-validate | complete | factory |
+| FACTORY-018 | Add validator to Windows CI | M0 | stage-zero-validate | complete | factory |
+| FACTORY-019 | Freeze the mission manifest | M0 | stage-zero-freeze | complete | factory |
+| FACTORY-020 | Run independent mission review | M0 | stage-zero-freeze | in-progress | factory |
+| FACTORY-021 | Document Soup as a future milestone | M0 | stage-zero-materialize | complete | factory |
+| FACTORY-022 | Document OmniRoute as a future milestone | M0 | stage-zero-materialize | complete | factory |
+| N8N-001 | N8n research policy for every stage | M0 | stage-zero-materialize | complete | factory |
+| OSS-001 | OSS provenance and adoption register | M0 | stage-zero-materialize | complete | factory |
+| SECURITY-001 | Cross-cutting secret redaction and hygiene policy | M0 | stage-zero-materialize | complete | factory |
+| SECURITY-002 | Cross-cutting open source dependency controls | M0 | stage-zero-materialize | complete | factory |
+| TASTE-001 | Taste governance boundary | M0 | stage-zero-materialize | complete | factory |
+| TEST-001 | Regression-red proof test discipline | M0 | stage-zero-materialize | complete | factory |
+| TEST-002 | Windows CI as authoritative runtime evidence | M0 | stage-zero-materialize | complete | factory |
 
 ## Milestone One
 

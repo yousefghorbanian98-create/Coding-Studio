@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-const GENERATION_TIME = '2026-09-04';
+const GENERATION_TIME = '2026-09-05';
 
 function readJson(root, relative) {
   return JSON.parse(readFileSync(join(root, relative), 'utf8'));
@@ -79,7 +79,8 @@ acceptance criteria, non-goals and planned tests.
     acDoc += `- Description: ${r.description}\n`;
     acDoc += `\nAcceptance criteria:\n\n`;
     r.acceptanceCriteria.forEach((c, i) => {
-      acDoc += `- [ ] AC-${i + 1} - ${c}\n`;
+      const box = r.status === 'complete' ? 'x' : ' ';
+      acDoc += `- [${box}] AC-${i + 1} - ${c}\n`;
     });
     acDoc += `\nNon-goals:\n\n`;
     (r.nonGoals.length ? r.nonGoals : ['None']).forEach((c) => {
