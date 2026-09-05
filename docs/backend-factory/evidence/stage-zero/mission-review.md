@@ -102,3 +102,13 @@ validator.
   Windows artifacts. No local Playwright success is claimed.
 - Stage Zero freeze/review remains **active or pending** until external
   re-review. The manifest review status is `remediation-required`.
+
+## External re-review verdict
+
+- External re-review verdict: **passed** (External Re-review Round 2).
+- Reviewed SHA: `5115fefc9b2ae50bd2e6517b94ed094bacc2b639`.
+- Verified Windows runs: `33953037993` (push) and `33953053251` (pull_request),
+  both successful with validator 1.2.0 passing.
+- Zero remaining Critical or High findings.
+- Stage Zero is approved for human-controlled integration; the merge remains
+  human-controlled.

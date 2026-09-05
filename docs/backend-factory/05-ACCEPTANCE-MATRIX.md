@@ -539,12 +539,12 @@ Evidence:
 ### FACTORY-020: Run independent mission review
 
 - Milestone: **M0** - Stage: **stage-zero-freeze**
-- Status: **in-progress** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Run fresh Completeness, Architecture, Security, Test Strategy, Windows and Autonomous Loop review passes and record the consolidated report.
 
 Acceptance criteria:
 
-- [ ] AC-1 - mission-review.md records reviewer passes, mutation checks, finding counts and zero Critical/High findings.
+- [x] AC-1 - mission-review.md records reviewer passes, mutation checks, finding counts and zero Critical/High findings.
 
 Non-goals:
 

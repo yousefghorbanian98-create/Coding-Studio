@@ -744,7 +744,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-freeze",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "mission-review.md records reviewer passes, mutation checks, finding counts and zero Critical/High findings."

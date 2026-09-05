@@ -5,7 +5,7 @@
       "number": 0,
       "title": "Backend Factory Stage Zero",
       "name": "Stage Zero",
-      "status": "active",
+      "status": "complete",
       "stage": "stage-zero-freeze",
       "requires": [],
       "stages": [
@@ -89,7 +89,7 @@
           "id": "stage-zero-freeze",
           "name": "Freeze manifest and independent review",
           "milestone": 0,
-          "status": "active",
+          "status": "complete",
           "dependsOn": [
             "stage-zero-validate"
           ],

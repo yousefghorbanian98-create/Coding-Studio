@@ -31,7 +31,7 @@ Total: 75 requirements.
 | FACTORY-017 | Add validate:mission package command | M0 | stage-zero-validate | complete | factory |
 | FACTORY-018 | Add validator to Windows CI | M0 | stage-zero-validate | complete | factory |
 | FACTORY-019 | Freeze the mission manifest | M0 | stage-zero-freeze | complete | factory |
-| FACTORY-020 | Run independent mission review | M0 | stage-zero-freeze | in-progress | factory |
+| FACTORY-020 | Run independent mission review | M0 | stage-zero-freeze | complete | factory |
 | FACTORY-021 | Document Soup as a future milestone | M0 | stage-zero-materialize | complete | factory |
 | FACTORY-022 | Document OmniRoute as a future milestone | M0 | stage-zero-materialize | complete | factory |
 | N8N-001 | N8n research policy for every stage | M0 | stage-zero-materialize | complete | factory |
