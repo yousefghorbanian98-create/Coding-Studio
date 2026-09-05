@@ -1,19 +1,19 @@
 {
   "schemaVersion": "1.0.0",
-  "runIdentifier": "factory-stage-zero-2026-09-04",
+  "runIdentifier": "factory-milestone-one-2026-09-05",
   "repository": "yousefghorbanian98-create/Coding-Studio",
-  "branch": "arena/01a06b4c-coding-studio",
+  "branch": "arena/01a07182-coding-studio",
   "baseCommit": "710324911da56856ae6a67bdb2f24bbfe3031b87",
-  "activeMilestone": 0,
-  "activeStage": "stage-zero-freeze",
-  "activeGate": "human-merge",
-  "status": "complete",
+  "activeMilestone": 1,
+  "activeStage": "m1-jcode-compat",
+  "activeGate": "research-completed-protocol-selected",
+  "status": "active",
   "attemptCounters": {
-    "healingAttempts": 2,
-    "ciRemediationAttempts": 2,
-    "reviewAndFixRounds": 2,
+    "healingAttempts": 0,
+    "ciRemediationAttempts": 1,
+    "reviewAndFixRounds": 0,
     "noProgressIterations": 0,
-    "identicalFailureFingerprints": 2
+    "identicalFailureFingerprints": 0
   },
   "lastCommit": "5115fefc9b2ae50bd2e6517b94ed094bacc2b639",
   "lastCIrun": "33953053251",
@@ -27,7 +27,6 @@
     "stage-zero-freeze"
   ],
   "pendingStages": [
-    "m1-jcode-compat",
     "m2-install-supervisor",
     "m3-tauri-ipc",
     "m4-events-lifecycle",
@@ -50,7 +49,13 @@
       "title": "External Review Round 2 passed at reviewed head 5115fefc9b2ae50bd2e6517b94ed094bacc2b639; Stage Zero approved for human-controlled integration.",
       "status": "closed",
       "createdAt": "2026-09-05T07:36:00.000Z"
+    },
+    {
+      "id": "m1-external-review-pending",
+      "title": "Milestone One Jcode compatibility layer delivered as a Draft PR on arena/01a07182-coding-studio; JCODE requirements stay in-progress until external review passes.",
+      "status": "open",
+      "createdAt": "2026-09-05T00:00:00.000Z"
     }
   ],
-  "lastProgressTime": "2026-09-05T08:14:33.843Z"
+  "lastProgressTime": "2026-09-05T17:35:00+03:30Z"
 }

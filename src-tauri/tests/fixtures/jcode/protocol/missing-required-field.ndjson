@@ -1,0 +1,4 @@
+{"ev":"ok"}
+{"v":1}
+{"v":1,"ev":"text_delta","text":"no session id"}
+{"v":1,"ev":"permission_request","session_id":"sess-1","tool_name":"bash"}

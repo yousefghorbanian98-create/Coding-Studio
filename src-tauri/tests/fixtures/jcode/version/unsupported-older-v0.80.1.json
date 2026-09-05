@@ -1,0 +1,11 @@
+{
+  "version": "0.80.1",
+  "semver": "0.80.1",
+  "base_semver": "0.80.1",
+  "update_semver": "0.80.1",
+  "git_hash": "deadbe0",
+  "git_tag": "v0.80.1",
+  "build_time": "2026-08-25T10:00:00Z",
+  "git_date": "2026-08-25",
+  "release_build": true
+}

@@ -1,0 +1,4 @@
+{"v":1,"ev":"tool_start","session_id":"sess-2026-09-05-a01","call_id":"call-0002","name":"bash"}
+{"v":1,"ev":"permission_request","session_id":"sess-2026-09-05-a01","request_id":"perm-77ab","tool_name":"bash","description":"Run: cargo test"}
+{"v":1,"ev":"tool_done","session_id":"sess-2026-09-05-a01","call_id":"call-0002","name":"bash","output":"test result: ok. 1 passed","error":null}
+{"v":1,"ev":"turn_done","session_id":"sess-2026-09-05-a01"}

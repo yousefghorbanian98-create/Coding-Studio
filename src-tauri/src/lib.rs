@@ -1,5 +1,10 @@
 use serde::Serialize;
 
+/// Jcode compatibility boundary (Backend Milestone One): version pinning,
+/// release verification, and the harness-API protocol contract. Not yet
+/// surfaced through Tauri commands — that wiring is Milestone Three.
+pub mod jcode;
+
 #[derive(Serialize)]
 pub struct AppInfo {
     pub name: String,

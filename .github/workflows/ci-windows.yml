@@ -171,10 +171,60 @@ jobs:
           workspaces: src-tauri -> target
 
       # Compiles the desktop crate and runs its unit tests. No external
-      # service is required.
+      # service is required. Output is teed to a log so the follow-on step can
+      # surface an excerpt as PR-visible annotations on failure (the authoring
+      # sandbox has no installable Rust toolchain; CI is the compiler, and
+      # annotations are the sandbox-readable failure channel).
       - name: Rust tests (cargo test)
         working-directory: src-tauri
-        run: cargo test --all-features
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo test --all-features 2>&1 | tee "${RUNNER_TEMP}/cargo-test.log"
+          exit ${PIPESTATUS[0]}
+
+      - name: Milestone One — surface Rust failure excerpt as annotations
+        if: failure()
+        shell: bash
+        run: |
+          log="${RUNNER_TEMP}/cargo-test.log"
+          test -f "$log" && {
+            { { grep -aE "error(\[E[0-9]+\])?:|failures:|assertion .*(left|==)|panicked at|not ok" "$log" || true; } | head -40
+              tail -25 "$log"
+            } | awk '!seen[$0]++' | head -50 | while IFS= read -r line; do
+              line="${line//'%'/'%25'}"; line="${line//$'\r'/'%0D'}"
+              printf '::error title=M1-cargo-test::%s\n' "$line"
+            done
+          } || echo "::error title=M1-cargo-test::cargo test failed before producing output"
+
+      # Same pattern as the existing vitest/E2E failure comments: the PR gets a
+      # readable excerpt the moment a Rust step fails (no log download needed).
+      - name: Comment Milestone One cargo failure excerpt on the pull request
+        if: failure() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo '### Milestone One — Rust CI failure excerpt (auto-posted)'
+            echo ''
+            echo '```text'
+            { cat "${RUNNER_TEMP}/cargo-test.log" "${RUNNER_TEMP}/cargo-fmt.log" "${RUNNER_TEMP}/cargo-clippy.log" 2>/dev/null || echo '(no log captured before failure)'; } | tail -n 160
+            echo '```'
+          } > m1-cargo-failures.md
+          gh pr comment "$PR_NUMBER" --body-file m1-cargo-failures.md
+
+      # Milestone One: the Jcode compatibility layer is held to rustfmt +
+      # clippy(-D warnings) so the contract surface stays reviewable.
+      - name: Rust fmt + clippy
+        working-directory: src-tauri
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo fmt --check 2>&1 | tee "${RUNNER_TEMP}/cargo-fmt.log"
+          cargo clippy --all-targets --all-features -- -D warnings 2>&1 | tee "${RUNNER_TEMP}/cargo-clippy.log"
+          exit ${PIPESTATUS[0]}
 
       - name: Tauri build
         # No signing keys are configured on purpose: this produces an unsigned
@@ -195,3 +245,78 @@ jobs:
             src-tauri/target/release/*.exe
           retention-days: 14
           if-no-files-found: error
+
+  # ---------------------------------------------------------------------------
+  # Milestone One (m1-jcode-compat): optional integrity-verified probe of the
+  # pinned official Jcode release. This job is deliberately separate from the
+  # build job so ordinary frontend/unit CI never depends on a binary download.
+  #
+  # Safety properties (see docs/backend-factory/evidence/milestone-one/):
+  #   - tag-immutable download URL (v0.81.7), never a mutable "latest" alias
+  #   - SHA-256 verified against the independently re-fetched official
+  #     SHA256SUMS record AND the freeze-recorded expected digest
+  #   - only the non-authenticated `version --json` command is executed
+  #   - isolated temporary JCODE_HOME/JCODE_RUNTIME_DIR, telemetry disabled
+  #   - hard timeout, stdout/stderr captured separately, cleanup at the end
+  #   - no credentials, no provider login, no model inference, no paid API
+  # ---------------------------------------------------------------------------
+  jcode-release-probe:
+    name: Jcode pinned-release probe (x86_64, integrity-verified)
+    runs-on: windows-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      JCODE_PIN_TAG: v0.81.7
+      JCODE_PIN_VERSION: 0.81.7
+      JCODE_ASSET: jcode-windows-x86_64.exe
+      # Recorded official digest (fixture sha256sums-v0.81.7.txt is byte-exact;
+      # see PROVENANCE.md). The probe re-fetches the official SHA256SUMS and
+      # requires both records and the downloaded file to agree.
+      JCODE_EXPECTED_SHA256: b5b09dbe0dd0b14796dfa75f63decbdf98a75f3f9de9b86d6d25522ef3eb105b
+    steps:
+      - name: Download pinned release asset and official checksum record
+        shell: bash
+        working-directory: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          base="https://github.com/1jehuang/jcode/releases/download/${JCODE_PIN_TAG}"
+          curl -fsSL --retry 3 --retry-all-errors -o "${JCODE_ASSET}" "${base}/${JCODE_ASSET}"
+          curl -fsSL --retry 3 --retry-all-errors -o SHA256SUMS "${base}/SHA256SUMS"
+
+      - name: Verify SHA-256 integrity (three-way agreement)
+        shell: bash
+        working-directory: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          recorded="$(grep "  ${JCODE_ASSET}\$" SHA256SUMS | awk '{print $1}')"
+          test -n "$recorded"
+          echo "recorded official digest: $recorded"
+          test "$recorded" = "$JCODE_EXPECTED_SHA256"
+          actual="$(sha256sum "${JCODE_ASSET}" | awk '{print $1}')"
+          test "$actual" = "$recorded"
+          echo "verified sha256=$actual"
+
+      - name: Run non-authenticated version probe in an isolated directory
+        shell: bash
+        working-directory: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+          export JCODE_HOME="$work/jcode-home"
+          export JCODE_RUNTIME_DIR="$work/runtime"
+          export JCODE_NO_TELEMETRY=1
+          export DO_NOT_TRACK=1
+          mkdir -p "$JCODE_HOME" "$JCODE_RUNTIME_DIR"
+          set +e
+          timeout 120 "./${JCODE_ASSET}" version --json >"$work/stdout.json" 2>"$work/stderr.txt"
+          code=$?
+          set -e
+          echo "exit_code=$code"
+          echo "--- stderr (diagnostics channel, never parsed as data) ---"
+          cat "$work/stderr.txt" || true
+          test "$code" -eq 0
+          grep -q "\"semver\": \"${JCODE_PIN_VERSION}\"" "$work/stdout.json"
+          grep -q "\"release_build\": true" "$work/stdout.json"
+          echo "probe passed: ${JCODE_ASSET} reports ${JCODE_PIN_VERSION}, exit 0"

@@ -1,0 +1,1 @@
+{"v":1,"reply_to":1,"ev":"hello_ok","version":1,"server":"jcode-harness-api-bridge/0.1.0","capabilities":["sessions","streaming","persisted_session_discovery","runtime_info","api_key_provisioning","session_archive","session_retention","session_files","session_fork"]}

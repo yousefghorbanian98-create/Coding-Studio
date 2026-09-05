@@ -920,7 +920,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "The official repository identity, default branch and upstream commit are recorded as frozen evidence."
@@ -960,7 +960,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "License is recorded and an ADR is created when a forbidden license is encountered."
@@ -996,7 +996,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "A pinned version and architecture matrix are documented in an ADR that includes Windows support."
@@ -1034,7 +1034,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "A stable machine-readable event schema is frozen with sequence numbers and deduplication identifiers."
@@ -1072,7 +1072,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Every lifecycle capability is represented by a fixture test and a protocol ADR."
@@ -1110,7 +1110,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Authentication handoff and diagnostics command behaviors are documented with exit code and stream guarantees."
@@ -1148,7 +1148,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Configuration locations are documented and stdout/stderr/exit-code guarantees are enforced by tests."
@@ -1187,7 +1187,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Supported-version policy and non-scraping rule are documented and validator-enforced."
@@ -1223,7 +1223,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Compatibility fixtures, ADR and Windows evidence exist and are referenced from the acceptance matrix."

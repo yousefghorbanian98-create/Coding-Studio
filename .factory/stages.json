@@ -116,7 +116,7 @@
       "number": 1,
       "title": "Jcode compatibility and stable machine protocol",
       "name": "Milestone One",
-      "status": "planned",
+      "status": "active",
       "stage": "m1-jcode-compat",
       "requires": [
         0
@@ -126,7 +126,7 @@
           "id": "m1-jcode-compat",
           "name": "Jcode compatibility gates",
           "milestone": 1,
-          "status": "planned",
+          "status": "active",
           "dependsOn": [
             "stage-zero-freeze"
           ],

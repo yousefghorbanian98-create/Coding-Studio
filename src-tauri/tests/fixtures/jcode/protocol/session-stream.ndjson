@@ -1,0 +1,13 @@
+{"v":1,"reply_to":1,"ev":"hello_ok","version":1,"server":"jcode-harness-api-bridge/0.1.0","capabilities":["sessions","streaming"]}
+{"v":1,"reply_to":2,"ev":"attached","session":{"session_id":"sess-2026-09-05-a01","status":"idle","title":"Fixture session"}}
+{"v":1,"ev":"session_status","session_id":"sess-2026-09-05-a01","status":"generating"}
+{"v":1,"ev":"message_accepted","session_id":"sess-2026-09-05-a01"}
+{"v":1,"ev":"connection_phase","session_id":"sess-2026-09-05-a01","phase":"waiting for response"}
+{"v":1,"ev":"model_info","session_id":"sess-2026-09-05-a01","provider":"anthropic","model":"claude-sonnet-4-20250514","reasoning_effort":"high"}
+{"v":1,"ev":"reasoning_delta","session_id":"sess-2026-09-05-a01","text":"The user asked a question."}
+{"v":1,"ev":"reasoning_done","session_id":"sess-2026-09-05-a01","duration_secs":0.8}
+{"v":1,"ev":"text_delta","session_id":"sess-2026-09-05-a01","text":"Hello"}
+{"v":1,"ev":"text_delta","session_id":"sess-2026-09-05-a01","text":" from the fixture."}
+{"v":1,"ev":"token_usage","session_id":"sess-2026-09-05-a01","input":512,"output":9,"cache_read_input":128}
+{"v":1,"ev":"session_status","session_id":"sess-2026-09-05-a01","status":"idle"}
+{"v":1,"ev":"turn_done","session_id":"sess-2026-09-05-a01"}
