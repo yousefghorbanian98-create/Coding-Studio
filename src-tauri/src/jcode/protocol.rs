@@ -281,6 +281,7 @@ pub enum EventKind {
         session_id: SessionId,
         task_id: TaskId,
         label: Option<Content>,
+        summary: Content,
         percent: Option<f32>,
         done: bool,
     },
@@ -783,6 +784,7 @@ fn json_value_to_event(value: serde_json::Value) -> Result<EventKind, JcodeError
                 session_id: SessionId::new(w.session_id)?,
                 task_id: TaskId::new(w.task_id)?,
                 label: w.label.map(Content::new),
+                summary: Content::new(w.summary),
                 percent: w.percent,
                 done: w.done,
             }
@@ -879,7 +881,7 @@ impl<R: BufRead> FrameDecoder<R> {
             let limit = self.max_frame_bytes as u64 + 1;
             // UFCS pins Self = &mut R: Read::take is by-value, so spelling it
             // as a free call moves only the short-lived reference, never R.
-            use std::io::Read as _;
+
             let mut limited = std::io::Read::take(&mut self.reader, limit);
             let read = limited.read_line(&mut line).map_err(JcodeError::from)?;
             if read == 0 {

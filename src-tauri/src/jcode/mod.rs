@@ -29,7 +29,6 @@ macro_rules! impl_debug_via_display {
     };
 }
 
-pub(crate) use impl_debug_via_display;
 
 pub mod auth;
 pub mod config;

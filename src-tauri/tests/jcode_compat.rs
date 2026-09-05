@@ -56,7 +56,7 @@ fn replays_full_turn_stream_with_monotonic_sequence() {
         let raw = text.lines().nth((dec.frames_read() - 1) as usize).unwrap();
         let (ingress, ev) = seq.ingest(raw, frame);
         assert_eq!(ingress, Ingress::Fresh);
-        delivered.push(ev.unwrap());
+        delivered.push(ev);
     }
     assert_eq!(delivered.len(), 13);
     for (i, ev) in delivered.iter().enumerate() {
@@ -91,14 +91,14 @@ fn replays_tool_call_lifecycle() {
         names,
         vec!["tool_call_start", "tool_call_input", "tool_call_start", "tool_call_done"]
     );
-    match &frames[0].frame.event {
+    match &frames[0].event {
         EventKind::ToolCallStart { executing, call_id, .. } => {
             assert!(!executing);
             assert_eq!(call_id.as_str(), "call-0001");
         }
         other => panic!("unexpected {other:?}"),
     }
-    match &frames[3].frame.event {
+    match &frames[3].event {
         EventKind::ToolCallDone { output, error, .. } => {
             assert_eq!(output.as_str(), "pub mod jcode;");
             assert!(error.is_none());
