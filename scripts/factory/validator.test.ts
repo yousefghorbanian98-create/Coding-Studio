@@ -675,6 +675,20 @@ describe('factory validator', () => {
     restoreAndPass(dir);
   });
 
+  it('fails THREAT_ID_DUPLICATE when two threat records share an id with different content', () => {
+    const dir = freshFixture();
+    const threats = clone(threatsPayload()) as any;
+    threats.threats.push({
+      id: 'THR-SUPPLY-CHAIN',
+      title: 'Different title for the duplicate record',
+      description: 'Different description: the id collides with an existing threat.',
+      controls: 'Different controls.',
+    });
+    writeJson(dir, '.factory/threats.json', threats);
+    expectFailure(dir, 'THREAT_ID_DUPLICATE', 'THR-SUPPLY-CHAIN');
+    restoreAndPass(dir);
+  });
+
   it('fails THREAT_DOC_MISMATCH when the threat markdown disagrees with the catalog', () => {
     const dir = freshFixture();
     write(dir, 'docs/backend-factory/08-THREAT-MODEL.md', '# Threat Model\n\n| ID | Title | Description | Primary controls |\n| --- | --- | --- | --- |\n| THR-OTHER | x | y | z |\n');
@@ -735,6 +749,21 @@ describe('factory validator', () => {
     requirements.requirements[0].evidencePaths = ['missing-evidence'];
     writeJson(dir, '.factory/requirements.json', requirements);
     expectFailure(dir, 'COMPLETE_EVIDENCE_PATH_MISSING', 'missing-evidence');
+    restoreAndPass(dir);
+  });
+
+  it('fails COMPLETE_IMPL_FILE_MISSING without throwing when a completed requirement implementation file does not exist', () => {
+    const dir = freshFixture();
+    const requirements = clone(requirementsPayload()) as any;
+    requirements.requirements[0].status = 'complete';
+    requirements.requirements[0].evidencePaths = ['docs/backend-factory/00-USER-DIRECTIVE.md'];
+    requirements.requirements[0].implementationFiles = [
+      'docs/backend-factory/00-USER-DIRECTIVE.md',
+      'docs/backend-factory/NO-SUCH-IMPL.md',
+    ];
+    writeJson(dir, '.factory/requirements.json', requirements);
+    expect(() => validateFactory(dir)).not.toThrow();
+    expectFailure(dir, 'COMPLETE_IMPL_FILE_MISSING', 'docs/backend-factory/NO-SUCH-IMPL.md');
     restoreAndPass(dir);
   });
 
@@ -817,6 +846,20 @@ describe('factory validator', () => {
     const issues = expectFailure(dir, 'THREAT_SCHEMA_INVALID', '/threats/0/id');
     expect(issues.some((i) => i.file === '.factory/threats.json')).toBe(true);
     restoreAndPass(dir);
+  });
+
+  it('registers every literal issue code the validator source can emit', () => {
+    const source = readRepo('scripts/factory/validator.mjs');
+    const emitted = new Set<string>();
+    for (const match of source.matchAll(/issue\('([A-Z0-9_]+)'/g)) {
+      emitted.add(match[1]);
+    }
+    expect(emitted.size).toBeGreaterThan(0);
+    for (const code of [...emitted].sort()) {
+      if (!RULE_CODES.includes(code)) {
+        throw new Error(`validator emits literal rule code ${code} that is absent from RULE_CODES`);
+      }
+    }
   });
 
   it('covers the full authoritative rule-code inventory with mutation tests', () => {

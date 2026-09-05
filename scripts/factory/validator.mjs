@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 
 export const REQUIRED_BASE_COMMIT = '710324911da56856ae6a67bdb2f24bbfe3031b87';
-export const VALIDATOR_VERSION = '1.1.0';
+export const VALIDATOR_VERSION = '1.2.0';
 
 export const REQUIRED_DOCS = [
   'docs/backend-factory/00-USER-DIRECTIVE.md',
@@ -92,6 +92,7 @@ export const RULE_CODES = [
   'REQ_NO_ACCEPTANCE',
   'REQ_NO_PLANNED_TEST',
   'SECURITY_REQ_NO_THREAT',
+  'THREAT_ID_DUPLICATE',
   'THREAT_MISSING',
   'THREAT_UNREFERENCED',
   'THREAT_DOC_MISMATCH',
@@ -101,6 +102,7 @@ export const RULE_CODES = [
   'STAGE_ACC_MISSING_REQUIREMENT',
   'COMPLETE_NO_EVIDENCE',
   'COMPLETE_EVIDENCE_PATH_MISSING',
+  'COMPLETE_IMPL_FILE_MISSING',
   'COMPLETE_IMPL_NO_COMMIT',
   'COMPLETE_IMPL_NO_CI',
   'IMPL_COMMIT_INVALID',
@@ -457,6 +459,13 @@ function validateStagesGraph(root, stages, stageMap, reqMap, issues) {
 
 function validateThreatCatalog(root, threats, reqList, issues) {
   if (!threats) return new Set();
+  const seenIds = new Set();
+  for (const t of threats.threats) {
+    if (seenIds.has(t.id)) {
+      issues.push(issue('THREAT_ID_DUPLICATE', `duplicate threat id "${t.id}" in the threat catalog`, '.factory/threats.json'));
+    }
+    seenIds.add(t.id);
+  }
   const ids = new Set(threats.threats.map((t) => t.id));
   const mapped = new Set();
   for (const req of reqList) {

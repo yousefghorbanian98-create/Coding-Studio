@@ -8,7 +8,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "00-USER-DIRECTIVE.md exists and contains the verbatim directive text unchanged."
@@ -44,7 +44,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Master mission contains Milestone One through Six and Future Milestone Seven/Eight."
@@ -80,7 +80,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Roadmap and architecture docs exist and agree with the machine stages and architecture."
@@ -118,7 +118,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Requirement, acceptance and traceability tables exist and agree with machine readable requirements."
@@ -160,7 +160,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "State machine documents exist and define the full loop, finite retry limits and recovery state."
@@ -203,7 +203,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Provider plan and Ruflo plan exist with selection criteria and optional feature flag."
@@ -241,7 +241,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Threat model maps threats to requirements; test strategy requires red-proof regression tests and no skipped tests."
@@ -281,7 +281,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "N8N and OSS policies exist with forbidden practices and required evidence fields."
@@ -322,7 +322,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "evidence/stage-zero/finn-loop-research.md contains all required Finn-loop research fields."
@@ -358,7 +358,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "evidence/stage-zero/n8n-research.md records the inspected SHA, candidates and the explicit rejection or adoption decision."
@@ -396,7 +396,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "evidence/stage-zero/taste-decision.md records the Expected conclusion Taste gate not applicable to product UI in Stage Zero."
@@ -432,7 +432,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "evidence/stage-zero/oss-register.md lists external sources with repository, SHA, license and decision."
@@ -468,7 +468,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-validate",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Machine files exist, are schema-valid and journal is append-only."
@@ -514,7 +514,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-validate",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "All four schema files exist and are used by the validator."
@@ -556,7 +556,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-validate",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Validator detects all enumerated rule failures with meaningful error codes; CLI exits nonzero on failure."
@@ -595,7 +595,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-validate",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Each validation rule has a mutation test that asserts the expected error code and message."
@@ -631,7 +631,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-validate",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "npm run validate:mission exits zero on a valid mission and nonzero on invalid mission."
@@ -667,7 +667,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-validate",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "ci-windows.yml runs the mission validator before static analysis."
@@ -707,7 +707,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-freeze",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "manifest.json authenticates every frozen file and fails when a frozen document is altered without a manifest update."
@@ -744,7 +744,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-freeze",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "mission-review.md records reviewer passes, mutation checks, finding counts and zero Critical/High findings."
@@ -780,7 +780,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Soup is documented in the master mission and blocked in the machine state."
@@ -818,7 +818,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "OmniRoute is documented in the master mission and blocked in the machine state."
@@ -2587,7 +2587,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Secret-redaction assertions exist across diagnostics, IPC, CI and docs."
@@ -2612,7 +2612,9 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
+      "evidencePaths": [
+        "docs/backend-factory/08-THREAT-MODEL.md"
+      ],
       "implementationCommit": null,
       "ciRun": null
     },
@@ -2623,7 +2625,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "The OSS policy forbids each listed practice and requires the review fields."
@@ -2649,7 +2651,9 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
+      "evidencePaths": [
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md"
+      ],
       "implementationCommit": null,
       "ciRun": null
     },
@@ -2660,7 +2664,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Every real defect has a regression test proven red before fix."
@@ -2683,7 +2687,9 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
+      "evidencePaths": [
+        "docs/backend-factory/09-TEST-STRATEGY.md"
+      ],
       "implementationCommit": null,
       "ciRun": null
     },
@@ -2694,7 +2700,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Windows CI results are the authority for Windows behavior; local browser unavailability is not claimed as Playwright success."
@@ -2722,7 +2728,10 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
+      "evidencePaths": [
+        "docs/backend-factory/09-TEST-STRATEGY.md",
+        ".github/workflows/ci-windows.yml"
+      ],
       "implementationCommit": null,
       "ciRun": null
     },
@@ -2733,7 +2742,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Every stage has an n8n research gate and the policy forbids executing, importing, connecting or contacting workflow contents."
@@ -2758,7 +2767,9 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
+      "evidencePaths": [
+        "docs/backend-factory/10-N8N-RESEARCH-POLICY.md"
+      ],
       "implementationCommit": null,
       "ciRun": null
     },
@@ -2769,7 +2780,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "OSS register covers adopted and inspected sources; no dependency for a trivial utility."
@@ -2795,7 +2806,10 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
+      "evidencePaths": [
+        "docs/backend-factory/11-OSS-ADOPTION-POLICY.md",
+        "docs/backend-factory/evidence/stage-zero/oss-register.md"
+      ],
       "implementationCommit": null,
       "ciRun": null
     },
@@ -2806,7 +2820,7 @@
       "kind": "factory",
       "milestone": 0,
       "stage": "stage-zero-materialize",
-      "status": "planned",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Taste decisions exist for UI-changing stages and a taste gate is recorded for each."
@@ -2830,7 +2844,10 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
+      "evidencePaths": [
+        "docs/backend-factory/evidence/stage-zero/taste-decision.md",
+        "docs/backend-factory/03-ARCHITECTURE.md"
+      ],
       "implementationCommit": null,
       "ciRun": null
     }

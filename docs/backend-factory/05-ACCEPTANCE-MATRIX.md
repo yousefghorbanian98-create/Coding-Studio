@@ -7,12 +7,12 @@ acceptance criteria, non-goals and planned tests.
 ### FACTORY-001: Materialize the verbatim original user directive
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Preserve the original user directive verbatim at docs/backend-factory/00-USER-DIRECTIVE.md without paraphrase or omission.
 
 Acceptance criteria:
 
-- [ ] AC-1 - 00-USER-DIRECTIVE.md exists and contains the verbatim directive text unchanged.
+- [x] AC-1 - 00-USER-DIRECTIVE.md exists and contains the verbatim directive text unchanged.
 
 Non-goals:
 
@@ -34,12 +34,12 @@ Evidence:
 ### FACTORY-002: Materialize the complete master mission
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Produce docs/backend-factory/01-MASTER-MISSION.md containing all six backend milestones plus future milestones seven and eight.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Master mission contains Milestone One through Six and Future Milestone Seven/Eight.
+- [x] AC-1 - Master mission contains Milestone One through Six and Future Milestone Seven/Eight.
 
 Non-goals:
 
@@ -61,12 +61,12 @@ Evidence:
 ### FACTORY-003: Materialize roadmap and architecture documents
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Produce 02-BACKEND-ROADMAP.md and 03-ARCHITECTURE.md with milestones, stages, gates and the provider-neutral architecture.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Roadmap and architecture docs exist and agree with the machine stages and architecture.
+- [x] AC-1 - Roadmap and architecture docs exist and agree with the machine stages and architecture.
 
 Non-goals:
 
@@ -89,12 +89,12 @@ Evidence:
 ### FACTORY-004: Materialize requirements, acceptance and traceability documents
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Produce 04-REQUIREMENTS.md, 05-ACCEPTANCE-MATRIX.md and 06-TRACEABILITY-MATRIX.md that agree with .factory/requirements.json.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Requirement, acceptance and traceability tables exist and agree with machine readable requirements.
+- [x] AC-1 - Requirement, acceptance and traceability tables exist and agree with machine readable requirements.
 
 Non-goals:
 
@@ -118,12 +118,12 @@ Evidence:
 ### FACTORY-005: Materialize state machine, self-heal and recovery documents
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Produce 07-STATE-MACHINE.md, 12-SELF-HEAL-RUNBOOK.md and 13-RECOVERY-RUNBOOK.md describing the autonomous Finn-derived loop, limits, circuit breakers and recovery state.
 
 Acceptance criteria:
 
-- [ ] AC-1 - State machine documents exist and define the full loop, finite retry limits and recovery state.
+- [x] AC-1 - State machine documents exist and define the full loop, finite retry limits and recovery state.
 
 Non-goals:
 
@@ -148,12 +148,12 @@ Evidence:
 ### FACTORY-006: Materialize provider and Ruflo plans
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Produce 14-PROVIDER-PLAN.md and 15-RUFLO-PLAN.md including provider order, selection gates and optional Ruflo integration boundary.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Provider plan and Ruflo plan exist with selection criteria and optional feature flag.
+- [x] AC-1 - Provider plan and Ruflo plan exist with selection criteria and optional feature flag.
 
 Non-goals:
 
@@ -176,12 +176,12 @@ Evidence:
 ### FACTORY-007: Materialize threat model and test strategy
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Produce 08-THREAT-MODEL.md and 09-TEST-STRATEGY.md with mapped threats and a test strategy that forbids weakened assertions and deleted tests.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Threat model maps threats to requirements; test strategy requires red-proof regression tests and no skipped tests.
+- [x] AC-1 - Threat model maps threats to requirements; test strategy requires red-proof regression tests and no skipped tests.
 
 Non-goals:
 
@@ -204,12 +204,12 @@ Evidence:
 ### FACTORY-008: Materialize research and adoption policies
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Produce 10-N8N-RESEARCH-POLICY.md and 11-OSS-ADOPTION-POLICY.md with untrusted-input handling and mandatory provenance fields.
 
 Acceptance criteria:
 
-- [ ] AC-1 - N8N and OSS policies exist with forbidden practices and required evidence fields.
+- [x] AC-1 - N8N and OSS policies exist with forbidden practices and required evidence fields.
 
 Non-goals:
 
@@ -233,12 +233,12 @@ Evidence:
 ### FACTORY-009: Produce Finn-loop research evidence
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Inspect finna/Finn-loop, record inspected SHA, license, files, adopted and rejected patterns, deviations and the safe autonomous derived model.
 
 Acceptance criteria:
 
-- [ ] AC-1 - evidence/stage-zero/finn-loop-research.md contains all required Finn-loop research fields.
+- [x] AC-1 - evidence/stage-zero/finn-loop-research.md contains all required Finn-loop research fields.
 
 Non-goals:
 
@@ -260,12 +260,12 @@ Evidence:
 ### FACTORY-010: Inspect relevant n8n workflows safely
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Inspect up to three genuinely relevant workflows from Zie619/n8n-workflows without executing them and record candidate details and rejected patterns.
 
 Acceptance criteria:
 
-- [ ] AC-1 - evidence/stage-zero/n8n-research.md records the inspected SHA, candidates and the explicit rejection or adoption decision.
+- [x] AC-1 - evidence/stage-zero/n8n-research.md records the inspected SHA, candidates and the explicit rejection or adoption decision.
 
 Non-goals:
 
@@ -287,12 +287,12 @@ Evidence:
 ### FACTORY-011: Record Taste Skill decision
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Inspect Leonxlnx/taste-skill and record SHA, license, selected skill, applicable and rejected rules and backend limitations.
 
 Acceptance criteria:
 
-- [ ] AC-1 - evidence/stage-zero/taste-decision.md records the Expected conclusion Taste gate not applicable to product UI in Stage Zero.
+- [x] AC-1 - evidence/stage-zero/taste-decision.md records the Expected conclusion Taste gate not applicable to product UI in Stage Zero.
 
 Non-goals:
 
@@ -314,12 +314,12 @@ Evidence:
 ### FACTORY-012: Record external source register
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Create an OSS register covering the external sources inspected in Stage Zero and the OSS research policy evidence fields.
 
 Acceptance criteria:
 
-- [ ] AC-1 - evidence/stage-zero/oss-register.md lists external sources with repository, SHA, license and decision.
+- [x] AC-1 - evidence/stage-zero/oss-register.md lists external sources with repository, SHA, license and decision.
 
 Non-goals:
 
@@ -341,12 +341,12 @@ Evidence:
 ### FACTORY-013: Create machine state files
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Create .factory/state.json, journal.jsonl, requirements.json and stages.json with a schema version and no secrets.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Machine files exist, are schema-valid and journal is append-only.
+- [x] AC-1 - Machine files exist, are schema-valid and journal is append-only.
 
 Non-goals:
 
@@ -372,12 +372,12 @@ Evidence:
 ### FACTORY-014: Create machine schemas
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Create JSON schemas for requirements, stages, state and manifest under .factory/schemas/.
 
 Acceptance criteria:
 
-- [ ] AC-1 - All four schema files exist and are used by the validator.
+- [x] AC-1 - All four schema files exist and are used by the validator.
 
 Non-goals:
 
@@ -402,12 +402,12 @@ Evidence:
 ### FACTORY-015: Create deterministic mission validator
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Create scripts/factory/validate-mission.mjs with no network dependency that validates every required rule and emits coded errors.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Validator detects all enumerated rule failures with meaningful error codes; CLI exits nonzero on failure.
+- [x] AC-1 - Validator detects all enumerated rule failures with meaningful error codes; CLI exits nonzero on failure.
 
 Non-goals:
 
@@ -430,12 +430,12 @@ Evidence:
 ### FACTORY-016: Create validator mutation tests
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Create tests proving every validation rule by starting with a valid fixture, mutating a field, proving failure, restoring and proving pass.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Each validation rule has a mutation test that asserts the expected error code and message.
+- [x] AC-1 - Each validation rule has a mutation test that asserts the expected error code and message.
 
 Non-goals:
 
@@ -457,12 +457,12 @@ Evidence:
 ### FACTORY-017: Add validate:mission package command
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Add the validate:mission npm script that runs the mission validator against the repository.
 
 Acceptance criteria:
 
-- [ ] AC-1 - npm run validate:mission exits zero on a valid mission and nonzero on invalid mission.
+- [x] AC-1 - npm run validate:mission exits zero on a valid mission and nonzero on invalid mission.
 
 Non-goals:
 
@@ -484,12 +484,12 @@ Evidence:
 ### FACTORY-018: Add validator to Windows CI
 
 - Milestone: **M0** - Stage: **stage-zero-validate**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Run npm run validate:mission in the existing Windows CI workflow without unpinning or weakening existing actions.
 
 Acceptance criteria:
 
-- [ ] AC-1 - ci-windows.yml runs the mission validator before static analysis.
+- [x] AC-1 - ci-windows.yml runs the mission validator before static analysis.
 
 Non-goals:
 
@@ -512,12 +512,12 @@ Evidence:
 ### FACTORY-019: Freeze the mission manifest
 
 - Milestone: **M0** - Stage: **stage-zero-freeze**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Hash frozen mission documents, machine requirements, stages and schemas into .factory/manifest.json with SHA-256 values.
 
 Acceptance criteria:
 
-- [ ] AC-1 - manifest.json authenticates every frozen file and fails when a frozen document is altered without a manifest update.
+- [x] AC-1 - manifest.json authenticates every frozen file and fails when a frozen document is altered without a manifest update.
 
 Non-goals:
 
@@ -539,12 +539,12 @@ Evidence:
 ### FACTORY-020: Run independent mission review
 
 - Milestone: **M0** - Stage: **stage-zero-freeze**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Run fresh Completeness, Architecture, Security, Test Strategy, Windows and Autonomous Loop review passes and record the consolidated report.
 
 Acceptance criteria:
 
-- [ ] AC-1 - mission-review.md records reviewer passes, mutation checks, finding counts and zero Critical/High findings.
+- [x] AC-1 - mission-review.md records reviewer passes, mutation checks, finding counts and zero Critical/High findings.
 
 Non-goals:
 
@@ -566,12 +566,12 @@ Evidence:
 ### FACTORY-021: Document Soup as a future milestone
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Document Future Milestone Seven (Soup skill routing) but do not start it until all six backend milestones pass.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Soup is documented in the master mission and blocked in the machine state.
+- [x] AC-1 - Soup is documented in the master mission and blocked in the machine state.
 
 Non-goals:
 
@@ -594,12 +594,12 @@ Evidence:
 ### FACTORY-022: Document OmniRoute as a future milestone
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Document Future Milestone Eight (OmniRoute provider routing) but do not start it until all six backend milestones pass.
 
 Acceptance criteria:
 
-- [ ] AC-1 - OmniRoute is documented in the master mission and blocked in the machine state.
+- [x] AC-1 - OmniRoute is documented in the master mission and blocked in the machine state.
 
 Non-goals:
 
@@ -1911,12 +1911,12 @@ Evidence:
 ### SECURITY-001: Cross-cutting secret redaction and hygiene policy
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Require redaction of secrets across logs, events, Git and CI and forbid committing credentials.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Secret-redaction assertions exist across diagnostics, IPC, CI and docs.
+- [x] AC-1 - Secret-redaction assertions exist across diagnostics, IPC, CI and docs.
 
 Non-goals:
 
@@ -1932,18 +1932,18 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/08-THREAT-MODEL.md
 
 
 ### SECURITY-002: Cross-cutting open source dependency controls
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Forbid remote script piping, unknown installers, mutable latest references, unpinned actions, unattributed code and incompatible licenses.
 
 Acceptance criteria:
 
-- [ ] AC-1 - The OSS policy forbids each listed practice and requires the review fields.
+- [x] AC-1 - The OSS policy forbids each listed practice and requires the review fields.
 
 Non-goals:
 
@@ -1960,18 +1960,18 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/11-OSS-ADOPTION-POLICY.md
 
 
 ### TEST-001: Regression-red proof test discipline
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Require a regression test proven red against each defect and forbid weakened or deleted tests.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Every real defect has a regression test proven red before fix.
+- [x] AC-1 - Every real defect has a regression test proven red before fix.
 
 Non-goals:
 
@@ -1987,18 +1987,18 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/09-TEST-STRATEGY.md
 
 
 ### TEST-002: Windows CI as authoritative runtime evidence
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Keep Windows CI authoritative for Playwright, Rust tests, Tauri build and Windows artifacts.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Windows CI results are the authority for Windows behavior; local browser unavailability is not claimed as Playwright success.
+- [x] AC-1 - Windows CI results are the authority for Windows behavior; local browser unavailability is not claimed as Playwright success.
 
 Non-goals:
 
@@ -2015,18 +2015,19 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/09-TEST-STRATEGY.md
+- .github/workflows/ci-windows.yml
 
 
 ### N8N-001: N8n research policy for every stage
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Before every stage, search n8n-workflows for relevant patterns and treat workflows as untrusted input that is scanned and sanitized.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Every stage has an n8n research gate and the policy forbids executing, importing, connecting or contacting workflow contents.
+- [x] AC-1 - Every stage has an n8n research gate and the policy forbids executing, importing, connecting or contacting workflow contents.
 
 Non-goals:
 
@@ -2042,18 +2043,18 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/10-N8N-RESEARCH-POLICY.md
 
 
 ### OSS-001: OSS provenance and adoption register
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Record external sources and cover every proposed adoption with the complete provenance review fields.
 
 Acceptance criteria:
 
-- [ ] AC-1 - OSS register covers adopted and inspected sources; no dependency for a trivial utility.
+- [x] AC-1 - OSS register covers adopted and inspected sources; no dependency for a trivial utility.
 
 Non-goals:
 
@@ -2069,18 +2070,19 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/11-OSS-ADOPTION-POLICY.md
+- docs/backend-factory/evidence/stage-zero/oss-register.md
 
 
 ### TASTE-001: Taste governance boundary
 
 - Milestone: **M0** - Stage: **stage-zero-materialize**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Taste Skill supervises only user-facing changes and never controls backend architecture or security; conflicting recommendations are rejected.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Taste decisions exist for UI-changing stages and a taste gate is recorded for each.
+- [x] AC-1 - Taste decisions exist for UI-changing stages and a taste gate is recorded for each.
 
 Non-goals:
 
@@ -2096,5 +2098,6 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/stage-zero/taste-decision.md
+- docs/backend-factory/03-ARCHITECTURE.md
 
