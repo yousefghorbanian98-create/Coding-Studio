@@ -190,9 +190,19 @@ fn match_secret_kv(rest: &str) -> Option<(usize, ())> {
         let after = &unquoted[key.len()..];
         let mut idx = 0;
         let bytes = after.as_bytes();
-        // optional closing quote of a JSON-ish key (`"token": "…"`)
-        if bytes.first() == Some(&b'"') {
+        // Whitespace between key and separator (`client_secret = 'x'`,
+        // `token\t=\t"x"`). Never skip newlines: a line that merely *starts*
+        // with a keyword must stay negative.
+        while bytes.get(idx).is_some_and(|b| *b == b' ' || *b == b'\t') {
             idx += 1;
+        }
+        // optional closing quote of a JSON-ish key (`"token": "…"`)
+        if bytes.get(idx) == Some(&b'"') {
+            idx += 1;
+            // optional whitespace after the closing quote (`"token" : "…"`)
+            while bytes.get(idx).is_some_and(|b| *b == b' ' || *b == b'\t') {
+                idx += 1;
+            }
         }
         // separator
         if bytes.get(idx) == Some(&b'=') || bytes.get(idx) == Some(&b':') {
@@ -289,6 +299,62 @@ mod tests {
         }
         // Non-secret words containing keys must survive.
         assert_eq!(redact("tokenizer is a word"), "tokenizer is a word");
+    }
+
+    #[test]
+    fn redaction_handles_quoted_unquoted_and_whitespace_kv() {
+        // Quoted values: the whole quoted field must be gone.
+        for sample in [
+            "client_secret = 'zz'",
+            "client_secret='zz'",
+            "client_secret = \"zz\"",
+            "api_key: \"v4.local.abc.def\"",
+            "\"token\": \"xG9aa\"",
+            "\"token\"  :  \"xG9aa\"",
+            "password='hunter2'",
+        ] {
+            let r = redact(sample);
+            assert!(r.contains(REDACTED), "quoted case not redacted: {sample} -> {r}");
+            assert!(!r.contains("zz"), "quoted body survived in {r}");
+            assert!(!r.contains("xG9aa"), "quoted body survived in {r}");
+        }
+        // Unquoted values, whitespace variations (space/tab around = and :).
+        for sample in [
+            "token=abc123",
+            "token =abc123",
+            "token\t=\tabc123",
+            "token = abc123",
+            "api_key:somevalue123",
+            "api_key : somevalue123",
+            "authorization: Bearer aaa.bbb.ccc",
+        ] {
+            let r = redact(sample);
+            assert!(r.contains(REDACTED), "ws case not redacted: {sample} -> {r}");
+            assert!(!r.contains("abc123"), "body survived in {r}");
+            assert!(!r.contains("somevalue123"), "body survived in {r}");
+            assert!(!r.contains("aaa.bbb.ccc"), "bearer body survived in {r}");
+        }
+    }
+
+    #[test]
+    fn redaction_negative_controls_hold() {
+        // A keyword followed by anything except a KV separator stays named:
+        // newline must never join unrelated text into a "assignment".
+        for sample in [
+            "hello world",
+            "tokenizer is a word",
+            "tokens may not be redacted",
+            "token embargo lifted",
+            "password\nstrength check",
+            "token\n= not-an-actual-assignment",
+            "port = 11434",         // sensitive-looking but not a secret KEY
+            "api_version = 1",      // only api_key/api_secret/api_token match
+            "[redacted marker]",
+            "client secrets expire regularly",
+        ] {
+            let r = redact(sample);
+            assert_eq!(r, sample, "negative control mutated: {sample} -> {r}");
+        }
     }
 
     #[test]
