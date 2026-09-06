@@ -15,8 +15,12 @@ ancestor of the verified `master` tip
 
 ## Consequences
 
-- All pins reference tag + commit + asset digests (immutable triple), never a
-  moving branch or a "latest" URL.
+- All pins reference tag + commit + asset digests, never a moving branch
+  or a "latest" URL. Review-round-1 precision: GitHub tag/release URLs are
+  version-scoped, not immutable trust anchors (assets/tags can be replaced
+  server-side); the embedded SHA-256 digest set is the immutable Coding
+  Studio trust anchor and any replacement or tag movement fails the pinned
+  digest check before execution.
 - The abandoned April 2026 `v0.9.x` release line is explicitly not "newer"
   than the `v0.81.x` line; numeric comparison of tags is meaningless across
   that discontinuity.

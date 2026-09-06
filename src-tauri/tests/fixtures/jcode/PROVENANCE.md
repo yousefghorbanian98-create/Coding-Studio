@@ -15,7 +15,7 @@ upstream output except the exact class.
 
 | file | class | provenance |
 |---|---|---|
-| `sha256sums-v0.81.7.txt` | **exact** | Fetched from the tag-immutable URL `https://github.com/1jehuang/jcode/releases/download/v0.81.7/SHA256SUMS` on 2026-09-05. Independently proven byte-exact: 836 bytes, SHA-256 `733aebe30981a81c5d8205ac76b6d57399e4fbd4dc77ec1b371478dfe68cce0e`, equal to the GitHub API `digest` of release asset id 544965885. Sanitization: none needed (contains only digests and public asset names). Representative because it IS the official checksum record, not a sample of it. |
+| `sha256sums-v0.81.7.txt` | **exact** | Fetched from the version-scoped tag URL (not itself a trust anchor) `https://github.com/1jehuang/jcode/releases/download/v0.81.7/SHA256SUMS` on 2026-09-05. Independently proven byte-exact: 836 bytes, SHA-256 `733aebe30981a81c5d8205ac76b6d57399e4fbd4dc77ec1b371478dfe68cce0e`, equal to the GitHub API `digest` of release asset id 544965885. Sanitization: none needed (contains only digests and public asset names). Representative because it IS the official checksum record, not a sample of it. |
 
 ## version/
 

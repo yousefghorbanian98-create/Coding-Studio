@@ -1,13 +1,14 @@
 //! Release metadata, Windows architecture mapping, and checksum verification
 //! for the pinned Jcode release (ADR-0002).
 //!
-//! The pinned digest table below is not the trust anchor by itself — the
-//! anchor rule is "fetch `SHA256SUMS` from the tag-immutable URL and match,
-//! then execute". The table is the recorded observation of that file, proven
-//! byte-exact against the GitHub API digest (see
-//! `docs/backend-factory/evidence/milestone-one/release-and-license.md`), and
-//! it lets tests and the Milestone Two installer cross-check a fetched record
-//! against two independent observations of the same immutable release.
+//! Trust-anchor wording (review round 1, finding 2): the download URL is
+//! version-scoped, **not** an immutable trust anchor — release assets and
+//! tags can be replaced or re-pointed server-side. The immutable Coding
+//! Studio trust anchor is the embedded SHA-256 digest: the recorded,
+//! byte-exact SHA256SUMS table below (proven against the GitHub API digest,
+//! see `docs/backend-factory/evidence/milestone-one/release-and-license.md`)
+//! plus the workflow-pinned expected digest. Any asset replacement or tag
+//! movement must fail that pinned digest check before execution.
 
 use crate::jcode::error::{ErrorCode, JcodeError};
 use crate::jcode::version::{PINNED_JCODE_TAG, PINNED_JCODE_VERSION};
@@ -269,7 +270,8 @@ pub fn verify_against_pin(set: &ChecksumSet) -> Result<ReleaseVerification, Jcod
     })
 }
 
-/// Tag-specific immutable URLs for one Windows architecture.
+/// Version-scoped download URL for one Windows architecture (not a trust
+/// anchor — see the module header).
 pub fn asset_download_url(arch: WindowsArch) -> String {
     format!(
         "{}/{}",
@@ -326,7 +328,10 @@ mod tests {
     }
 
     #[test]
-    fn urls_are_tag_immutable() {
+    fn urls_are_version_scoped_not_trust_anchors() {
+        // Review round 1, finding 2: URLs are version-scoped pointers; the
+        // pinned SHA-256 digest is the trust anchor that fails closed on any
+        // server-side replacement or tag movement.
         let url = asset_download_url(WindowsArch::X86_64);
         assert!(url.contains("/download/v0.81.7/jcode-windows-x86_64.exe"));
         assert!(!url.contains("latest"));

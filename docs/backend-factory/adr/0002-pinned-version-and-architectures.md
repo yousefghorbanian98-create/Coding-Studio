@@ -26,9 +26,11 @@ assumed compatible.
 
 - `src-tauri/src/jcode/version.rs` holds the single pin block
   (`PINNED_JCODE_*` constants) + classification, covered by unit tests.
-- Integrity: tag-immutable `SHA256SUMS` + SHA-256 verification before any
-  execution; the byte-exact official checksum set for v0.81.7 is preserved as
-  a test fixture (provenance proven against the GitHub API digest).
+- Integrity: `SHA256SUMS` is fetched from a version-scoped tag URL (not a
+  trust anchor) and matched against the embedded pinned SHA-256 digests —
+  the immutable trust anchor — before any execution; the byte-exact official
+  checksum set for v0.81.7 is preserved as a test fixture (provenance proven
+  against the GitHub API digest).
 - Release-upgrade procedure: re-run the full gate set, bump the pin block,
   extend fixtures, re-verify on Windows CI.
 

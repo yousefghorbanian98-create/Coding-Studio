@@ -7,11 +7,11 @@
   "activeMilestone": 1,
   "activeStage": "m1-jcode-compat",
   "activeGate": "research-completed-protocol-selected",
-  "status": "blocked",
+  "status": "active",
   "attemptCounters": {
     "healingAttempts": 0,
     "ciRemediationAttempts": 5,
-    "reviewAndFixRounds": 0,
+    "reviewAndFixRounds": 1,
     "noProgressIterations": 0,
     "identicalFailureFingerprints": 0
   },
@@ -37,13 +37,6 @@
     "m7-soup-routing",
     "m8-omni-route"
   ],
-  "blockers": [
-    {
-      "id": "m1-fmt-clippy-budget-exhausted",
-      "title": "Rust fmt+clippy gate pending: CI remediation budget exhausted (5/5); diagnostics reorder + mechanical formatting application needs human-approved exception",
-      "status": "final-formatter-recovery-pushed-awaiting-ci",
-      "createdAt": "2026-09-05T19:55:00+03:30Z"
-    }
-  ],
-  "lastProgressTime": "2026-09-05T23:20:00+03:30Z"
+  "blockers": [],
+  "lastProgressTime": "2026-09-06T00:40:00+03:30Z"
 }

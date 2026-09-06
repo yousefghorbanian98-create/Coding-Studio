@@ -37,7 +37,8 @@ implementation of the *documented wire shape* of the upstream protocol.
   crate nor SDK as a compiled dependency
 - Attribution: upstream credited in this register and ADR-001/ADR-003
 - Version pinning: exact tag `v0.81.7` + tagged commit + asset digest set
-- Checksum policy: tag-immutable `SHA256SUMS` fetch + SHA-256 match before any
+- Checksum policy: `SHA256SUMS` fetched via version-scoped tag URL (not a
+  trust anchor) + SHA-256 match against the pinned digest before any
   execution (implemented for the CI probe; coded as `verification.rs`)
 - Tests: fixture replay + unit/integration tests under `src-tauri/`
 - Rollback plan: bump the single pin block after a new release passes all

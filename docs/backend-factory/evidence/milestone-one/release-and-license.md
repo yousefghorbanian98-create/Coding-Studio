@@ -19,7 +19,7 @@
 | Tagged commit | `358226c2a35b8b50d4d520b3363b0dc60c000fdb` (ancestor of `master` tip `f11adb5996c541592e28519018709eebebc9fce4`) |
 | Published | 2026-09-04T21:38:18Z |
 | Release name | `GPT-6 Astra default` |
-| Immutable asset base | `https://github.com/1jehuang/jcode/releases/download/v0.81.7/` |
+| Version-scoped asset base (not a trust anchor) | `https://github.com/1jehuang/jcode/releases/download/v0.81.7/` — assets and tags can be replaced server-side; the embedded SHA-256 digests below are the immutable trust anchor |
 
 ## Release assets (metadata via GitHub API, verified 2026-09-05)
 
@@ -44,7 +44,8 @@ architecture); `windows-aarch64` = ARM64 (evidence tier documented in
 
 The sandbox could not execute binaries (Linux-only) and could not download
 from `release-assets.githubusercontent.com`, but the byte-exact content of
-`SHA256SUMS` was recovered through the immutable tag URL and **proven
+`SHA256SUMS` was recovered through the version-scoped tag URL (a pointer,
+not a trust anchor — release assets can be replaced server-side) and **proven
 byte-exact**: the reconstructed file (836 bytes, LF-terminated lines) hashes to
 SHA-256 `733aebe30981a81c5d8205ac76b6d57399e4fbd4dc77ec1b371478dfe68cce0e`,
 which is independently equal to the GitHub API asset `digest` field
@@ -112,6 +113,8 @@ The integrity-verified copy also ships as the test fixture
 - Binary execution inside this sandbox was impossible (network-blocked asset
   host, Linux environment). Per mission policy, real-binary execution is
   deferred to the Windows CI probe (`.github/workflows/ci-windows.yml`,
-  `jcode-release-probe` job), which downloads from the immutable tag URL,
-  verifies SHA-256, and runs only non-authenticated commands
+  `jcode-release-probe` job), which downloads from the version-scoped tag
+  URL, verifies the downloaded bytes against the embedded pinned SHA-256
+  digest — the immutable trust anchor — so any server-side asset
+  replacement or tag movement fails the check before execution, and runs only non-authenticated commands
   (`jcode version --json`) in an isolated directory with telemetry disabled.
