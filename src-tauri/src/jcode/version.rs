@@ -457,8 +457,16 @@ mod tests {
     }
 
     #[test]
-    fn parse_version_report_tolerates_missing_optional_fields() {
-        let r = parse_version_report(r#"{"semver":"0.81.7","git_tag":"v0.81.7"}"#).unwrap();
+    fn parse_version_report_tolerates_missing_non_identity_fields() {
+        // All four required identity fields are present and match the pin;
+        // only genuinely non-identity optional fields (version, build_time,
+        // git_date, base_semver, update_semver) are omitted, and omitting
+        // them must not downgrade the verdict. Missing identity fields stay
+        // fail-closed per the dedicated tests above.
+        let r = parse_version_report(
+            r#"{"semver":"0.81.7","git_tag":"v0.81.7","git_hash":"358226c","release_build":true}"#,
+        )
+        .unwrap();
         assert_eq!(classify(&r), VersionCompatibility::Supported);
         assert!(parse_version_report("not json").is_err());
         assert!(parse_version_report("[1,2,3]").is_err());
