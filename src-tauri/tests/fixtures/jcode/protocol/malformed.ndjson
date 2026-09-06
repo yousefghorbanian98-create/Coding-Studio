@@ -1,0 +1,5 @@
+{"v":1,"ev":"text_delta","session_id":"sess-2026-09-05-a01","text":"this line never
+not json at all
+[1,2,3]
+"a bare string"
+{"v":1, broken json,,,

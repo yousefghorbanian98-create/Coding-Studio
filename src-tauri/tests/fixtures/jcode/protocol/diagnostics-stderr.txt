@@ -1,0 +1,3 @@
+[windows] Named pipe \\.\pipe\jcode-api-9f8b2c1d4a55e012 busy (access denied), retrying without first_pipe_instance
+[bridge] connected to legacy socket C:\Users\Amina\AppData\Local\Temp\jcode-Amina\jcode.sock
+[bridge] client coding-studio/0.1.0 accepted on API socket

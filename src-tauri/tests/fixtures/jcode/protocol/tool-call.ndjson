@@ -1,0 +1,4 @@
+{"v":1,"ev":"tool_start","session_id":"sess-2026-09-05-a01","call_id":"call-0001","name":"read"}
+{"v":1,"ev":"tool_input_delta","session_id":"sess-2026-09-05-a01","call_id":"call-0001","delta":"{\"path\":\"src/lib.rs\"}"}
+{"v":1,"ev":"tool_exec","session_id":"sess-2026-09-05-a01","call_id":"call-0001","name":"read"}
+{"v":1,"ev":"tool_done","session_id":"sess-2026-09-05-a01","call_id":"call-0001","name":"read","output":"pub mod jcode;","error":null}

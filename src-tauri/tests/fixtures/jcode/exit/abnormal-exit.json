@@ -1,0 +1,1 @@
+{"probe": "jcode run --ndjson <message> without a provider session", "exit_code": 1, "stderr_bytes": 128}

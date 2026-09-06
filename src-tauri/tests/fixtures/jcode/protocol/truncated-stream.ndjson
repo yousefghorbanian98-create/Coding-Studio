@@ -1,0 +1,4 @@
+{"v":1,"reply_to":1,"ev":"hello_ok","version":1,"server":"jcode-harness-api-bridge/0.1.0","capabilities":["sessions","streaming"]}
+{"v":1,"reply_to":2,"ev":"attached","session":{"session_id":"sess-2026-09-05-b02","status":"generating"}}
+{"v":1,"ev":"message_accepted","session_id":"sess-2026-09-05-b02"}
+{"v":1,"ev":"text_delta","session_id":"sess-2026-09-05-b02","text":"partial answer"}
