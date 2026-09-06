@@ -69,8 +69,16 @@ remediation history and the approved-exception log remain on record unchanged.
   separate decisions and are NOT granted.** PR #4 stays Draft, OPEN,
   unmerged, and not Ready for Review.
 
-## Status
+## Final status
 
-**External technical review passed (conditional on closeout CI); awaiting
-human acceptance.** Milestone One is *not* marked complete or accepted
-anywhere. No milestone or requirement state was advanced by this document.
+**Milestone One is ACCEPTED.** The external technical review passed
+(conditional on the documentation-only closeout CI staying green — satisfied:
+runs `34037469832` and `34037471847` at `757c1cb` succeeded), and **explicit
+human acceptance was granted on 2026-09-06**, including authorization to mark
+PR #4 Ready for Review and to merge it into `main` through the normal
+protected-branch process. Factory records now show: JCODE-001…009 `complete`;
+the M1 stage `m1-jcode-compat` and milestone 1 `complete` in
+`.factory/stages.json`; `reviewAndFixRounds = 2`; `ciRemediationAttempts = 5`
+(historical, unchanged); `activeGate = human-acceptance-granted-merge-authorized`.
+Milestone Two remains **planned and untouched**; no Milestone Two work has
+started.

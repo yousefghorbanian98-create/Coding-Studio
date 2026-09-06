@@ -6,7 +6,7 @@
   "baseCommit": "710324911da56856ae6a67bdb2f24bbfe3031b87",
   "activeMilestone": 1,
   "activeStage": "m1-jcode-compat",
-  "activeGate": "external-review-passed-awaiting-human-acceptance",
+  "activeGate": "human-acceptance-granted-merge-authorized",
   "status": "active",
   "attemptCounters": {
     "healingAttempts": 0,
@@ -15,8 +15,8 @@
     "noProgressIterations": 0,
     "identicalFailureFingerprints": 0
   },
-  "lastCommit": "5115fefc9b2ae50bd2e6517b94ed094bacc2b639",
-  "lastCIrun": "33953053251",
+  "lastCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+  "lastCIrun": "34037469832",
   "semantics": {
     "lastCommit": "Most recent verified commit SHA on this branch at the time the record was last updated. Null until a verified commit has been recorded for the change set. It does not require the current uncommitted working tree to be pre-recorded.",
     "lastCIrun": "Most recent completed Windows CI run identifier for the recorded lastCommit. Null when no verified CI run for that commit has been observed. A CI run that is generated only after a commit is recorded intentionally is not required to exist when that record is written."
@@ -24,7 +24,8 @@
   "completedStages": [
     "stage-zero-materialize",
     "stage-zero-validate",
-    "stage-zero-freeze"
+    "stage-zero-freeze",
+    "m1-jcode-compat"
   ],
   "pendingStages": [
     "m2-install-supervisor",
@@ -38,5 +39,5 @@
     "m8-omni-route"
   ],
   "blockers": [],
-  "lastProgressTime": "2026-09-06T02:05:00+03:30Z"
+  "lastProgressTime": "2026-09-06T03:00:00+03:30Z"
 }

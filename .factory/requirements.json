@@ -920,7 +920,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "The official repository identity, default branch and upstream commit are recorded as frozen evidence."
@@ -949,9 +949,13 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/upstream-provenance.md",
+        "docs/backend-factory/evidence/milestone-one/oss-register.md",
+        "docs/backend-factory/evidence/milestone-one/security-review.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-002",
@@ -960,7 +964,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "License is recorded and an ADR is created when a forbidden license is encountered."
@@ -985,9 +989,12 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/release-and-license.md",
+        "docs/backend-factory/evidence/milestone-one/oss-register.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-003",
@@ -996,7 +1003,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "A pinned version and architecture matrix are documented in an ADR that includes Windows support."
@@ -1023,9 +1030,13 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/release-and-license.md",
+        "docs/backend-factory/evidence/milestone-one/upstream-provenance.md",
+        "docs/backend-factory/adr/0002-pinned-version-and-architectures.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-004",
@@ -1034,7 +1045,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "A stable machine-readable event schema is frozen with sequence numbers and deduplication identifiers."
@@ -1061,9 +1072,12 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/protocol-selection.md",
+        "docs/backend-factory/evidence/milestone-one/capability-matrix.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-005",
@@ -1072,7 +1086,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Every lifecycle capability is represented by a fixture test and a protocol ADR."
@@ -1099,9 +1113,12 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/capability-matrix.md",
+        "docs/backend-factory/evidence/milestone-one/upstream-provenance.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-006",
@@ -1110,7 +1127,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Authentication handoff and diagnostics command behaviors are documented with exit code and stream guarantees."
@@ -1137,9 +1154,12 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/security-review.md",
+        "docs/backend-factory/evidence/milestone-one/capability-matrix.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-007",
@@ -1148,7 +1168,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Configuration locations are documented and stdout/stderr/exit-code guarantees are enforced by tests."
@@ -1176,9 +1196,12 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/upstream-provenance.md",
+        "docs/backend-factory/evidence/milestone-one/capability-matrix.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-008",
@@ -1187,7 +1210,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Supported-version policy and non-scraping rule are documented and validator-enforced."
@@ -1212,9 +1235,13 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/release-and-license.md",
+        "docs/backend-factory/evidence/milestone-one/protocol-selection.md",
+        "docs/backend-factory/adr/0001-jcode-official-identity.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "JCODE-009",
@@ -1223,7 +1250,7 @@
       "kind": "implementation",
       "milestone": 1,
       "stage": "m1-jcode-compat",
-      "status": "in-progress",
+      "status": "complete",
       "securitySensitive": false,
       "acceptanceCriteria": [
         "Compatibility fixtures, ADR and Windows evidence exist and are referenced from the acceptance matrix."
@@ -1251,9 +1278,13 @@
       "n8nResearch": "Unconditional n8n research gate before stage work.",
       "tasteDecision": "Taste decision recorded in stage metadata.",
       "ossProvenance": "Unconditional OSS provenance policy gate before adoption.",
-      "evidencePaths": [],
-      "implementationCommit": null,
-      "ciRun": null
+      "evidencePaths": [
+        "docs/backend-factory/evidence/milestone-one/windows-evidence.md",
+        "docs/backend-factory/evidence/milestone-one/protocol-selection.md",
+        "src-tauri/tests/fixtures/jcode/PROVENANCE.md"
+      ],
+      "implementationCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
+      "ciRun": "34037469832"
     },
     {
       "identifier": "INSTALL-001",
