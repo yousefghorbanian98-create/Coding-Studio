@@ -258,7 +258,8 @@ jobs:
   # build job so ordinary frontend/unit CI never depends on a binary download.
   #
   # Safety properties (see docs/backend-factory/evidence/milestone-one/):
-  #   - tag-immutable download URL (v0.81.7), never a mutable "latest" alias
+  #   - version-scoped download URL (v0.81.7), never a mutable "latest"
+  #     alias; the pinned SHA-256 digest is the trust anchor
   #   - SHA-256 verified against the independently re-fetched official
   #     SHA256SUMS record AND the freeze-recorded expected digest
   #   - only the non-authenticated `version --json` command is executed

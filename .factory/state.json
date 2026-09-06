@@ -6,7 +6,7 @@
   "baseCommit": "710324911da56856ae6a67bdb2f24bbfe3031b87",
   "activeMilestone": 1,
   "activeStage": "m1-jcode-compat",
-  "activeGate": "research-completed-protocol-selected",
+  "activeGate": "external-review-passed-awaiting-human-acceptance",
   "status": "active",
   "attemptCounters": {
     "healingAttempts": 0,
@@ -38,5 +38,5 @@
     "m8-omni-route"
   ],
   "blockers": [],
-  "lastProgressTime": "2026-09-06T01:10:00+03:30Z"
+  "lastProgressTime": "2026-09-06T02:05:00+03:30Z"
 }

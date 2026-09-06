@@ -31,8 +31,46 @@ remediation history and the approved-exception log remain on record unchanged.
 - The identity-gate strengthening (R1-1) is verified by the new focused unit
   tests; classification lanes for older/newer are regression-controlled.
 
+## Review-fix rounds — full traceability
+
+- **Review-fix round 1** was delivered as commit **`06f8fd5`** ("Milestone One
+  review-fix round 1 (external review: CHANGES REQUESTED)"). Its CI exposed a
+  **stale-test failure**: `cargo test` failed in both events (runs
+  `34014938255`, `34014936519`) because the legacy test
+  `parse_version_report_tolerates_missing_optional_fields`
+  (`src-tauri/src/jcode/version.rs:462`) still expected `Supported` for a
+  report missing `git_hash` and `release_build`, which the strengthened
+  identity gate correctly classifies as `Malformed`. 61 of 62 tests passed at
+  that commit; the failure was reported without self-remediation.
+- **Review-fix round 2** was delivered as commit
+  **`f1140403d8d7f222718759c40a7669fc83854750`** ("Milestone One review-fix
+  round 2: stale-test correction only"): the stale test was replaced with
+  `parse_version_report_tolerates_missing_non_identity_fields`, whose JSON
+  carries all four identity fields (`semver 0.81.7`, `git_tag v0.81.7`,
+  `git_hash 358226c`, `release_build true`), omits only genuinely
+  non-identity optionals, and classifies `Supported`. The production identity
+  gate was not touched; all round-1 fail-closed tests were preserved.
+- Round-2 CI: **runs `34019189295` (push) and `34019191415` (pull_request)
+  both succeeded**, and every required Windows gate was executed and passed —
+  frozen-mission validator, Lint, Type-check, Vitest (648), frontend build,
+  Playwright E2E, `cargo test` (62 tests), `cargo fmt --check`, clippy with
+  `-D warnings`, Tauri build, and the isolated integrity-verified
+  pinned-release probe (download, three-way SHA-256 integrity,
+  non-authenticated version probe).
+
+## External re-review verdict (round 1 + round 2)
+
+- The **strengthened pinned-release identity gate is accepted**.
+- The **temporary rustfmt patch publisher was removed** (accepted).
+- The **immutable-URL wording is corrected** on all surfaces (accepted).
+- **External technical review verdict: PASS**, conditional only on this
+  documentation-only closeout commit's CI remaining green.
+- **Human acceptance, the Ready-for-Review transition, and merge remain
+  separate decisions and are NOT granted.** PR #4 stays Draft, OPEN,
+  unmerged, and not Ready for Review.
+
 ## Status
 
-**Awaiting reviewer re-review of round-1 fixes.** Milestone One is *not*
-marked complete or accepted anywhere. No milestone or requirement state was
-advanced by this document.
+**External technical review passed (conditional on closeout CI); awaiting
+human acceptance.** Milestone One is *not* marked complete or accepted
+anywhere. No milestone or requirement state was advanced by this document.
