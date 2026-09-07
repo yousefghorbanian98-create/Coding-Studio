@@ -313,6 +313,13 @@ function writeValidFixture(root: string): void {
     'docs/backend-factory/evidence/stage-zero/taste-decision.md',
     'docs/backend-factory/evidence/stage-zero/oss-register.md',
     'docs/backend-factory/evidence/stage-zero/mission-review.md',
+    'docs/backend-factory/evidence/milestone-two/finn-loop.md',
+    'docs/backend-factory/evidence/milestone-two/n8n-research.md',
+    'docs/backend-factory/evidence/milestone-two/taste-decision.md',
+    'docs/backend-factory/evidence/milestone-two/oss-register.md',
+    'docs/backend-factory/evidence/milestone-two/architecture-rehearsal.md',
+    'docs/backend-factory/evidence/milestone-two/security-review.md',
+    'docs/backend-factory/evidence/milestone-two/resource-bounds.md',
   ]) {
     write(root, file, '# Evidence placeholder\n');
   }

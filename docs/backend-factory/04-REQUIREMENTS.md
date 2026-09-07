@@ -60,14 +60,14 @@ Total: 75 requirements.
 
 | ID | Title | Milestone | Stage | Status | Kind |
 | --- | --- | --- | --- | --- | --- |
-| INSTALL-001 | Managed Jcode binary discovery | M2 | m2-install-supervisor | planned | implementation |
-| INSTALL-002 | Trusted download and atomic installation | M2 | m2-install-supervisor | planned | implementation |
-| INSTALL-003 | Architecture detection and version compatibility | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-001 | Safe process spawning | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-002 | Working directory and path validation | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-003 | Streaming with bounded buffers and timeout | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-004 | Graceful cancellation and forced termination | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-005 | Crash detection, orphan cleanup, restart and diagnostics | M2 | m2-install-supervisor | planned | implementation |
+| INSTALL-001 | Managed Jcode binary discovery | M2 | m2-install-supervisor | in-progress | implementation |
+| INSTALL-002 | Trusted download and atomic installation | M2 | m2-install-supervisor | in-progress | implementation |
+| INSTALL-003 | Architecture detection and version compatibility | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-001 | Safe process spawning | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-002 | Working directory and path validation | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-003 | Streaming with bounded buffers and timeout | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-004 | Graceful cancellation and forced termination | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-005 | Crash detection, orphan cleanup, restart and diagnostics | M2 | m2-install-supervisor | in-progress | implementation |
 
 ## Milestone Three
 
