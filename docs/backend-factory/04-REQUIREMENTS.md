@@ -46,15 +46,15 @@ Total: 75 requirements.
 
 | ID | Title | Milestone | Stage | Status | Kind |
 | --- | --- | --- | --- | --- | --- |
-| JCODE-001 | Verify the official Jcode repository | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-002 | Verify the Jcode license | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-003 | Select a stable Jcode version and supported architectures | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-004 | Machine-readable execution and structured event output | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-005 | Jcode headless lifecycle capabilities | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-006 | Provider authentication handoff and diagnostics commands | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-007 | Configuration locations and output guarantees | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-008 | Version policy and no terminal scraping | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-009 | Compatibility fixtures and Windows evidence | M1 | m1-jcode-compat | planned | implementation |
+| JCODE-001 | Verify the official Jcode repository | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-002 | Verify the Jcode license | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-003 | Select a stable Jcode version and supported architectures | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-004 | Machine-readable execution and structured event output | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-005 | Jcode headless lifecycle capabilities | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-006 | Provider authentication handoff and diagnostics commands | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-007 | Configuration locations and output guarantees | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-008 | Version policy and no terminal scraping | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-009 | Compatibility fixtures and Windows evidence | M1 | m1-jcode-compat | complete | implementation |
 
 ## Milestone Two
 

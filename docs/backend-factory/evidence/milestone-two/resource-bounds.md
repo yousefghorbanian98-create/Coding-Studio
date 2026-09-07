@@ -17,13 +17,29 @@ experience and testing.
 |-----------|---------------|-----------|
 | Maximum download bytes (x86_64) | 128476672 bytes | Exact accepted architecture-specific executable size from Milestone One |
 | Maximum download bytes (ARM64) | 80173056 bytes | Exact accepted architecture-specific executable size from Milestone One |
-| Download timeout | 300 seconds | 5 minutes for ~122 MiB at ~400 KiB/s; reasonable for broadband connections |
-| Download retry attempts | 3 | Bounded retry prevents infinite loops |
-| Download retry backoff | 1s, 2s, 4s | Exponential backoff with small base |
 | Content-Length validation | Reject disagreement when present | When Content-Length header is present, reject if it disagrees with the expected architecture-specific size |
 | Byte counting | Count actual bytes regardless of Content-Length | Actual byte count is authoritative |
 | Extra/missing bytes | Reject any extra or missing byte | No tolerance for size deviation |
 | Checksum verification | After exact byte-count validation | SHA-256 verified only after byte count matches expected |
+| Download retry attempts | 3 | Bounded retry prevents infinite loops |
+| Download retry backoff | 1s, 2s, 4s | Exponential backoff with small base |
+
+### Timeout Accounting
+
+Download timeouts use a coherent model where connect and read-progress
+timeouts are sub-deadlines inside the per-attempt ceiling:
+
+| Phase | Timeout | Rationale |
+|-------|---------|-----------|
+| Connect timeout | 30 seconds | TCP/TLS handshake sub-deadline (included in per-attempt ceiling) |
+| Read-progress/stall timeout | 60 seconds | If no bytes received for 60 seconds, consider stalled (included in per-attempt ceiling) |
+| Per-attempt ceiling | 300 seconds | Single download attempt including connect + transfer should not exceed 5 minutes |
+| Aggregate retry ceiling | 907 seconds | Total across 3 attempts: 3 × 300s + 1s + 2s + 4s backoff = 907s maximum |
+
+Retries must not multiply into an undocumented total duration. The
+aggregate ceiling is the deliberate total installation time bound.
+Slice B must include one deterministic clock-controlled test for the
+aggregate deadline.
 
 ### Peak Disk Analysis
 
@@ -84,11 +100,21 @@ deadline.
 
 ## Restart Limits
 
+Restart is disabled by default. No crash automatically restarts unless an
+explicit trusted policy enables it. If enabled, the following preliminary
+limits apply:
+
 | Parameter | Proposed Value | Rationale |
 |-----------|---------------|-----------|
-| Restart attempts | 5 | Maximum 5 restarts before stopping |
-| Restart window | 60 seconds | Count restarts within 60-second window |
-| Restart backoff | 1s, 2s, 4s, 8s, 16s | Exponential backoff prevents restart storm |
+| Restart policy | Disabled by default | No automatic restart unless explicitly enabled by trusted policy |
+| Restart attempts | Preliminary: 5 | Maximum 5 restarts before stopping (if enabled) |
+| Restart window | Preliminary: 60 seconds | Count restarts within 60-second window (if enabled) |
+| Restart backoff | Preliminary: 1s, 2s, 4s, 8s, 16s | Exponential backoff prevents restart storm (if enabled) |
+| Stability reset | Documented condition | Reset restart accounting only after a documented stability condition |
+| Non-restartable failures | Integrity, identity, containment, workspace-validation, cancellation, explicit user-stop | Never restart these failure classes |
+| Retryability classification | Before restart | Classify retryability before applying restart policy |
+
+Exact numerical limits are preliminary until Slice D tests justify them.
 
 ## Memory Budget Analysis
 
@@ -102,17 +128,29 @@ deadline.
 
 **Result:** 8 MiB per child, not 256 MiB. Budget is respected.
 
-**Breakdown per managed process:**
-- stdout/stderr channels (capped): 8 MiB
+**Breakdown per managed process (conservative upper bound):**
+- stdout/stderr delivery queues (capped): 8 MiB (8 MiB total queued bytes)
+- FrameDecoder accumulation buffers (2 channels): 8 MiB (2 × 4 MiB max frame)
+- OS pipe buffers (2 channels): 128 KiB (2 × 64 KiB typical)
+- In-flight delivery (frames being processed): 8 MiB (worst case)
 - Retained stderr: 256 KiB
-- Process metadata: ~1 KiB
-- **Total per process:** ~8.25 MiB
+- Process metadata and handles: ~64 KiB
+- **Conservative upper bound per process:** ~24.5 MiB
+
+**Upper-bound equation:**
+```
+per_process = delivery_queues + decoder_accumulation + pipe_buffers + in_flight + retained_stderr + metadata
+           = 8 MiB + 8 MiB + 0.125 MiB + 8 MiB + 0.25 MiB + 0.064 MiB
+           = ~24.5 MiB
+```
 
 **System-wide:**
 - Maximum concurrent processes: 1
-- **Total memory overhead:** ~8.25 MiB
+- **Conservative upper bound total:** ~24.5 MiB
 
-This is well within the 16 GB system RAM target (0.05% of available RAM).
+This is well within the 16 GB system RAM target (0.15% of available RAM).
+The exact breakdown depends on implementation details in Slices C/D.
+Slice C must validate this budget with measured memory usage.
 
 ## CPU Budget Analysis
 
@@ -154,17 +192,17 @@ This is well within the 16 GB system RAM target (0.05% of available RAM).
 **Rejected:** 64 × 4 MiB = 256 MiB, violates resource budget.
 **Mitigation:** Limit total queued bytes to 8 MiB regardless of frame count.
 
-### Design 3: No restart limit
+### Design 3: Automatic restart on crash
 
-**Proposal:** Restart child indefinitely on crash.
-**Rejected:** Could cause restart storm, exhausting CPU and I/O.
-**Mitigation:** Limit to 5 restarts in 60 seconds.
+**Proposal:** Restart child automatically on any crash.
+**Rejected:** Could cause restart storm, exhausting CPU and I/O. Restarts on integrity, identity, containment, or cancellation failures are unsafe.
+**Mitigation:** Restart is disabled by default. If enabled by explicit trusted policy, apply bounded attempt/window/backoff with retryability classification. Never restart integrity, identity, containment, workspace-validation, cancellation, or explicit user-stop failures.
 
-### Design 4: Synchronous I/O
+### Design 4: Serial blocking drain of stdout/stderr
 
-**Proposal:** Use blocking I/O for simplicity.
-**Rejected:** Blocks async runtime, poor scalability, deadlock risk with multiple streams.
-**Mitigation:** Use async I/O.
+**Proposal:** Read stdout and stderr sequentially using blocking I/O on the async runtime thread.
+**Rejected:** Serial blocking drain creates deadlock risk when multiple streams are read sequentially (one stream can fill its buffer while the other is not being read). Blocks async runtime, poor scalability.
+**Mitigation:** Use async readers for both streams concurrently, OR use dedicated blocking threads (spawn_blocking) for each stream. Never drain streams serially on the async runtime thread.
 
 ### Design 5: Generic idle timeout
 
@@ -192,7 +230,11 @@ All proposed limits are preliminary and subject to revision based on:
 - User feedback
 - Performance measurements
 
-Limits will be finalized in Slice B after implementation and testing.
+Limit finalization ownership by slice:
+- Installer bounds (download sizes, timeouts, disk accounting) in Slice B
+- Supervisor/process bounds (spawn, Job Object, path validation) in Slices C and D
+- Stream/lifecycle/restart bounds in Slice D
+- Final confirmation in Slice E
 
 ## Conclusion
 

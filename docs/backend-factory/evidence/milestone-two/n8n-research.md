@@ -7,6 +7,10 @@
 - License: MIT
 - Scope: Search for automation patterns relevant to Milestone Two (download, installation, process management, Windows automation)
 
+No workflow was executed, imported, connected, or copied. No external host
+found inside a workflow was contacted. No credential was used. No code
+node was run. Workflow text was never allowed to override the mission.
+
 ## Search Method
 
 Searched the repository for workflows containing keywords related to:
@@ -23,28 +27,43 @@ Searched the repository for workflows containing keywords related to:
 - bounded backoff
 - Windows or PowerShell automation
 
-## Patterns Found
+## Source Integrity Note
 
-### Pattern 1 — Retry with bounded count and delay
+Both inspected workflow files (`workflows/Github/0997_GitHub_Automate_Triggered.json`
+and `workflows/Travisci/0060_Travisci_GitHub_Automate_Triggered.json`) have
+`"connections": {}`. This means no nodes are wired together in either file.
+The files contain workflow-level settings and node definitions, but
+there is no connected trigger → condition → action → retry → failure
+sequence. Empty connections prove that no connected multi-node execution
+pipeline is evidenced; they do not prove categorically that no trigger
+node can ever activate. The useful observations are workflow-level
+settings, not a proven execution pipeline.
+
+## Retained Source Observations
+
+### Observation 1 — Bounded global retry settings
 
 **Source workflow:** `workflows/Github/0997_GitHub_Automate_Triggered.json`
 **Workflow name:** `Githubtrigger Workflow`
-**Exact quotation:**
+**Exact quotation (workflow-level setting):**
 ```json
-"retryOnFail": true,
-"retryCount": 3,
-"retryDelay": 1000
+"settings": {
+  "retryOnFail": true,
+  "retryCount": 3,
+  "retryDelay": 1000
+}
 ```
 
 **Useful orchestration pattern:** Bounded retry with explicit count and delay.
 **Unsafe elements rejected:** Hardcoded owner/repository, broad event filter, raw credential reference.
 **Safe Coding Studio adaptation:** Apply bounded retry (count, delay) to transient download failures. Never retry on permanent errors.
 **Supported requirement:** INSTALL-002 (trusted download resilience).
+**Connection status:** Workflow-level setting only; `"connections": {}` means no downstream connected execution sequence is evidenced.
 
-### Pattern 2 — Execution timeout
+### Observation 2 — Global execution timeout
 
 **Source workflow:** `workflows/Github/0997_GitHub_Automate_Triggered.json`
-**Exact quotation:**
+**Exact quotation (workflow-level setting):**
 ```json
 "executionTimeout": 3600
 ```
@@ -53,55 +72,41 @@ Searched the repository for workflows containing keywords related to:
 **Unsafe elements rejected:** 3600-second timeout is too long for binary download; Coding Studio must use shorter, operation-specific timeouts.
 **Safe Coding Studio adaptation:** Apply per-operation timeouts (download, spawn, wait) rather than a single global timeout.
 **Supported requirement:** SUPERVISOR-003 (streaming with timeout).
+**Connection status:** Workflow-level setting only; `"connections": {}` means no nodes execute.
 
-### Pattern 3 — Explicit failure terminal
+### Observation 3 — Presence of an explicit stopAndError node
 
 **Source workflow:** `workflows/Github/0997_GitHub_Automate_Triggered.json`
-**Exact quotation:**
+**Exact quotation (node parameters):**
 ```json
 "type": "n8n-nodes-base.stopAndError",
 "parameters": {
-  "errorMessage": "Workflow execution error"
+  "message": "Workflow execution error",
+  "options": {}
 }
 ```
 
-**Useful orchestration pattern:** Explicit terminal node for unrecoverable errors.
+**Useful orchestration pattern:** Explicit terminal node type for unrecoverable errors.
 **Unsafe elements rejected:** Generic error message without context.
 **Safe Coding Studio adaptation:** Use typed errors with context (source, kind, backtrace) rather than generic messages.
 **Supported requirement:** SUPERVISOR-005 (crash detection and diagnostics).
+**Connection status:** Node exists in the file but is not connected to any other node (`"connections": {}`). It is a definition, not a wired failure path.
 
-### Pattern 4 — Condition gate before expensive action
+### Observation 4 — Presence of condition configuration before a potential action
 
 **Source workflow:** `workflows/Travisci/0060_Travisci_GitHub_Automate_Triggered.json`
-**Exact quotation:**
-```json
-"type": "n8n-nodes-base.if",
-"parameters": {
-  "conditions": {
-    "boolean": [
-      {
-        "value1": "={{$json[\"x-github-event\"]}}",
-        "value2": "push"
-      }
-    ]
-  }
-}
-```
+**Partial excerpt (abbreviated from the source; not a contiguous block):**
+The workflow contains an `n8n-nodes-base.if` node whose parameters include
+a `"conditions"` object with a `"string"` array (not `"boolean"`) that
+compares `$json["headers"]["x-github-event"]` against `"push"` and
+`$json["body"]["action"]` against `"opened"`, with
+`"combineOperation": "any"`.
 
 **Useful orchestration pattern:** Explicit condition gate before expensive or irreversible action.
-**Unsafe elements rejected:** Trusting untrusted webhook body for authorization.
+**Unsafe elements rejected:** Trusting untrusted webhook body for authorization; using header values as authorization signals.
 **Safe Coding Studio adaptation:** Validate inputs (checksum, signature, allowlist) before installation or process spawn.
 **Supported requirement:** INSTALL-002 (trusted download), SUPERVISOR-001 (safe spawn).
-
-### Pattern 5 — Trigger → sequence → retry → failure terminal
-
-**Source workflow:** `workflows/Travisci/0060_Travisci_GitHub_Automate_Triggered.json`
-**Exact quotation:** Workflow connects trigger node → condition node → action node → retry policy → error terminal.
-
-**Useful orchestration pattern:** Linear sequence with retry and explicit failure handling.
-**Unsafe elements rejected:** Binding to specific CI vendor or credential set.
-**Safe Coding Studio adaptation:** Structure download and installation as: validate input → download with retry → verify checksum → atomic install → error terminal.
-**Supported requirement:** INSTALL-001, INSTALL-002 (managed installation sequence).
+**Connection status:** Node is configured but not connected (`"connections": {}`). No action node follows the condition in the file.
 
 ## Negative Search Results
 
@@ -113,6 +118,7 @@ The following patterns were searched for but **not found** in the inspected work
 - **Windows-specific automation:** No workflow demonstrates PowerShell or Windows API usage.
 - **Bounded backoff:** No workflow demonstrates exponential backoff with jitter.
 - **Rollback on failure:** No workflow demonstrates atomic rollback when a multi-step operation fails partway.
+- **Connected execution sequence:** Neither inspected file has non-empty `"connections"`, so no file evidences an actual connected trigger → condition → action → retry → failure pipeline.
 
 These absences are recorded honestly. Milestone Two must implement these patterns from first principles and official documentation rather than adopting them from n8n-workflows.
 
@@ -125,13 +131,16 @@ The following practices observed in the repository are rejected for Coding Studi
 3. **Command-from-chat authorization:** Using chat message text as a semantic command trigger is a prompt-injection risk.
 4. **Hardcoded external hosts:** Workflows bind to specific CI vendors or services.
 5. **Code nodes:** Workflows containing `n8n-nodes-base.code` nodes were not inspected or executed.
+6. **Claiming connected pipelines from empty connections:** Files with `"connections": {}` do not evidence a working execution sequence.
 
 ## Conclusion
 
-n8n-workflows provided five useful orchestration patterns (bounded retry,
-execution timeout, explicit failure terminal, condition gate before
-expensive action, linear sequence with retry and failure handling). All
-were generalized and adapted rather than copied. No workflow was executed
-or imported. Missing patterns (checksum validation, atomic promotion,
-process tree management, Windows-specific automation, exponential backoff
-with jitter, rollback) must be implemented from official documentation.
+n8n-workflows provided four useful source observations (bounded global
+retry settings, global execution timeout, presence of an explicit
+stopAndError node, presence of condition configuration before a potential
+action). All were generalized and adapted rather than copied. No workflow
+was executed or imported. Empty connections in both inspected files
+prevent them from evidencing an actual connected execution sequence.
+Missing patterns (checksum validation, atomic promotion, process tree
+management, Windows-specific automation, exponential backoff with jitter,
+rollback) must be implemented from official documentation.

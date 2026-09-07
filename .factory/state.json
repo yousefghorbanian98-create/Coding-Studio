@@ -11,12 +11,12 @@
   "attemptCounters": {
     "healingAttempts": 0,
     "ciRemediationAttempts": 5,
-    "reviewAndFixRounds": 3,
+    "reviewAndFixRounds": 5,
     "noProgressIterations": 0,
     "identicalFailureFingerprints": 0
   },
-  "lastCommit": "7628751470d926abba33b0e988ff3e923af01c4f",
-  "lastCIrun": "34145038733",
+  "lastCommit": "44ad1f1dc87a569cead4f6f598565c167e2dd2a2",
+  "lastCIrun": "34147759062",
   "semantics": {
     "lastCommit": "Most recent verified commit SHA on this branch at the time the record was last updated. Null until a verified commit has been recorded for the change set. It does not require the current uncommitted working tree to be pre-recorded.",
     "lastCIrun": "Most recent completed Windows CI run identifier for the recorded lastCommit. Null when no verified CI run for that commit has been observed. A CI run that is generated only after a commit is recorded intentionally is not required to exist when that record is written."

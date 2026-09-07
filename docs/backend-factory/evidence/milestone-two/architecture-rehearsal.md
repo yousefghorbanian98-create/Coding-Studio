@@ -7,20 +7,45 @@ error class, retryability, test strategy, and unresolved limitations.
 
 ## Installer Scenarios
 
-### 1. Explicit binary discovery
+### 1. Binary discovery (two authorized sources)
 
-**Scenario:** Jcode binary already exists at the managed path and matches the pinned version.
-**Expected state transition:** `Idle → Discovering → Discovered(version) → Idle`
+INSTALL-001 permits exactly two deterministic discovery sources:
+
+**Source A: Explicit user-configured absolute path**
+
+**Scenario:** User configures an explicit absolute path to the Jcode executable.
+**Expected state transition:** `Idle → Discovering → ExplicitPathValidation → Discovered(version) → Idle`
+**Validation requirements:**
+- Must be absolute; filename-only input is rejected
+- Canonicalize and inspect the final file
+- Reject directory, reparse/symlink/junction escape, wrong architecture, wrong byte digest, wrong Jcode identity
+- Do not copy or mutate the explicit executable
+- Explicit invalid input fails closed rather than silently falling back to PATH
+
+**Stable error class:** `InstallError::ExplicitPathInvalid`
+**Retryability:** No; user must provide valid absolute path.
+**Test strategy:** Unit tests for explicit valid absolute path, relative path (rejected), filename-only path (rejected), PATH-only executable (rejected), explicit path to wrong binary (rejected), explicit reparse escape (rejected).
+
+**Source B: Application-managed version directory**
+
+**Scenario:** Jcode binary exists at the managed path and matches the pinned version.
+**Expected state transition:** `Idle → Discovering → ManagedPathValidation → Discovered(version) → Idle`
+**Validation requirements:**
+- Derive from private managed root plus pinned version/architecture
+- Validate containment and exact expected filename
+- Verify exact size, digest, architecture, and Jcode identity
+- If absent or invalid, enter managed installation or stable repair flow
+- Never search PATH
+
 **Owned handles/files:** Read access to binary path, version query handle.
 **Cleanup responsibility:** None.
 **Stable error class:** `InstallError::VersionQueryFailed`
 **Retryability:** Yes, on transient I/O errors.
-**Test strategy:** Unit test with fixture binary at managed path.
-**Unresolved limitation:** None.
+**Test strategy:** Unit test with managed valid binary, managed corrupt binary (triggers repair).
 
 ### 2. Managed install discovery
 
-**Scenario:** No binary found; managed install initiates download and installation.
+**Scenario:** No binary found at either authorized source; managed install initiates download and installation.
 **Expected state transition:** `Idle → Discovering → NotFound → Downloading → Verifying → Promoting → Discovered(version) → Idle`
 **Owned handles/files:** Download temp file, final binary path, HTTP response handle.
 **Cleanup responsibility:** Installer cleans temp file on any failure.
@@ -31,14 +56,14 @@ error class, retryability, test strategy, and unresolved limitations.
 
 ### 3. Untrusted PATH candidate
 
-**Scenario:** Binary found on PATH but not at the managed location.
+**Scenario:** Binary found on PATH but not at an authorized source (neither explicit absolute path nor managed directory).
 **Expected state transition:** `Idle → Discovering → UntrustedPathCandidate → Rejected → NotFound → ...`
 **Owned handles/files:** None.
 **Cleanup responsibility:** None.
 **Stable error class:** `InstallError::UntrustedPath`
-**Retryability:** No; triggers managed install instead.
-**Test strategy:** Unit test with PATH containing non-managed binary.
-**Unresolved limitation:** User may have a valid system-installed Jcode; policy rejects it for security.
+**Retryability:** No; PATH discovery is not permitted by INSTALL-001.
+**Test strategy:** Unit test with PATH containing non-managed binary and no explicit path configured.
+**Unresolved limitation:** User may have a valid system-installed Jcode; policy rejects it for security. User must configure explicit absolute path or use managed installation.
 
 ### 4. Version-scoped HTTPS download
 
@@ -65,13 +90,17 @@ error class, retryability, test strategy, and unresolved limitations.
 
 ### 6. Oversized download
 
-**Scenario:** Download exceeds maximum allowed size (e.g., 500 MB).
-**Expected state transition:** `Downloading → SizeExceeded → NotFound`
+**Scenario:** Download exceeds the exact expected architecture-specific size. Three distinct failure cases:
+- Content-Length header differs from the exact expected size (when present).
+- Actual streamed bytes exceed expected size by even one byte.
+- Stream ends before the exact expected size.
+
+**Expected state transition:** `Downloading → SizeMismatch → NotFound`
 **Owned handles/files:** Partial temp file, HTTP response.
 **Cleanup responsibility:** Installer deletes partial temp file.
-**Stable error class:** `InstallError::SizeExceeded`
+**Stable error class:** `InstallError::SizeMismatch`
 **Retryability:** No; likely misconfiguration or attack.
-**Test strategy:** Integration test with mock server sending oversized response.
+**Test strategy:** Integration test with mock server sending oversized, undersized, and Content-Length-disagreeing responses.
 **Unresolved limitation:** None.
 
 ### 7. Interrupted download
@@ -99,35 +128,49 @@ error class, retryability, test strategy, and unresolved limitations.
 ### 9. Concurrent installation
 
 **Scenario:** Two installer instances attempt to install simultaneously.
-**Expected state transition:** `Promoting → LockContention → PromotionFailed → NotFound`
+**Expected state transition:** `Discovering → LockAcquired → Promoting → PromotionCommitted → Discovered` (winner) or `Discovering → LockContention → Waiting → ReDiscovering → Discovered` (loser)
 **Owned handles/files:** File lock on install directory.
-**Cleanup responsibility:** Loser releases lock and cleans temp file.
-**Stable error class:** `InstallError::LockContention`
-**Retryability:** Yes, with backoff.
-**Test strategy:** Integration test spawning two installer tasks.
+**Cleanup responsibility:** Winner cleans temp file after commit. Loser waits for lock release, then re-discovers from authoritative state.
+**Stable error class:** `InstallError::LockContention` (transient, not terminal)
+**Retryability:** Loser waits and re-discovers; does not fail immediately.
+**Test strategy:** Integration test spawning two installer tasks; verify loser re-discovers winner's result.
 **Unresolved limitation:** File locking semantics vary across platforms.
 
 ### 10. Promotion failure and rollback
 
-**Scenario:** Atomic rename from temp to final path fails (e.g., disk full).
-**Expected state transition:** `Promoting → PromotionFailed → NotFound`
-**Owned handles/files:** Temp file, final path.
-**Cleanup responsibility:** Installer deletes temp file.
+**Scenario:** Promotion from temp to final path fails (e.g., disk full, permission denied).
+**Expected state transition:** `Verifying → PromotionAttempted → PromotionFailed → NotFound` (temp cleaned, no old version existed) or `Verifying → PromotionAttempted → PromotionFailed → Discovered(old_version)` (old preserved)
+**Promotion order:** Lock must be acquired before promotion. New version must be fully verified before attempting to replace old. Old version is preserved until promotion commit succeeds.
+**Owned handles/files:** Lock, temp file, old binary (if exists).
+**Cleanup responsibility:** Installer deletes temp file on promotion failure. Old binary is preserved until new version is committed.
 **Stable error class:** `InstallError::PromotionFailed`
 **Retryability:** Yes, if transient (disk space freed).
-**Test strategy:** Integration test with read-only target directory.
+**Test strategy:** Integration test with read-only target directory; verify old version preserved if exists.
 **Unresolved limitation:** None.
 
 ### 11. Executable replacement after verification
 
 **Scenario:** Existing binary is replaced with new verified version.
-**Expected state transition:** `Discovered(old_version) → Replacing → Discovered(new_version)`
-**Owned handles/files:** Old binary, new temp file.
-**Cleanup responsibility:** Installer deletes old binary after successful rename.
+**Expected state transition:** `Discovered(old_version) → Verifying(new_version) → Promoting → PromotionCommitted → Discovered(new_version) → OldCleanup`
+**Critical rule:** NEVER delete the old installation before the new one is fully present and verified. Preserve old until promotion commit succeeds.
+**Owned handles/files:** Lock, old binary, new temp file.
+**Cleanup responsibility:** Old binary is deleted only after new version promotion commit succeeds. If promotion fails, old binary is preserved.
 **Stable error class:** `InstallError::ReplacementFailed`
 **Retryability:** Yes, if transient.
-**Test strategy:** Integration test with existing binary at managed path.
+**Test strategy:** Integration test with existing binary at managed path; verify old preserved on promotion failure.
 **Unresolved limitation:** On Windows, cannot replace a running executable.
+
+### 11b. TOCTOU protection during verify-to-spawn
+
+**Scenario:** An attacker attempts to replace the verified executable between verification and CreateProcess.
+**Mitigation:** Open the executable with deny-write and deny-delete sharing modes (`FILE_SHARE_READ` only, no `FILE_SHARE_WRITE` or `FILE_SHARE_DELETE`). Verify the file from the held handle (digest, size, identity). Retain the handle through `CreateProcess` using `PROC_THREAD_ATTRIBUTE_HANDLE_LIST` or by spawning from the held handle. The file cannot be replaced while the handle is held.
+**Expected state transition:** `Verified → HandleHeld → Spawning → Spawned` (no gap for replacement)
+**Owned handles/files:** File handle with restrictive sharing, process handle.
+**Cleanup responsibility:** File handle closed after `CreateProcess` returns successfully.
+**Stable error class:** `InstallError::TOCTOUDetected` (if file was modified between verify and spawn)
+**Retryability:** Yes, re-verify and re-open.
+**Test strategy:** Integration test: open file with deny-write/delete sharing, attempt replacement from another thread (should fail with sharing violation), verify spawn succeeds from held handle. Test replacement attempt during verify-to-spawn window.
+**Unresolved limitation:** If another process already holds a write handle, the deny-write open will fail; fail closed.
 
 ## Supervisor Scenarios
 
@@ -246,24 +289,24 @@ error class, retryability, test strategy, and unresolved limitations.
 ### 22. Child crash
 
 **Scenario:** Child process exits with non-zero code or is terminated by signal.
-**Expected state transition:** `Running → Crashed(exit_code) → Restarting`
+**Expected state transition:** `Running → Crashed(exit_code) → Stopped`
 **Owned handles/files:** Process handle (exited), Job handle.
-**Cleanup responsibility:** Supervisor closes process handle, retains Job for restart.
+**Cleanup responsibility:** Supervisor closes process handle.
 **Stable error class:** `SupervisorError::ChildCrashed`
-**Retryability:** Yes, with backoff (up to 5 restarts in 60 seconds).
-**Test strategy:** Integration test with child that exits immediately.
+**Restart policy:** Restart is disabled by default. No crash automatically restarts unless an explicit trusted policy enables it. If enabled, retain a bounded attempt/window/backoff policy. Reset restart accounting only after a documented stability condition. Never restart integrity, identity, containment, workspace-validation, cancellation, or explicit user-stop failures. Classify retryability before applying restart policy. Exact numerical limits are preliminary until Slice D tests justify them.
+**Test strategy:** Integration test with `m2-test-helper` in `exit <code>` mode.
 **Unresolved limitation:** None.
 
 ### 23. Descendant escape attempt
 
 **Scenario:** Child spawns a grandchild that attempts to escape the Job.
-**Expected state transition:** `Running → EscapeBlocked → Running`
-**Owned handles/files:** Job Object (blocks escape).
-**Cleanup responsibility:** Job Object enforces containment.
-**Stable error class:** N/A; escape is blocked by Job Object.
-**Retryability:** N/A.
-**Test strategy:** Integration test with child spawning grandchild that attempts breakaway.
-**Unresolved limitation:** Requires JOB_OBJECT_LIMIT_BREAKAWAY_OK to be unset.
+**Expected state transition:** `Running → EscapeDetected → (containment unproven)`
+**Owned handles/files:** Job Object handle.
+**Cleanup responsibility:** Job Object is the planned containment mechanism; KILL_ON_JOB_CLOSE and absence of breakaway permissions are planned controls.
+**Stable error class:** `SupervisorError::DescendantEscape`
+**Retryability:** No; security violation.
+**Test strategy:** Integration test with `m2-test-helper` in `spawn-descendant` mode.
+**Unresolved limitation:** Suspended creation plus Job assignment before resume is the planned design. Nested-host-Job behavior and descendant containment require Windows tests. Assignment or hierarchy incompatibility fails closed while the child remains suspended. Descendant containment remains unproven until Slice C evidence passes.
 
 ### 24. Restart storm
 
@@ -272,9 +315,9 @@ error class, retryability, test strategy, and unresolved limitations.
 **Owned handles/files:** None.
 **Cleanup responsibility:** Supervisor stops restarting, logs storm.
 **Stable error class:** `SupervisorError::RestartStorm`
-**Retryability:** No; escalation required.
-**Test strategy:** Integration test with child that crashes 5 times in 60 seconds.
-**Unresolved limitation:** Threshold (5 in 60s) may need tuning.
+**Restart policy:** Restart is disabled by default. If enabled, bounded attempt/window/backoff policy applies; stop and escalate on storm. Exact numerical limits are preliminary until Slice D tests justify them.
+**Test strategy:** Integration test with `m2-test-helper` that crashes repeatedly.
+**Unresolved limitation:** Threshold values need tuning based on Slice D evidence.
 
 ### 25. Cleanup failure
 

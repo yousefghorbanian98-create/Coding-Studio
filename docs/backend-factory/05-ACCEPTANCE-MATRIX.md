@@ -676,12 +676,12 @@ Evidence:
 ### JCODE-001: Verify the official Jcode repository
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Establish the official Jcode repository and verify provenance, maintenance, and binaries before any integration.
 
 Acceptance criteria:
 
-- [ ] AC-1 - The official repository identity, default branch and upstream commit are recorded as frozen evidence.
+- [x] AC-1 - The official repository identity, default branch and upstream commit are recorded as frozen evidence.
 
 Non-goals:
 
@@ -699,18 +699,20 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/upstream-provenance.md
+- docs/backend-factory/evidence/milestone-one/oss-register.md
+- docs/backend-factory/evidence/milestone-one/security-review.md
 
 
 ### JCODE-002: Verify the Jcode license
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Verify the Jcode license is compatible with Coding Studio and forbidden licenses require explicit approval.
 
 Acceptance criteria:
 
-- [ ] AC-1 - License is recorded and an ADR is created when a forbidden license is encountered.
+- [x] AC-1 - License is recorded and an ADR is created when a forbidden license is encountered.
 
 Non-goals:
 
@@ -726,18 +728,19 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/release-and-license.md
+- docs/backend-factory/evidence/milestone-one/oss-register.md
 
 
 ### JCODE-003: Select a stable Jcode version and supported architectures
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Select a pinned stable Jcode version with documented Windows support and supported architectures.
 
 Acceptance criteria:
 
-- [ ] AC-1 - A pinned version and architecture matrix are documented in an ADR that includes Windows support.
+- [x] AC-1 - A pinned version and architecture matrix are documented in an ADR that includes Windows support.
 
 Non-goals:
 
@@ -754,18 +757,20 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/release-and-license.md
+- docs/backend-factory/evidence/milestone-one/upstream-provenance.md
+- docs/backend-factory/adr/0002-pinned-version-and-architectures.md
 
 
 ### JCODE-004: Machine-readable execution and structured event output
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Define the Jcode machine protocol: structured output, JSON-or-equivalent event protocol, headless mode, session create/resume, streaming and cancellation.
 
 Acceptance criteria:
 
-- [ ] AC-1 - A stable machine-readable event schema is frozen with sequence numbers and deduplication identifiers.
+- [x] AC-1 - A stable machine-readable event schema is frozen with sequence numbers and deduplication identifiers.
 
 Non-goals:
 
@@ -782,18 +787,19 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/protocol-selection.md
+- docs/backend-factory/evidence/milestone-one/capability-matrix.md
 
 
 ### JCODE-005: Jcode headless lifecycle capabilities
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Prove that Jcode run headless exposes session creation, resume, streaming, cancellation and approval prompts without a visual terminal.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Every lifecycle capability is represented by a fixture test and a protocol ADR.
+- [x] AC-1 - Every lifecycle capability is represented by a fixture test and a protocol ADR.
 
 Non-goals:
 
@@ -810,18 +816,19 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/capability-matrix.md
+- docs/backend-factory/evidence/milestone-one/upstream-provenance.md
 
 
 ### JCODE-006: Provider authentication handoff and diagnostics commands
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Define provider authentication handoff in the protocol and the health/doctor/version commands.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Authentication handoff and diagnostics command behaviors are documented with exit code and stream guarantees.
+- [x] AC-1 - Authentication handoff and diagnostics command behaviors are documented with exit code and stream guarantees.
 
 Non-goals:
 
@@ -838,18 +845,19 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/security-review.md
+- docs/backend-factory/evidence/milestone-one/capability-matrix.md
 
 
 ### JCODE-007: Configuration locations and output guarantees
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Document and validate configuration locations and guarantee exit codes, stdout and stderr contracts.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Configuration locations are documented and stdout/stderr/exit-code guarantees are enforced by tests.
+- [x] AC-1 - Configuration locations are documented and stdout/stderr/exit-code guarantees are enforced by tests.
 
 Non-goals:
 
@@ -867,18 +875,19 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/upstream-provenance.md
+- docs/backend-factory/evidence/milestone-one/capability-matrix.md
 
 
 ### JCODE-008: Version policy and no terminal scraping
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **complete** - Security sensitive: **yes**
 - Description: Define supported and unsupported version behavior and explicitly prohibit scraping a visual terminal interface.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Supported-version policy and non-scraping rule are documented and validator-enforced.
+- [x] AC-1 - Supported-version policy and non-scraping rule are documented and validator-enforced.
 
 Non-goals:
 
@@ -894,18 +903,20 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/release-and-license.md
+- docs/backend-factory/evidence/milestone-one/protocol-selection.md
+- docs/backend-factory/adr/0001-jcode-official-identity.md
 
 
 ### JCODE-009: Compatibility fixtures and Windows evidence
 
 - Milestone: **M1** - Stage: **m1-jcode-compat**
-- Status: **planned** - Security sensitive: **no**
+- Status: **complete** - Security sensitive: **no**
 - Description: Create compatibility test fixtures, a compatibility ADR and Windows evidence that the machine protocol runs on Windows.
 
 Acceptance criteria:
 
-- [ ] AC-1 - Compatibility fixtures, ADR and Windows evidence exist and are referenced from the acceptance matrix.
+- [x] AC-1 - Compatibility fixtures, ADR and Windows evidence exist and are referenced from the acceptance matrix.
 
 Non-goals:
 
@@ -923,13 +934,15 @@ Threats:
 
 Evidence:
 
-- No evidence yet (planned).
+- docs/backend-factory/evidence/milestone-one/windows-evidence.md
+- docs/backend-factory/evidence/milestone-one/protocol-selection.md
+- src-tauri/tests/fixtures/jcode/PROVENANCE.md
 
 
 ### INSTALL-001: Managed Jcode binary discovery
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Discover a Jcode binary from explicit paths and pinned versions without uncontrolled PATH mutation.
 
 Acceptance criteria:
@@ -957,7 +970,7 @@ Evidence:
 ### INSTALL-002: Trusted download and atomic installation
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Install Jcode from a trusted origin with checksum verification, atomic installation, temporary downloads, interrupted-download recovery and rollback.
 
 Acceptance criteria:
@@ -987,7 +1000,7 @@ Evidence:
 ### INSTALL-003: Architecture detection and version compatibility
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Detect the target architecture and verify version compatibility before install or execution.
 
 Acceptance criteria:
@@ -1015,7 +1028,7 @@ Evidence:
 ### SUPERVISOR-001: Safe process spawning
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Spawn Jcode without shell interpolation, with separated arguments and an environment allowlist.
 
 Acceptance criteria:
@@ -1043,7 +1056,7 @@ Evidence:
 ### SUPERVISOR-002: Working directory and path validation
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Validate working directories and canonical workspace paths and protect against symbolic-link or junction escape.
 
 Acceptance criteria:
@@ -1072,7 +1085,7 @@ Evidence:
 ### SUPERVISOR-003: Streaming with bounded buffers and timeout
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Stream stdout and stderr with bounded buffers, backpressure and a hard timeout.
 
 Acceptance criteria:
@@ -1100,7 +1113,7 @@ Evidence:
 ### SUPERVISOR-004: Graceful cancellation and forced termination
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Cancel runs gracefully and fall back to forced termination including Windows process-tree termination.
 
 Acceptance criteria:
@@ -1130,7 +1143,7 @@ Evidence:
 ### SUPERVISOR-005: Crash detection, orphan cleanup, restart and diagnostics
 
 - Milestone: **M2** - Stage: **m2-install-supervisor**
-- Status: **planned** - Security sensitive: **yes**
+- Status: **in-progress** - Security sensitive: **yes**
 - Description: Detect crashes, clean orphans, apply a restart policy and emit structured diagnostics with secret redaction.
 
 Acceptance criteria:
