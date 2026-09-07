@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 
 export const REQUIRED_BASE_COMMIT = 'd96ba2e960a6c166ab2dbd45b5716a58efe41b1d';
-export const VALIDATOR_VERSION = '1.2.0';
+export const VALIDATOR_VERSION = '1.3.0';
 
 export const REQUIRED_DOCS = [
   'docs/backend-factory/00-USER-DIRECTIVE.md',

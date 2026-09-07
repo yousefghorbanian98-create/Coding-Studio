@@ -49,6 +49,7 @@ error class, retryability, test strategy, and unresolved limitations.
 **Stable error class:** `InstallError::DownloadFailed`
 **Retryability:** Yes, with bounded backoff (3 attempts).
 **Test strategy:** Integration test with mock HTTPS server serving versioned binary.
+**Trust anchor:** The Coding Studio trust anchor is the exact architecture-specific executable SHA-256 digest accepted and recorded in Milestone One. The GitHub release asset, SHA256SUMS file, and GitHub API metadata are corroborating observations inside the GitHub trust domain. The accepted tag and tagged commit are provenance evidence, not binary-integrity substitutes. The installer must verify the exact architecture-specific digest before promotion and execution.
 **Unresolved limitation:** None.
 
 ### 5. Redirect to unauthorized host
@@ -138,7 +139,7 @@ error class, retryability, test strategy, and unresolved limitations.
 **Cleanup responsibility:** Supervisor owns all handles, closes on drop.
 **Stable error class:** `SupervisorError::SpawnFailed`
 **Retryability:** Yes, if binary exists.
-**Test strategy:** Unit test spawning a known binary (e.g., `cmd.exe /c echo test`).
+**Test strategy:** Unit test spawning a purpose-built Rust test-helper executable (`m2-test-helper`) with deterministic modes: exact argv capture, environment capture, simultaneous stdout/stderr, sleep/hang, controlled exit code, descendant creation, PID/handle liveness evidence. No shell (cmd.exe, PowerShell) is used as a test subject.
 **Unresolved limitation:** None.
 
 ### 13. Environment allowlist
@@ -187,14 +188,15 @@ error class, retryability, test strategy, and unresolved limitations.
 
 ### 17. Job Object assignment failure
 
-**Scenario:** AssignProcessToJobObject fails (e.g., process already in another Job).
+**Scenario:** AssignProcessToJobObject fails (e.g., process already in another Job with incompatible limits, or hierarchy conflict).
 **Expected state transition:** `Suspended → JobAssignmentFailed → Terminated`
 **Owned handles/files:** Suspended process handle.
-**Cleanup responsibility:** Supervisor terminates suspended process.
+**Cleanup responsibility:** Supervisor terminates suspended process safely.
 **Stable error class:** `SupervisorError::JobAssignmentFailed`
 **Retryability:** No; terminate and retry spawn.
-**Test strategy:** Unit test with process already in a Job.
-**Unresolved limitation:** Nested Jobs may not be supported on older Windows versions.
+**Test strategy:** Unit test with process already in a Job with incompatible limits.
+**Windows Job Object nesting facts:** Nested Job Objects were introduced in Windows 8 and Windows Server 2012. The product target Windows 10/11 supports nesting. The real test requirement is behavior when Coding Studio itself already belongs to a Job Object (e.g., running under CI, a terminal multiplexer, or another supervisor). Assignment can still fail because of incompatible limits or hierarchy. The child must remain suspended and be terminated safely on assignment failure. No breakaway flag may be granted.
+**Unresolved limitation:** Behavior when the parent process is already in a Job with restrictive limits needs Windows CI evidence.
 
 ### 18. Pipe inheritance failure
 
@@ -215,7 +217,8 @@ error class, retryability, test strategy, and unresolved limitations.
 **Cleanup responsibility:** Supervisor drains channels on exit.
 **Stable error class:** `SupervisorError::OutputBackpressure`
 **Retryability:** N/A; backpressure is normal operation.
-**Test strategy:** Integration test with child writing to both streams at max rate.
+**Test strategy:** Integration test with `m2-test-helper` writing to both streams at max rate in `simultaneous-output` mode.
+**Frame policy:** MAX_FRAME_BYTES remains 4 MiB as accepted in Milestone One. A frame larger than 4 MiB is malformed. The preliminary queue model uses: maximum individual frame 4 MiB, small bounded item count, total queued bytes no greater than 8 MiB per process, backpressure before the byte budget is exceeded. Valid protocol events are never silently dropped. For sustained overload: apply backpressure, then fail the run explicitly with a stable resource-exhaustion error if progress cannot resume within a bounded deadline. Diagnostics may be truncated only after redaction and with an explicit truncation marker (`[truncated N bytes]`).
 **Unresolved limitation:** None.
 
 ### 20. Cancellation during startup
@@ -290,3 +293,39 @@ Twenty-five scenarios rehearsed. All have explicit state transitions, owned
 resources, cleanup responsibility, error classes, retryability, and test
 strategies. Unresolved limitations are documented and will be addressed in
 implementation or deferred to future milestones.
+
+## Lifecycle Timeout Model
+
+The supervisor does not terminate a healthy long-lived Jcode process
+merely because stdout/stderr is quiet. User inactivity is not process
+failure. Separate bounded timeouts apply to specific lifecycle phases:
+
+| Phase | Timeout | Error Class |
+|-------|---------|-------------|
+| Process creation | 30s | `SupervisorError::SpawnTimeout` |
+| Identity probe | 10s | `SupervisorError::IdentityProbeTimeout` |
+| Protocol handshake | 15s | `SupervisorError::HandshakeTimeout` |
+| Tracked operation | Per-operation | `SupervisorError::OperationTimeout` |
+| Graceful shutdown | 5s | `SupervisorError::ShutdownTimeout` |
+| Forced cleanup | 3s | `SupervisorError::CleanupTimeout` |
+
+**Test strategy:** Use `m2-test-helper` in `sleep` and `hang` modes to
+verify each phase-specific timeout independently.
+
+## Test Helper Design
+
+All supervisor tests use a purpose-built Rust test-helper executable
+(`m2-test-helper`) instead of shell commands. The helper supports
+deterministic modes:
+
+- `argv-capture` — print exact argv as JSON
+- `env-capture` — print exact environment as JSON
+- `simultaneous-output` — write to both stdout and stderr at high rate
+- `sleep <seconds>` — sleep for N seconds then exit 0
+- `hang` — block indefinitely (for shutdown testing)
+- `exit <code>` — exit with specific code
+- `spawn-descendant` — spawn a child process that outlives the helper
+- `liveness` — print PID and handle liveness evidence
+
+No shell (cmd.exe, PowerShell) is used as a production supervisor test
+subject.

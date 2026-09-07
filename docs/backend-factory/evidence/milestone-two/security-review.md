@@ -10,14 +10,14 @@ applicable. No mitigation is claimed to exist before implementation.
 ### THR-M2-001: Release substitution
 
 **Description:** An attacker substitutes the Jcode binary at the download URL with a malicious version.
-**Status:** Planned mitigation — verify SHA-256 checksum against pinned value from trusted source (upstream release API).
-**Evidence required:** Integration test with mock server serving substituted binary; checksum verification rejects it.
+**Status:** Planned mitigation — verify SHA-256 of the downloaded executable bytes against the Coding Studio trust anchor: the exact architecture-specific digest accepted and recorded in Milestone One. The GitHub release asset, co-located SHA256SUMS file, and GitHub API metadata are useful corroborating observations but remain inside the GitHub/upstream trust domain and are not independent trust channels.
+**Evidence required:** Integration test with mock server serving substituted binary; checksum verification against the M1-accepted anchor rejects it.
 
 ### THR-M2-002: Checksum substitution
 
 **Description:** An attacker compromises both the binary and the checksum file, making verification pass.
-**Status:** Planned mitigation — obtain checksum from a separate trusted channel (GitHub API release asset digest) rather than a co-located checksum file.
-**Evidence required:** Verify checksum source is independent of binary host.
+**Status:** Planned mitigation — the Coding Studio trust anchor is the exact architecture-specific executable SHA-256 digest accepted in Milestone One, not a co-located checksum file. The GitHub API digest and SHA256SUMS are corroborating observations inside the GitHub trust domain; they may be compared as additional signals but never replace the M1-accepted anchor.
+**Evidence required:** Verify that the installer rejects any binary whose SHA-256 does not match the M1-accepted anchor, regardless of what the GitHub API or SHA256SUMS report.
 
 ### THR-M2-003: Mutable release assets
 
@@ -81,10 +81,10 @@ applicable. No mitigation is claimed to exist before implementation.
 
 ### THR-M2-013: DLL search hijacking
 
-**Description:** Malicious DLL is placed in the binary directory, loaded by Jcode at startup.
-**Status:** Planned mitigation — set working directory to a controlled path; use SetDllDirectory to restrict search.
-**Evidence required:** Unit test with malicious DLL in binary directory.
-**Accepted limitation:** Cannot prevent all DLL hijacking vectors; mitigate known high-risk paths.
+**Description:** Malicious DLL is placed in a directory in the child's DLL search path, loaded by Jcode at startup.
+**Status:** Planned mitigation — use fully qualified executable path; set controlled child working directory; sanitize or omit inherited PATH where feasible; ensure no untrusted writable directory is in the child DLL search path. Evaluate child-specific process mitigation and loader behavior from Microsoft primary documentation (SetDefaultDllDirectories, LOAD_LIBRARY_SEARCH_SYSTEM32). Do not mutate the parent Coding Studio process-wide DLL search state (e.g., SetDllDirectory) as an incidental spawn operation.
+**Evidence required:** Windows CI evidence that the child process does not load DLLs from untrusted directories.
+**Accepted limitation:** Residual DLL dependency-loading risk remains explicit until implementation and Windows evidence exist. Cannot prevent all DLL hijacking vectors; mitigate known high-risk paths.
 
 ## Supervisor Threats
 

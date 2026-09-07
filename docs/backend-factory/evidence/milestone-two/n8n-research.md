@@ -43,7 +43,7 @@ Searched the repository for workflows containing keywords related to:
 
 ### Pattern 2 — Execution timeout
 
-**Source workflow:** `workflows/Github/0997_GitHub_Automat_Triggered.json`
+**Source workflow:** `workflows/Github/0997_GitHub_Automate_Triggered.json`
 **Exact quotation:**
 ```json
 "executionTimeout": 3600
@@ -128,4 +128,10 @@ The following practices observed in the repository are rejected for Coding Studi
 
 ## Conclusion
 
-n8n-workflows provided three useful orchestration patterns (bounded retry, execution timeout, explicit failure terminal, condition gate, linear sequence). All were generalized and adapted rather than copied. No workflow was executed or imported. Missing patterns (checksum, atomic promotion, process tree, Windows automation, backoff, rollback) must be implemented from official documentation.
+n8n-workflows provided five useful orchestration patterns (bounded retry,
+execution timeout, explicit failure terminal, condition gate before
+expensive action, linear sequence with retry and failure handling). All
+were generalized and adapted rather than copied. No workflow was executed
+or imported. Missing patterns (checksum validation, atomic promotion,
+process tree management, Windows-specific automation, exponential backoff
+with jitter, rollback) must be implemented from official documentation.
