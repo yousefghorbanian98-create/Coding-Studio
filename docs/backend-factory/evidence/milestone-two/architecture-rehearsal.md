@@ -163,14 +163,89 @@ INSTALL-001 permits exactly two deterministic discovery sources:
 ### 11b. TOCTOU protection during verify-to-spawn
 
 **Scenario:** An attacker attempts to replace the verified executable between verification and CreateProcess.
-**Mitigation:** Open the executable with deny-write and deny-delete sharing modes (`FILE_SHARE_READ` only, no `FILE_SHARE_WRITE` or `FILE_SHARE_DELETE`). Verify the file from the held handle (digest, size, identity). Retain the handle through `CreateProcess` using `PROC_THREAD_ATTRIBUTE_HANDLE_LIST` or by spawning from the held handle. The file cannot be replaced while the handle is held.
-**Expected state transition:** `Verified → HandleHeld → Spawning → Spawned` (no gap for replacement)
-**Owned handles/files:** File handle with restrictive sharing, process handle.
-**Cleanup responsibility:** File handle closed after `CreateProcess` returns successfully.
-**Stable error class:** `InstallError::TOCTOUDetected` (if file was modified between verify and spawn)
+**Mitigation:** Open the fully qualified executable path in the parent with access/share semantics that deny conflicting write/delete/replacement while allowing required read/execution behavior. Obtain and retain a stable file identity from that held parent handle. Hash and inspect the file through the held handle. Compare exact size, architecture, digest, and accepted Jcode identity. Keep the protective handle open in the parent throughout CreateProcess. Pass the same fully qualified path through lpApplicationName. Do not inherit the verification handle into the child unless a separate documented requirement exists. After process creation, re-check relevant file identity where meaningful and close the protective handle only when Windows image-loading semantics make replacement safe. Fail closed if the protective open cannot be established or identity changes. Keep residual path-resolution risk explicit until Windows adversarial evidence passes.
+
+**Expected state transition:** `VerifiedHandleHeld → CreateProcessByFullyQualifiedPath → ProcessCreated → PostCreateIdentityCheck → ProtectiveHandleReleased`
+
+**Owned handles/files:** Protective file handle (deny-write/delete sharing), process handle.
+**Cleanup responsibility:** Protective file handle closed after post-creation identity check completes.
+**Stable error class:** `InstallError::TOCTOUDetected` (if identity changes during verify-to-spawn)
 **Retryability:** Yes, re-verify and re-open.
-**Test strategy:** Integration test: open file with deny-write/delete sharing, attempt replacement from another thread (should fail with sharing violation), verify spawn succeeds from held handle. Test replacement attempt during verify-to-spawn window.
-**Unresolved limitation:** If another process already holds a write handle, the deny-write open will fail; fail closed.
+**Test strategy:** Integration tests for:
+- Overwrite while the protective handle is held (should fail with sharing violation)
+- Delete while held (should fail with sharing violation)
+- Rename/replace while held (should fail with sharing violation)
+- Hard-link alias replacement where applicable
+- Replacement immediately before CreateProcess
+- Replacement during CreateProcess
+- Replacement immediately after CreateProcess returns
+- Failure to obtain the required sharing/access mode (fail closed)
+
+**Slice assignment:** Verification/managed-file protection evidence to Slice B. Final verified-spawn evidence to Slice C.
+**Unresolved limitation:** If another process already holds a write handle, the deny-write open will fail; fail closed. Residual path-resolution risk remains explicit until Windows adversarial evidence passes.
+
+### 11c. Installation interruption recovery
+
+**Scenario:** Installation process is interrupted at various points (crash, power loss, user cancellation, system restart). The installer must recover safely on next startup without leaving the system in an inconsistent state or deleting the last known-good verified executable.
+
+**Critical rule:** The installation lock must be acquired before interpreting or mutating recovery artifacts.
+
+**Startup recovery states:**
+
+| State | Final Executable | Staging | Rollback | Action |
+|-------|------------------|---------|----------|--------|
+| A | Valid | None | None | Return verified final; cleanup harmless stale untrusted residue only after ownership validation |
+| B | Valid | Incomplete | None | Keep final; delete owned incomplete staging idempotently |
+| C | Valid | None | Valid | Keep final after full validation; retain or remove rollback according to documented committed transaction state; never delete both |
+| D | Missing/Invalid | None | Valid | Restore rollback atomically or retain as selected verified version; return Discovered(old_version) |
+| E | Missing | Complete verified | None | Revalidate exact size, digest, architecture, identity, and artifact ownership; safely resume promotion under lock |
+| F | Missing | Incomplete/untrusted | None | Delete owned staging idempotently; return NotFound and begin clean managed install |
+| G | Invalid | Residue | Valid | Quarantine/remove invalid owned artifacts; restore verified rollback; never execute invalid final |
+| H | Unknown/outside managed root | Any | Any | Do not delete or mutate; fail closed with stable recovery error where ownership cannot be proven |
+
+**Interruption points:**
+- During streaming (partial download)
+- After staging flush but before verification
+- After verification but before promotion
+- After old-version preservation
+- Between promotion rename operations
+- After new final appears but before transaction commit marker/directory flush
+- After commit but before rollback cleanup
+- During cleanup
+
+**Transaction markers:** Use deterministic artifact naming/state scheme to distinguish:
+- Staging: `jcode-{version}-{arch}.staging`
+- Rollback: `jcode-{version}-{arch}.rollback`
+- Committed final: `jcode-{version}-{arch}.exe`
+- Untrusted residue: any file not matching the above patterns or outside managed root
+
+**Windows flush/durability research required:**
+- File data flush: `FlushFileBuffers` on staging file before verification
+- Metadata/directory durability: Windows does not guarantee directory entry durability across power loss; accept that restart recovery remains authoritative even if perfect durability cannot be achieved
+- Rename/replace semantics: `MoveFileEx` with `MOVEFILE_REPLACE_EXISTING` is atomic on NTFS within the same volume
+- Restart recovery: Transaction markers and artifact naming are sufficient to distinguish state even without perfect durability guarantees
+
+**Cleanup requirements:**
+- Ownership-scoped: only delete artifacts that match the deterministic naming scheme and are inside the managed root
+- Idempotent: safe to run multiple times with the same result
+- Safe when repeated: never fails on already-cleaned state
+- Cannot delete last known-good: rollback and final are never both deleted in the same operation
+
+**Stable error class:** `InstallError::RecoveryFailed`
+**Retryability:** Yes, recovery is idempotent and can be retried.
+**Test strategy:** Integration and fault-injection tests for every interruption point:
+- Kill process during streaming
+- Kill process after staging flush but before verification
+- Kill process after verification but before promotion
+- Kill process after old-version preservation
+- Kill process between promotion rename operations
+- Kill process after new final appears but before commit marker
+- Kill process after commit but before rollback cleanup
+- Kill process during cleanup
+- Power-loss simulation (unplug/ungraceful shutdown) for each state A-H
+
+**Slice assignment:** Recovery flow design and evidence to Slice B. Fault-injection test evidence to Slice C.
+**Unresolved limitation:** Windows directory entry durability across power loss is not guaranteed; recovery relies on transaction markers and artifact naming rather than perfect durability.
 
 ## Supervisor Scenarios
 

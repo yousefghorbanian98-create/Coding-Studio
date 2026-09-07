@@ -128,29 +128,82 @@ Exact numerical limits are preliminary until Slice D tests justify them.
 
 **Result:** 8 MiB per child, not 256 MiB. Budget is respected.
 
-**Breakdown per managed process (conservative upper bound):**
-- stdout/stderr delivery queues (capped): 8 MiB (8 MiB total queued bytes)
-- FrameDecoder accumulation buffers (2 channels): 8 MiB (2 × 4 MiB max frame)
-- OS pipe buffers (2 channels): 128 KiB (2 × 64 KiB typical)
-- In-flight delivery (frames being processed): 8 MiB (worst case)
-- Retained stderr: 256 KiB
-- Process metadata and handles: ~64 KiB
-- **Conservative upper bound per process:** ~24.5 MiB
+### Stream Model
 
-**Upper-bound equation:**
-```
-per_process = delivery_queues + decoder_accumulation + pipe_buffers + in_flight + retained_stderr + metadata
-           = 8 MiB + 8 MiB + 0.125 MiB + 8 MiB + 0.25 MiB + 0.064 MiB
-           = ~24.5 MiB
-```
+- M1 FrameDecoder applies to structured stdout protocol frames.
+- stderr is a separate bounded raw diagnostic stream (ring buffer, not framed).
+- The preliminary design does not assume two independent 4 MiB FrameDecoder instances unless the actual protocol proves both streams are framed.
+
+### Category A: Strictly Budgeted Encoded Payload Ownership
+
+| Component | Budget | Notes |
+|-----------|--------|-------|
+| FrameDecoder accumulation (stdout) | ≤4 MiB | Single stream; one max-frame accumulation buffer |
+| Queued encoded/decoded event permits | ≤8 MiB total | 8 MiB payload permit across all queues |
+| In-flight event permit | ≤4 MiB | One frame being processed at a time |
+| Raw stderr ring | ≤256 KiB | Bounded diagnostic ring buffer |
+| Read chunks | Bounded | Implementation-defined, bounded by pipe read size |
+
+**8 MiB payload permit semantics:**
+- Permits are charged by original encoded frame length
+- Permit is acquired when a frame is decoded and queued for delivery
+- Ownership transfer avoids double charging (permit follows the frame)
+- Permit is released when the frame is consumed by the upstream reader
+- A single 4 MiB frame can be accepted without violating the 8 MiB total budget because the permit tracks actual encoded size, not worst-case capacity
+
+### Category B: Runtime and Representation Overhead (not yet budgeted)
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Vec/String capacities | Not budgeted | Depends on implementation |
+| serde/StudioEvent decoded object expansion | Not budgeted | JSON can expand significantly |
+| Channel metadata | Not budgeted | Bounded but implementation-specific |
+| Allocator fragmentation | Not budgeted | Platform-specific |
+| Task or thread stacks | Not budgeted | Depends on runtime choice |
+| OS pipe/kernel allocations | Not budgeted | Kernel-owned, not user-space retained |
+| Process/Job/handle metadata | Not budgeted | Small but implementation-specific |
+
+**OS pipe buffers** are kernel-owned allocations. Do not include them
+in the user-space retained payload ceiling unless the implementation
+explicitly requests, verifies, and accounts for the effective value.
+Treat kernel pipe allocation separately from user-space retained payload
+memory.
+
+### Preliminary Supervisor-Owned Buffer Estimate
+
+**Preliminary encoded-payload/buffer budget estimate per process:**
+- stdout FrameDecoder accumulation: ≤4 MiB
+- Queued encoded event permits: ≤8 MiB
+- In-flight event permit: ≤4 MiB
+- Raw stderr ring: ≤256 KiB
+- **Preliminary total:** ~16.25 MiB
+
+This is a preliminary supervisor-owned buffer estimate, not a complete
+conservative upper bound. It covers Category A (encoded payload ownership)
+only. Category B (runtime/representation overhead) is not yet budgeted.
 
 **System-wide:**
 - Maximum concurrent processes: 1
-- **Conservative upper bound total:** ~24.5 MiB
+- **Preliminary encoded-payload/buffer estimate:** ~16.25 MiB
 
-This is well within the 16 GB system RAM target (0.15% of available RAM).
-The exact breakdown depends on implementation details in Slices C/D.
-Slice C must validate this budget with measured memory usage.
+This is well within the 16 GB system RAM target (~0.1% of available RAM).
+
+### Implementation Acceptance Target for Decoded/Runtime Overhead
+
+Slice D must measure peak supervisor overhead on Windows and justify a
+final ceiling. The following adversarial cases must be tested:
+
+- Adversarial maximum-size valid JSON frame (4 MiB encoded, potentially larger decoded)
+- Many-small-fields JSON expansion case (many small objects that expand in memory)
+- Maximum queue occupancy (all 8 MiB of permits consumed simultaneously)
+- Simultaneous stderr pressure (stderr ring full while stdout is also full)
+- Cancellation while full (cancellation during peak memory usage)
+- Repeated runs to expose allocator retention (memory growth over time)
+
+The research document may propose a provisional acceptance target, but
+must not claim it is mathematically guaranteed before measurement.
+
+**Slice assignment:** Memory evidence belongs primarily to Slice D, not Slice C.
 
 ## CPU Budget Analysis
 
@@ -202,7 +255,7 @@ Slice C must validate this budget with measured memory usage.
 
 **Proposal:** Read stdout and stderr sequentially using blocking I/O on the async runtime thread.
 **Rejected:** Serial blocking drain creates deadlock risk when multiple streams are read sequentially (one stream can fill its buffer while the other is not being read). Blocks async runtime, poor scalability.
-**Mitigation:** Use async readers for both streams concurrently, OR use dedicated blocking threads (spawn_blocking) for each stream. Never drain streams serially on the async runtime thread.
+**Mitigation:** Use async readers for both streams concurrently, OR use dedicated bounded reader threads with explicit cancellation/join cleanup, OR an eventual runtime-provided blocking-task facility if an async runtime is selected. Never drain streams serially on the async runtime thread.
 
 ### Design 5: Generic idle timeout
 

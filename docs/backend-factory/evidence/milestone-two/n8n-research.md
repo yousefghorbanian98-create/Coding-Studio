@@ -45,14 +45,13 @@ settings, not a proven execution pipeline.
 
 **Source workflow:** `workflows/Github/0997_GitHub_Automate_Triggered.json`
 **Workflow name:** `Githubtrigger Workflow`
-**Exact quotation (workflow-level setting):**
+**Contiguous excerpt (workflow-level settings object):**
 ```json
-"settings": {
-  "retryOnFail": true,
-  "retryCount": 3,
-  "retryDelay": 1000
-}
+"retryOnFail": true,
+"retryCount": 3,
+"retryDelay": 1000
 ```
+These fields occur inside the workflow `settings` object.
 
 **Useful orchestration pattern:** Bounded retry with explicit count and delay.
 **Unsafe elements rejected:** Hardcoded owner/repository, broad event filter, raw credential reference.
@@ -72,7 +71,7 @@ settings, not a proven execution pipeline.
 **Unsafe elements rejected:** 3600-second timeout is too long for binary download; Coding Studio must use shorter, operation-specific timeouts.
 **Safe Coding Studio adaptation:** Apply per-operation timeouts (download, spawn, wait) rather than a single global timeout.
 **Supported requirement:** SUPERVISOR-003 (streaming with timeout).
-**Connection status:** Workflow-level setting only; `"connections": {}` means no nodes execute.
+**Connection status:** Workflow-level setting only; `"connections": {}` means no downstream connected multi-node execution sequence is evidenced.
 
 ### Observation 3 — Presence of an explicit stopAndError node
 
