@@ -36,7 +36,6 @@ impl PinnedArtifact {
         };
         
         let asset_name = windows_arch.exe_asset_name();
-        
         // Find the asset in the M1 table
         for (name, size, sha256) in EXPECTED_ASSETS_V0_81_7 {
             if *name == asset_name {
@@ -54,7 +53,6 @@ impl PinnedArtifact {
             format!("no pinned artifact for architecture {:?}", arch),
         ))
     }
-    
     /// Construct the version-scoped download URL.
     pub fn download_url(&self) -> String {
         format!(
@@ -64,7 +62,6 @@ impl PinnedArtifact {
         )
     }
 }
-
 /// Verified executable that has passed all validation checks.
 ///
 /// This type cannot be constructed without passing through the
@@ -82,23 +79,19 @@ impl VerifiedExecutable {
     pub fn path(&self) -> &Path {
         &self.path
     }
-    
     /// Get the architecture of the verified executable.
     pub fn arch(&self) -> SupportedArch {
         self.arch
     }
-    
     /// Get the size of the verified executable.
     pub fn size(&self) -> u64 {
         self.size
     }
-    
     /// Get the SHA-256 hash of the verified executable.
     pub fn sha256(&self) -> &str {
         &self.sha256
     }
 }
-
 /// Main installer API for managed Jcode installation.
 pub struct Installer {
     managed_root: PathBuf,
@@ -113,33 +106,27 @@ impl Installer {
         
         Ok(Self { managed_root, arch })
     }
-    
     /// Create a new installer with a custom managed root (for testing).
     #[cfg(test)]
     pub fn with_managed_root(managed_root: PathBuf, arch: SupportedArch) -> Self {
         Self { managed_root, arch }
     }
-    
     /// Get the managed root path.
     pub fn managed_root(&self) -> &Path {
         &self.managed_root
     }
-    
     /// Get the target architecture.
     pub fn arch(&self) -> SupportedArch {
         self.arch
     }
-    
     /// Get the pinned artifact specification.
     pub fn pinned_artifact(&self) -> Result<PinnedArtifact, InstallError> {
         PinnedArtifact::for_arch(self.arch)
     }
-    
     /// Get the managed executable path.
     pub fn managed_executable_path(&self) -> PathBuf {
         managed_executable_path(&self.managed_root, PINNED_JCODE_VERSION, self.arch)
     }
-    
     /// Discover or install the Jcode executable.
     ///
     /// This is the main orchestrating method that:
@@ -156,7 +143,6 @@ impl Installer {
     /// - Protective handle verification
     pub fn ensure_installed(&self) -> Result<VerifiedExecutable, InstallError> {
         let exe_path = self.managed_executable_path();
-        
         // Check if executable already exists
         if exe_path.exists() {
             // Validate existing executable
@@ -170,7 +156,6 @@ impl Installer {
             "executable not found and download not yet implemented",
         ))
     }
-    
     /// Validate an existing executable at the given path.
     fn validate_executable(&self, path: &Path) -> Result<VerifiedExecutable, InstallError> {
         let artifact = self.pinned_artifact()?;
@@ -216,7 +201,6 @@ impl Installer {
             sha256,
         })
     }
-    
     /// Compute SHA-256 hash of a file.
     fn compute_sha256(&self, path: &Path) -> Result<String, InstallError> {
         use sha2::{Sha256, Digest};
@@ -254,7 +238,6 @@ impl Installer {
         Ok(hex::encode(result))
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -283,7 +266,6 @@ mod tests {
         let x86 = PinnedArtifact::for_arch(SupportedArch::X86_64).unwrap();
         assert_eq!(x86.size, 128_476_672);
         assert_eq!(x86.sha256, "b5b09dbe0dd0b14796dfa75f63decbdf98a75f3f9de9b86d6d25522ef3eb105b");
-        
         let arm = PinnedArtifact::for_arch(SupportedArch::AArch64).unwrap();
         assert_eq!(arm.size, 80_173_056);
         assert_eq!(arm.sha256, "e38ed16c3fb3bae43989c4fe043da7e3240c24bcad95129fad059cf56636c05c");
@@ -297,7 +279,6 @@ mod tests {
             let installer = Installer::new().unwrap();
             assert!(installer.managed_root().to_string_lossy().contains("CodingStudio"));
         }
-        
         #[cfg(not(windows))]
         {
             let err = Installer::new().unwrap_err();
