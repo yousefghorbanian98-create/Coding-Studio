@@ -14,7 +14,7 @@
     "reviewAndFixRounds": 6,
     "noProgressIterations": 0,
     "identicalFailureFingerprints": 0,
-    "sliceBCleanRebuildRemediationAttempts": 0,
+    "sliceBCleanRebuildRemediationAttempts": 4,
     "sliceBCleanRebuildRemediationLimit": 5
   },
   "lastCommit": "ed2f83a823be4138c73402b61b0aefc18ea3187b",

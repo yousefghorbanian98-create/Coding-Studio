@@ -40,8 +40,12 @@ thiserror = "1.0.69"
 # Hex encoding for SHA-256 hash representation.
 hex = "0.4"
 
+# Chrono for transaction timestamps. Minimal features: no serde (we use serde_json directly),
+# no clock (we only need Utc::now()), no wasmbind.
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+
 # Windows FFI bindings. Minimal features: only the APIs we need for file
-# operations, process management, and known folders.
+# operations, process management, known folders, and synchronization.
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.52.0", features = [
     "Win32_Foundation",
@@ -49,7 +53,8 @@ windows-sys = { version = "0.52.0", features = [
     "Win32_System_IO",
     "Win32_Security",
     "Win32_UI_Shell",
-    "Win32_System_Com"
+    "Win32_System_Com",
+    "Win32_System_Threading"
 ] }
 
 [dev-dependencies]
@@ -57,6 +62,8 @@ tempfile = "3.10.1"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
+# HTTP feature: enables download functionality. Disabled by default for security.
+http = []
 
 [profile.release]
 codegen-units = 1

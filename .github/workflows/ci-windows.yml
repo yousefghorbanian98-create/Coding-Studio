@@ -232,6 +232,127 @@ jobs:
           } > m1-cargo-failures.md
           gh pr comment "$PR_NUMBER" --body-file m1-cargo-failures.md
 
+      # ---------------------------------------------------------------------------
+      # Slice B Diagnostic Bridge: when Rust gates fail, generate a complete
+      # repair bundle containing the official rustfmt patch, Cargo.lock, and
+      # all diagnostic logs. This allows the authoring sandbox (which has no
+      # Rust toolchain) to apply exact fixes without guessing.
+      # ---------------------------------------------------------------------------
+      - name: Slice B — generate diagnostic repair bundle
+        if: failure() && github.event_name == 'pull_request'
+        shell: bash
+        working-directory: src-tauri
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          bundle_dir="${RUNNER_TEMP}/slice-b-diagnostic-bundle"
+          mkdir -p "$bundle_dir"
+
+          # Generate official rustfmt patch
+          if command -v cargo >/dev/null 2>&1; then
+            cargo fmt --all || true
+            git diff --exit-code > "$bundle_dir/rustfmt.patch" 2>&1 || true
+
+            # Record tool versions
+            {
+              echo "rustc: $(rustc --version)"
+              echo "cargo: $(cargo --version)"
+              echo "rustfmt: $(rustfmt --version)"
+              echo "clippy: $(cargo clippy --version)"
+            } > "$bundle_dir/tool-versions.txt"
+
+            # Preserve Cargo.lock if it exists
+            if [ -f Cargo.lock ]; then
+              cp Cargo.lock "$bundle_dir/Cargo.lock"
+            fi
+          fi
+
+          # Copy diagnostic logs
+          for log in "${RUNNER_TEMP}/cargo-"*.log; do
+            if [ -f "$log" ]; then
+              cp "$log" "$bundle_dir/"
+            fi
+          done
+
+          # Generate file checksums
+          cd "$bundle_dir"
+          sha256sum * > checksums.sha256 2>/dev/null || true
+
+          # Create compressed archive
+          cd "${RUNNER_TEMP}"
+          tar -czf slice-b-bundle.tar.gz slice-b-diagnostic-bundle/
+          sha256sum slice-b-bundle.tar.gz > slice-b-bundle.sha256
+
+          # Post repair bundle as PR comment (if small enough)
+          bundle_size=$(stat -c%s slice-b-bundle.tar.gz 2>/dev/null || stat -f%z slice-b-bundle.tar.gz 2>/dev/null || echo 0)
+          if [ "$bundle_size" -lt 50000 ]; then
+            # Encode as base64 and split into chunks
+            base64 -w0 slice-b-bundle.tar.gz > slice-b-bundle.b64 2>/dev/null || base64 slice-b-bundle.tar.gz > slice-b-bundle.b64 2>/dev/null || true
+            split -b 40000 slice-b-bundle.b64 slice-b-chunk- 2>/dev/null || split -l 1000 slice-b-bundle.b64 slice-b-chunk- 2>/dev/null || true
+
+            {
+              echo '### Slice B — Diagnostic Repair Bundle'
+              echo ''
+              echo 'This bundle contains the official rustfmt patch, Cargo.lock, and diagnostic logs.'
+              echo ''
+              echo '**Bundle SHA-256:**'
+              echo '```'
+              cat slice-b-bundle.sha256
+              echo '```'
+              echo ''
+              echo '**Tool versions:**'
+              echo '```'
+              cat slice-b-diagnostic-bundle/tool-versions.txt 2>/dev/null || echo '(not available)'
+              echo '```'
+              echo ''
+
+              # Post chunks if they exist
+              chunk_count=$(ls slice-b-chunk-* 2>/dev/null | wc -l || echo 0)
+              if [ "$chunk_count" -gt 0 ]; then
+                echo '**Repair bundle (base64-encoded, chunked):**'
+                echo ''
+                i=1
+                for chunk in slice-b-chunk-*; do
+                  echo "<details><summary>Chunk $i of $chunk_count</summary>"
+                  echo ''
+                  echo '```'
+                  cat "$chunk"
+                  echo '```'
+                  echo '</details>'
+                  echo ''
+                  i=$((i + 1))
+                done
+
+                echo '**Reconstruction:**'
+                echo '```bash'
+                echo 'cat slice-b-chunk-* | base64 -d > slice-b-bundle.tar.gz'
+                echo 'sha256sum -c slice-b-bundle.sha256'
+                echo 'tar -xzf slice-b-bundle.tar.gz'
+                echo 'cd slice-b-diagnostic-bundle'
+                echo 'git apply rustfmt.patch'
+                echo 'cp Cargo.lock ../src-tauri/'
+                echo '```'
+              else
+                echo 'Bundle too large to inline. Download from workflow artifacts.'
+              fi
+            } > slice-b-repair-bundle.md
+
+            gh pr comment "$PR_NUMBER" --body-file slice-b-repair-bundle.md
+          fi
+
+      - name: Upload Slice B diagnostic bundle
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: slice-b-diagnostic-bundle
+          path: |
+            ${{ runner.temp }}/slice-b-bundle.tar.gz
+            ${{ runner.temp }}/slice-b-bundle.sha256
+          retention-days: 7
+          if-no-files-found: ignore
+
       - name: Tauri build
         # No signing keys are configured on purpose: this produces an unsigned
         # bundle. Code-signing and auto-update keys must live in repository
