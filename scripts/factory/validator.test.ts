@@ -248,6 +248,8 @@ function statePayload(): Record<string, unknown> {
       reviewAndFixRounds: 0,
       noProgressIterations: 0,
       identicalFailureFingerprints: 0,
+      sliceBCleanRebuildRemediationAttempts: 0,
+      sliceBCleanRebuildRemediationLimit: 5,
     },
     lastProgressTime: '2026-09-04T00:00:00.000Z',
     lastCommit: null,
@@ -313,6 +315,16 @@ function writeValidFixture(root: string): void {
     'docs/backend-factory/evidence/stage-zero/taste-decision.md',
     'docs/backend-factory/evidence/stage-zero/oss-register.md',
     'docs/backend-factory/evidence/stage-zero/mission-review.md',
+    'docs/backend-factory/evidence/milestone-two/finn-loop.md',
+    'docs/backend-factory/evidence/milestone-two/n8n-research.md',
+    'docs/backend-factory/evidence/milestone-two/taste-decision.md',
+    'docs/backend-factory/evidence/milestone-two/oss-register.md',
+    'docs/backend-factory/evidence/milestone-two/architecture-rehearsal.md',
+    'docs/backend-factory/evidence/milestone-two/security-review.md',
+    'docs/backend-factory/evidence/milestone-two/resource-bounds.md',
+    'docs/backend-factory/16-RESOURCE-ADOPTION-MATRIX.md',
+    'docs/backend-factory/17-DEPENDENCY-ADMISSION-POLICY.md',
+    'docs/backend-factory/evidence/milestone-two/slice-b-dependency-decision.md',
   ]) {
     write(root, file, '# Evidence placeholder\n');
   }

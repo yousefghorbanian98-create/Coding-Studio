@@ -21,13 +21,49 @@ serde = { version = "1", features = ["derive"] }
 # upstream struct order (v, id, req...) for byte-exact wire fixtures.
 serde_json = { version = "1", features = ["preserve_order"] }
 # Pure-Rust SHA-256 (RustCrypto). Needed to (a) reproduce Jcode's Windows
-# named-pipe derivation `\\.\pipe\<stem>-<sha256(path)[..16]>` and
+# named-pipe derivation `\\.\\pipe\\<stem>-<sha256(path)[..16]>` and
 # (b) verify release assets against the official SHA256SUMS record.
 # Adoption review: docs/backend-factory/evidence/milestone-one/oss-register.md
 sha2 = "0.10"
 
+# Slice B: Managed Jcode installation subsystem
+# HTTP client for downloading release assets. Minimal features: no cookies,
+# no multipart, no JSON, no gzip. TLS via rustls (pure Rust, no OpenSSL).
+# Proxy discovery disabled by default; explicit policy required.
+reqwest = { version = "0.12.26", default-features = false, features = ["rustls-tls", "stream"] }
+# Async runtime for HTTP streaming and concurrent I/O. Minimal features:
+# rt-multi-thread for blocking operations, io-util for async file I/O,
+# sync for channels, time for timeouts. No signal handling, no macros.
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "io-util", "sync", "time", "fs"] }
+# Thiserror for ergonomic error types in the installer module.
+thiserror = "1.0.69"
+# Hex encoding for SHA-256 hash representation.
+hex = "0.4"
+
+# Chrono for transaction timestamps. Minimal features: no serde (we use serde_json directly),
+# no clock (we only need Utc::now()), no wasmbind.
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+
+# Windows FFI bindings. Minimal features: only the APIs we need for file
+# operations, process management, known folders, and synchronization.
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.52.0", features = [
+    "Win32_Foundation",
+    "Win32_Storage_FileSystem",
+    "Win32_System_IO",
+    "Win32_Security",
+    "Win32_UI_Shell",
+    "Win32_System_Com",
+    "Win32_System_Threading"
+] }
+
+[dev-dependencies]
+tempfile = "3.10.1"
+
 [features]
 custom-protocol = ["tauri/custom-protocol"]
+# HTTP feature: enables download functionality. Disabled by default for security.
+http = []
 
 [profile.release]
 codegen-units = 1

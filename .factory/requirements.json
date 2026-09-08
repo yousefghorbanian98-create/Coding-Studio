@@ -1293,7 +1293,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Discovery prefers an explicit configured executable path and records the resolved pinned version."
@@ -1331,7 +1331,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Checksum mismatch aborts; interrupted downloads are recoverable; failed installs roll back to the previous version."
@@ -1372,7 +1372,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Unsupported architectures and incompatible versions fail with actionable diagnostics."
@@ -1410,7 +1410,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "The supervisor never invokes a shell for user input and passes arguments as separate strings; the child environment is allowlisted."
@@ -1447,7 +1447,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "The supervisor resolves canonical paths and rejects escapes; Windows junctions are denied by default."
@@ -1486,7 +1486,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Output buffers are bounded, backpressure is applied and runs time out rather than hanging."
@@ -1524,7 +1524,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Cancellation first asks for graceful exit, then terminates the whole process tree; Windows tree termination is covered."
@@ -1565,7 +1565,7 @@
       "kind": "implementation",
       "milestone": 2,
       "stage": "m2-install-supervisor",
-      "status": "planned",
+      "status": "in-progress",
       "securitySensitive": true,
       "acceptanceCriteria": [
         "Crashes are detected, orphans are cleaned, restart policy is bounded and diagnostics redact secrets."

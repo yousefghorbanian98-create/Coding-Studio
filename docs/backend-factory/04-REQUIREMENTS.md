@@ -46,28 +46,28 @@ Total: 75 requirements.
 
 | ID | Title | Milestone | Stage | Status | Kind |
 | --- | --- | --- | --- | --- | --- |
-| JCODE-001 | Verify the official Jcode repository | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-002 | Verify the Jcode license | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-003 | Select a stable Jcode version and supported architectures | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-004 | Machine-readable execution and structured event output | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-005 | Jcode headless lifecycle capabilities | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-006 | Provider authentication handoff and diagnostics commands | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-007 | Configuration locations and output guarantees | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-008 | Version policy and no terminal scraping | M1 | m1-jcode-compat | planned | implementation |
-| JCODE-009 | Compatibility fixtures and Windows evidence | M1 | m1-jcode-compat | planned | implementation |
+| JCODE-001 | Verify the official Jcode repository | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-002 | Verify the Jcode license | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-003 | Select a stable Jcode version and supported architectures | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-004 | Machine-readable execution and structured event output | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-005 | Jcode headless lifecycle capabilities | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-006 | Provider authentication handoff and diagnostics commands | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-007 | Configuration locations and output guarantees | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-008 | Version policy and no terminal scraping | M1 | m1-jcode-compat | complete | implementation |
+| JCODE-009 | Compatibility fixtures and Windows evidence | M1 | m1-jcode-compat | complete | implementation |
 
 ## Milestone Two
 
 | ID | Title | Milestone | Stage | Status | Kind |
 | --- | --- | --- | --- | --- | --- |
-| INSTALL-001 | Managed Jcode binary discovery | M2 | m2-install-supervisor | planned | implementation |
-| INSTALL-002 | Trusted download and atomic installation | M2 | m2-install-supervisor | planned | implementation |
-| INSTALL-003 | Architecture detection and version compatibility | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-001 | Safe process spawning | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-002 | Working directory and path validation | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-003 | Streaming with bounded buffers and timeout | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-004 | Graceful cancellation and forced termination | M2 | m2-install-supervisor | planned | implementation |
-| SUPERVISOR-005 | Crash detection, orphan cleanup, restart and diagnostics | M2 | m2-install-supervisor | planned | implementation |
+| INSTALL-001 | Managed Jcode binary discovery | M2 | m2-install-supervisor | in-progress | implementation |
+| INSTALL-002 | Trusted download and atomic installation | M2 | m2-install-supervisor | in-progress | implementation |
+| INSTALL-003 | Architecture detection and version compatibility | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-001 | Safe process spawning | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-002 | Working directory and path validation | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-003 | Streaming with bounded buffers and timeout | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-004 | Graceful cancellation and forced termination | M2 | m2-install-supervisor | in-progress | implementation |
+| SUPERVISOR-005 | Crash detection, orphan cleanup, restart and diagnostics | M2 | m2-install-supervisor | in-progress | implementation |
 
 ## Milestone Three
 

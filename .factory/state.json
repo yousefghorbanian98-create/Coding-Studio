@@ -1,22 +1,24 @@
 {
   "schemaVersion": "1.0.0",
-  "runIdentifier": "factory-milestone-one-2026-09-05",
+  "runIdentifier": "factory-milestone-two-2026-09-07",
   "repository": "yousefghorbanian98-create/Coding-Studio",
-  "branch": "arena/01a07182-coding-studio",
-  "baseCommit": "710324911da56856ae6a67bdb2f24bbfe3031b87",
-  "activeMilestone": 1,
-  "activeStage": "m1-jcode-compat",
-  "activeGate": "human-acceptance-granted-merge-authorized",
+  "branch": "arena/01a07c3a-coding-studio",
+  "baseCommit": "d96ba2e960a6c166ab2dbd45b5716a58efe41b1d",
+  "activeMilestone": 2,
+  "activeStage": "m2-install-supervisor",
+  "activeGate": "research-and-rehearsal",
   "status": "active",
   "attemptCounters": {
     "healingAttempts": 0,
     "ciRemediationAttempts": 5,
-    "reviewAndFixRounds": 2,
+    "reviewAndFixRounds": 6,
     "noProgressIterations": 0,
-    "identicalFailureFingerprints": 0
+    "identicalFailureFingerprints": 0,
+    "sliceBCleanRebuildRemediationAttempts": 4,
+    "sliceBCleanRebuildRemediationLimit": 5
   },
-  "lastCommit": "757c1cbbbeb46941eac4d51884e9939f833f0d8f",
-  "lastCIrun": "34037469832",
+  "lastCommit": "ed2f83a823be4138c73402b61b0aefc18ea3187b",
+  "lastCIrun": "34170925132",
   "semantics": {
     "lastCommit": "Most recent verified commit SHA on this branch at the time the record was last updated. Null until a verified commit has been recorded for the change set. It does not require the current uncommitted working tree to be pre-recorded.",
     "lastCIrun": "Most recent completed Windows CI run identifier for the recorded lastCommit. Null when no verified CI run for that commit has been observed. A CI run that is generated only after a commit is recorded intentionally is not required to exist when that record is written."
@@ -28,7 +30,6 @@
     "m1-jcode-compat"
   ],
   "pendingStages": [
-    "m2-install-supervisor",
     "m3-tauri-ipc",
     "m4-events-lifecycle",
     "m5-provider-onboarding",
@@ -39,5 +40,5 @@
     "m8-omni-route"
   ],
   "blockers": [],
-  "lastProgressTime": "2026-09-06T03:00:00+03:30Z"
+  "lastProgressTime": "2026-09-07T16:30:00+03:30Z"
 }

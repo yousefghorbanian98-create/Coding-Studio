@@ -48,13 +48,15 @@
     "counters": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["healingAttempts", "ciRemediationAttempts", "reviewAndFixRounds", "noProgressIterations", "identicalFailureFingerprints"],
+      "required": ["healingAttempts", "ciRemediationAttempts", "reviewAndFixRounds", "noProgressIterations", "identicalFailureFingerprints", "sliceBCleanRebuildRemediationAttempts", "sliceBCleanRebuildRemediationLimit"],
       "properties": {
         "healingAttempts": { "type": "integer", "minimum": 0 },
         "ciRemediationAttempts": { "type": "integer", "minimum": 0 },
         "reviewAndFixRounds": { "type": "integer", "minimum": 0 },
         "noProgressIterations": { "type": "integer", "minimum": 0 },
-        "identicalFailureFingerprints": { "type": "integer", "minimum": 0 }
+        "identicalFailureFingerprints": { "type": "integer", "minimum": 0 },
+        "sliceBCleanRebuildRemediationAttempts": { "type": "integer", "minimum": 0 },
+        "sliceBCleanRebuildRemediationLimit": { "type": "integer", "minimum": 0 }
       }
     },
     "semantics": {

@@ -158,7 +158,7 @@
       "number": 2,
       "title": "Managed Jcode installation and Rust process supervisor",
       "name": "Milestone Two",
-      "status": "planned",
+      "status": "active",
       "stage": "m2-install-supervisor",
       "requires": [
         1
@@ -168,7 +168,7 @@
           "id": "m2-install-supervisor",
           "name": "Managed install and supervisor",
           "milestone": 2,
-          "status": "planned",
+          "status": "active",
           "dependsOn": [
             "m1-jcode-compat"
           ],
@@ -190,7 +190,18 @@
             "SUPERVISOR-004",
             "SUPERVISOR-005"
           ],
-          "evidencePaths": []
+          "evidencePaths": [
+            "docs/backend-factory/16-RESOURCE-ADOPTION-MATRIX.md",
+            "docs/backend-factory/17-DEPENDENCY-ADMISSION-POLICY.md",
+            "docs/backend-factory/evidence/milestone-two/architecture-rehearsal.md",
+            "docs/backend-factory/evidence/milestone-two/finn-loop.md",
+            "docs/backend-factory/evidence/milestone-two/n8n-research.md",
+            "docs/backend-factory/evidence/milestone-two/oss-register.md",
+            "docs/backend-factory/evidence/milestone-two/resource-bounds.md",
+            "docs/backend-factory/evidence/milestone-two/security-review.md",
+            "docs/backend-factory/evidence/milestone-two/slice-b-dependency-decision.md",
+            "docs/backend-factory/evidence/milestone-two/taste-decision.md"
+          ]
         }
       ]
     },

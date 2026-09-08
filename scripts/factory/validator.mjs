@@ -3,8 +3,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 
-export const REQUIRED_BASE_COMMIT = '710324911da56856ae6a67bdb2f24bbfe3031b87';
-export const VALIDATOR_VERSION = '1.2.0';
+export const REQUIRED_BASE_COMMIT = 'd96ba2e960a6c166ab2dbd45b5716a58efe41b1d';
+export const VALIDATOR_VERSION = '1.3.0';
 
 export const REQUIRED_DOCS = [
   'docs/backend-factory/00-USER-DIRECTIVE.md',
@@ -31,6 +31,16 @@ export const REQUIRED_EVIDENCE = [
   'docs/backend-factory/evidence/stage-zero/taste-decision.md',
   'docs/backend-factory/evidence/stage-zero/oss-register.md',
   'docs/backend-factory/evidence/stage-zero/mission-review.md',
+  'docs/backend-factory/evidence/milestone-two/finn-loop.md',
+  'docs/backend-factory/evidence/milestone-two/n8n-research.md',
+  'docs/backend-factory/evidence/milestone-two/taste-decision.md',
+  'docs/backend-factory/evidence/milestone-two/oss-register.md',
+  'docs/backend-factory/evidence/milestone-two/architecture-rehearsal.md',
+  'docs/backend-factory/evidence/milestone-two/security-review.md',
+  'docs/backend-factory/evidence/milestone-two/resource-bounds.md',
+  'docs/backend-factory/16-RESOURCE-ADOPTION-MATRIX.md',
+  'docs/backend-factory/17-DEPENDENCY-ADMISSION-POLICY.md',
+  'docs/backend-factory/evidence/milestone-two/slice-b-dependency-decision.md',
 ];
 
 export const REQUIRED_MACHINE_FILES = [
