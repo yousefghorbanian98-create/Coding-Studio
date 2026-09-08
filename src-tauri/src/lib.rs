@@ -5,6 +5,12 @@ use serde::Serialize;
 /// surfaced through Tauri commands — that wiring is Milestone Three.
 pub mod jcode;
 
+/// Managed Jcode installation subsystem (Backend Milestone Two, Slice B):
+/// deterministic discovery, trusted download, verification, locking,
+/// transaction, promotion, and recovery. Not yet surfaced through Tauri
+/// commands — that wiring is Milestone Three.
+pub mod install;
+
 #[derive(Serialize)]
 pub struct AppInfo {
     pub name: String,

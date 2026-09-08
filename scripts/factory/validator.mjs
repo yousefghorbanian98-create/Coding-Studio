@@ -38,6 +38,9 @@ export const REQUIRED_EVIDENCE = [
   'docs/backend-factory/evidence/milestone-two/architecture-rehearsal.md',
   'docs/backend-factory/evidence/milestone-two/security-review.md',
   'docs/backend-factory/evidence/milestone-two/resource-bounds.md',
+  'docs/backend-factory/16-RESOURCE-ADOPTION-MATRIX.md',
+  'docs/backend-factory/17-DEPENDENCY-ADMISSION-POLICY.md',
+  'docs/backend-factory/evidence/milestone-two/slice-b-dependency-decision.md',
 ];
 
 export const REQUIRED_MACHINE_FILES = [

@@ -191,13 +191,16 @@
             "SUPERVISOR-005"
           ],
           "evidencePaths": [
+            "docs/backend-factory/16-RESOURCE-ADOPTION-MATRIX.md",
+            "docs/backend-factory/17-DEPENDENCY-ADMISSION-POLICY.md",
+            "docs/backend-factory/evidence/milestone-two/architecture-rehearsal.md",
             "docs/backend-factory/evidence/milestone-two/finn-loop.md",
             "docs/backend-factory/evidence/milestone-two/n8n-research.md",
-            "docs/backend-factory/evidence/milestone-two/taste-decision.md",
             "docs/backend-factory/evidence/milestone-two/oss-register.md",
-            "docs/backend-factory/evidence/milestone-two/architecture-rehearsal.md",
+            "docs/backend-factory/evidence/milestone-two/resource-bounds.md",
             "docs/backend-factory/evidence/milestone-two/security-review.md",
-            "docs/backend-factory/evidence/milestone-two/resource-bounds.md"
+            "docs/backend-factory/evidence/milestone-two/slice-b-dependency-decision.md",
+            "docs/backend-factory/evidence/milestone-two/taste-decision.md"
           ]
         }
       ]
