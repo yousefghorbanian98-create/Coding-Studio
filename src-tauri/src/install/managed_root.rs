@@ -221,10 +221,8 @@ mod tests {
         let temp = TempDir::new().unwrap();
         let root = temp.path().join("root");
         let escape = temp.path().join("escape.txt");
-        
         fs::create_dir_all(&root).unwrap();
         fs::write(&escape, "test").unwrap();
-        
         let err = validate_containment(&root, &escape).unwrap_err();
         assert_eq!(err.code(), InstallErrorCode::ContainmentFailure);
     }
@@ -234,10 +232,8 @@ mod tests {
         let temp = TempDir::new().unwrap();
         let root = temp.path().join("root");
         let candidate = root.join("..").join("escape.txt");
-        
         fs::create_dir_all(&root).unwrap();
         fs::write(temp.path().join("escape.txt"), "test").unwrap();
-        
         let err = validate_containment(&root, &candidate).unwrap_err();
         assert_eq!(err.code(), InstallErrorCode::ContainmentFailure);
     }
@@ -247,7 +243,6 @@ mod tests {
         let temp = TempDir::new().unwrap();
         let regular = temp.path().join("regular.txt");
         fs::write(&regular, "test").unwrap();
-        
         assert!(!is_reparse_point(&regular).unwrap());
     }
 }

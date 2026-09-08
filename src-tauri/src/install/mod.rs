@@ -3,14 +3,14 @@
 //! This module implements a complete, production-grade managed Jcode
 //! installation subsystem for Windows.
 
-pub mod error;
 pub mod architecture;
+pub mod error;
 pub mod managed_root;
 
 // Re-export primary types
-pub use error::{InstallError, InstallErrorCode};
 pub use architecture::SupportedArch;
-pub use managed_root::{production_managed_root, managed_executable_path};
+pub use error::{InstallError, InstallErrorCode};
+pub use managed_root::{managed_executable_path, production_managed_root};
 
 use crate::jcode::verification::{WindowsArch, EXPECTED_ASSETS_V0_81_7};
 use crate::jcode::version::PINNED_JCODE_VERSION;
@@ -47,7 +47,6 @@ impl PinnedArtifact {
                 });
             }
         }
-        
         Err(InstallError::new(
             InstallErrorCode::ArchitectureMismatch,
             format!("no pinned artifact for architecture {:?}", arch),
@@ -57,8 +56,7 @@ impl PinnedArtifact {
     pub fn download_url(&self) -> String {
         format!(
             "https://github.com/1jehuang/jcode/releases/download/v{}/{}",
-            PINNED_JCODE_VERSION,
-            self.filename
+            PINNED_JCODE_VERSION, self.filename
         )
     }
 }
@@ -103,7 +101,6 @@ impl Installer {
     pub fn new() -> Result<Self, InstallError> {
         let managed_root = production_managed_root()?;
         let arch = SupportedArch::host()?;
-        
         Ok(Self { managed_root, arch })
     }
     /// Create a new installer with a custom managed root (for testing).
